@@ -92,6 +92,12 @@ namespace ft {
 				}
 				_size++;
 			}
+
+			void 					pop_front() {
+				if (!empty())
+					erase(begin());
+			}
+
 			void					push_back(const value_type& val) {
 				DLLNode<T> *ptr = new DLLNode<T>;
 
@@ -117,6 +123,11 @@ namespace ft {
 				_size++;
 			}
 
+			void					pop_back() {
+				if (!empty())
+					erase(iterator(_last));
+			}
+
 			iterator				erase(iterator position) {
 				DLLNode<T> *ptr = position.getPtr();
 				DLLNode<T> *tmp = ptr->_next;
@@ -131,6 +142,12 @@ namespace ft {
 				delete ptr;
 				_size--;
 				return (iterator(tmp));
+			}
+
+			iterator 				erase(iterator first, iterator last) {
+				while (first != last)
+					erase(first++);
+				return (iterator(_first));
 			}
 
 			bool					empty() const {
