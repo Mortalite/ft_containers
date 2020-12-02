@@ -3,36 +3,31 @@
 
 # include <iostream>
 # include <limits>
+# include "iterator.h"
 
 namespace ft {
-
-	template<typename T> class _Node {
-		public:
-			T*			_data;
-			_Node<T>*	_next;
-			_Node<T>*	_prev;
-	};
 
 	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
 		public:
-			typedef T				value_type;
-			typedef Alloc			allocator_type;
-			typedef T&				reference;
-			typedef const T&		const_reference;
-			typedef T*				pointer;
-			typedef const T* 		const_pointer;
-			typedef std::ptrdiff_t	difference_type;
-			typedef size_t			size_type;
+			typedef T								value_type;
+			typedef Alloc							allocator_type;
+			typedef T&								reference;
+			typedef const T&						const_reference;
+			typedef T*								pointer;
+			typedef const T* 						const_pointer;
+			typedef std::ptrdiff_t					difference_type;
+			typedef size_t							size_type;
+			typedef ft::BidirectionalIterator<T>	iterator;
 
 			explicit list(const allocator_type& alloc = allocator_type());
 			list(const list& x);
 			~list();
 
+
 			void			push_front(const value_type& val);
 			void 			push_back(const value_type& val);
-
 
 			bool			empty() const;
 			size_type		size() const;
@@ -45,10 +40,13 @@ namespace ft {
 
 			void			print();
 
+			iterator		begin();
+			iterator		end();
+
 		private:
-			_Node<T>*		_first;
-			_Node<T>*		_last;
-			_Node<T>*		_end;
+			DLLNode<T>*		_first;
+			DLLNode<T>*		_last;
+			DLLNode<T>*		_end;
 			size_t			_size;
 			allocator_type	_alloc;
 	};
@@ -57,7 +55,7 @@ namespace ft {
 	list<T, Alloc>::list(const allocator_type& alloc) {
 		_first = NULL;
 		_last = NULL;
-		_end = new _Node<T>;
+		_end = new DLLNode<T>;
 		_end->_next = _end->_prev = NULL;
 		_end->_data = NULL;
 		_size = 0;
@@ -68,14 +66,14 @@ namespace ft {
 	list<T, Alloc>::list(const list& x) {
 		_first = NULL;
 		_last = NULL;
-		_end = new _Node<T>;
+		_end = new DLLNode<T>;
 		_end->_next = _end->_prev = NULL;
 		_end->_data = NULL;
 		_size = 0;
 		_alloc = x._alloc;
 
 		if (x._size) {
-			_Node<T> *ptr = x._first;
+			DLLNode<T> *ptr = x._first;
 			while (ptr != x._end) {
 				push_back(*ptr->_data);
 				ptr = ptr->_next;
@@ -85,7 +83,7 @@ namespace ft {
 
 	template<typename T, typename Alloc>
 	list<T, Alloc>::~list() {
-		_Node<T> *ptr;
+		DLLNode<T> *ptr;
 		while (_first != _end) {
 			ptr = _first->_next;
 			_alloc.deallocate(_first->_data, 1);
@@ -97,7 +95,7 @@ namespace ft {
 
 	template<typename T, typename Alloc>
 	void list<T, Alloc>::push_front(const value_type &val) {
-		_Node<T> *ptr = new _Node<T>;
+		DLLNode<T> *ptr = new DLLNode<T>;
 
 		ptr->_prev = ptr->_next = NULL;
 		ptr->_data = _alloc.allocate(1);
@@ -118,7 +116,7 @@ namespace ft {
 
 	template<typename T, typename Alloc>
 	void list<T, Alloc>::push_back(const value_type &val) {
-		_Node<T> *ptr = new _Node<T>;
+		DLLNode<T> *ptr = new DLLNode<T>;
 
 		ptr->_prev = ptr->_next = NULL;
 		ptr->_data = _alloc.allocate(1);
@@ -140,7 +138,7 @@ namespace ft {
 
 	template<typename T, typename Alloc>
 	void list<T, Alloc>::print() {
-		_Node<T> *ptr = _first;
+		DLLNode<T> *ptr = _first;
 
 		while (ptr != _end) {
 			std::cout << *ptr->_data << std::endl;
@@ -182,6 +180,16 @@ namespace ft {
 	template<typename T, typename Alloc>
 	typename list<T, Alloc>::const_reference list<T, Alloc>::back() const {
 		return (*_last->_data);
+	}
+
+	template<typename T, typename Alloc>
+	typename list<T, Alloc>::iterator list<T, Alloc>::begin() {
+		return (iterator(_end->_next));
+	}
+
+	template<typename T, typename Alloc>
+	typename list<T, Alloc>::iterator list<T, Alloc>::end() {
+		return (iterator(_end));
 	}
 
 }

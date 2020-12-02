@@ -1,6 +1,8 @@
 #include <iostream>
-#include "list.hpp"
 #include <typeinfo>
+#include <list>
+#include "list.hpp"
+#include "iterator.h"
 
 #define RED		"\033[31m"
 #define BLUE    "\033[34m"
@@ -30,5 +32,20 @@ int main() {
 
 	std::cout << "size = " << list.size() << ", isEmpty = " << list.empty() << std::endl;
 	std::cout << "max_size = " << list.max_size() << std::endl;
+
+	typedef std::list<int> Ilist;
+	std::list<int> list1;
+	list1.push_back(10);
+	Ilist::iterator iterator(list1.begin());
+	Ilist::iterator iterator1 = iterator;
+	std::cout << "iterator value = " << *iterator1 << std::endl;
+
+	typedef ft::list<int> Flist;
+	Flist::iterator iterator2(list.begin());
+	while (iterator2 != list.end())
+		std::cout << "value = " << *iterator2++ << std::endl;
+
+	ft::ReverseBidirectionalIterator<int> iterator3;
+
 	return 0;
 }
