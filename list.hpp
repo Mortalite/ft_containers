@@ -11,37 +11,18 @@ namespace ft {
 	class list {
 
 		public:
-			typedef T								value_type;
-			typedef Alloc							allocator_type;
-			typedef T&								reference;
-			typedef const T&						const_reference;
-			typedef T*								pointer;
-			typedef const T* 						const_pointer;
-			typedef std::ptrdiff_t					difference_type;
-			typedef size_t							size_type;
-			typedef ft::BidirectionalIterator<T>	iterator;
-
-			explicit list(const allocator_type& alloc = allocator_type());
-			list(const list& x);
-			~list();
-
-
-			void			push_front(const value_type& val);
-			void 			push_back(const value_type& val);
-
-			bool			empty() const;
-			size_type		size() const;
-			size_type		max_size() const;
-
-			reference		front();
-			const_reference	front() const;
-			reference		back();
-			const_reference back() const;
-
-			void			print();
-
-			iterator		begin();
-			iterator		end();
+			typedef T											value_type;
+			typedef Alloc										allocator_type;
+			typedef T&											reference;
+			typedef const T&									const_reference;
+			typedef T*											pointer;
+			typedef const T* 									const_pointer;
+			typedef std::ptrdiff_t								difference_type;
+			typedef size_t										size_type;
+			typedef ft::BidirectionalIterator<T>				iterator;
+			typedef ft::ReverseBidirectionalIterator<T>			reverse_iterator;
+			typedef ft::ConstBidirectionalIterator<T>			const_iterator;
+			typedef ft::ConstReverseBidirectionalIterator<T>	const_reverse_iterator;
 
 		private:
 			DLLNode<T>*		_first;
@@ -49,148 +30,193 @@ namespace ft {
 			DLLNode<T>*		_end;
 			size_t			_size;
 			allocator_type	_alloc;
-	};
 
-	template<typename T, typename Alloc>
-	list<T, Alloc>::list(const allocator_type& alloc) {
-		_first = NULL;
-		_last = NULL;
-		_end = new DLLNode<T>;
-		_end->_next = _end->_prev = NULL;
-		_end->_data = NULL;
-		_size = 0;
-		_alloc = alloc;
-	}
+		public:
 
-	template<typename T, typename Alloc>
-	list<T, Alloc>::list(const list& x) {
-		_first = NULL;
-		_last = NULL;
-		_end = new DLLNode<T>;
-		_end->_next = _end->_prev = NULL;
-		_end->_data = NULL;
-		_size = 0;
-		_alloc = x._alloc;
-
-		if (x._size) {
-			DLLNode<T> *ptr = x._first;
-			while (ptr != x._end) {
-				push_back(*ptr->_data);
-				ptr = ptr->_next;
+			explicit list(const allocator_type& alloc = allocator_type()) {
+				_first = NULL;
+				_last = NULL;
+				_end = new DLLNode<T>;
+				_end->_next = _end;
+				_end->_prev = _end;
+				_end->_data = NULL;
+				_size = 0;
+				_alloc = alloc;
 			}
-		}
-	}
+			list(const list& x) {
+				_first = NULL;
+				_last = NULL;
+				_end = new DLLNode<T>;
+				_end->_next = _end;
+				_end->_prev = _end;
+				_end->_data = NULL;
+				_size = 0;
+				_alloc = x._alloc;
 
-	template<typename T, typename Alloc>
-	list<T, Alloc>::~list() {
-		DLLNode<T> *ptr;
-		while (_first != _end) {
-			ptr = _first->_next;
-			_alloc.deallocate(_first->_data, 1);
-			delete _first;
-			_first = ptr;
-		}
-		delete _end;
-	}
+				if (x._size) {
+					DLLNode<T> *ptr = x._first;
+					while (ptr != x._end) {
+						push_back(*ptr->_data);
+						ptr = ptr->_next;
+					}
+				}
+			}
+			~list() {
+				DLLNode<T> *ptr;
+				while (_first && _first != _end) {
+					ptr = _first->_next;
+					_alloc.deallocate(_first->_data, 1);
+					delete _first;
+					_first = ptr;
+				}
+				delete _end;
+			}
 
-	template<typename T, typename Alloc>
-	void list<T, Alloc>::push_front(const value_type &val) {
-		DLLNode<T> *ptr = new DLLNode<T>;
 
-		ptr->_prev = ptr->_next = NULL;
-		ptr->_data = _alloc.allocate(1);
-		_alloc.construct(ptr->_data, val);
-		if (!_size) {
-			ptr->_next = _end;
-			_end->_prev = ptr;
-			_end->_next = _first;
-			_last = _first = ptr;
-		}
-		else {
-			_first->_prev = ptr;
-			ptr->_next = _first;
-			_end->_next = _first = ptr;
-		}
-		_size++;
-	}
+			void					push_front(const value_type& val) {
+				DLLNode<T> *ptr = new DLLNode<T>;
 
-	template<typename T, typename Alloc>
-	void list<T, Alloc>::push_back(const value_type &val) {
-		DLLNode<T> *ptr = new DLLNode<T>;
+				ptr->_prev = ptr->_next = NULL;
+				ptr->_data = _alloc.allocate(1);
+				_alloc.construct(ptr->_data, val);
+				if (!_size) {
+					ptr->_next = _end;
+					_end->_prev = ptr;
+					_end->_next = _first;
+					_last = _first = ptr;
+				}
+				else {
+					_first->_prev = ptr;
+					ptr->_next = _first;
+					_end->_next = _first = ptr;
+				}
+				_size++;
+			}
+			void					push_back(const value_type& val) {
+				DLLNode<T> *ptr = new DLLNode<T>;
 
-		ptr->_prev = ptr->_next = NULL;
-		ptr->_data = _alloc.allocate(1);
-		_alloc.construct(ptr->_data, val);
-		if (!_size) {
-			ptr->_next = _end;
-			_end->_prev = ptr;
-			_end->_next = _first;
-			_last = _first = ptr;
-		}
-		else {
-			_last->_next = ptr;
-			ptr->_prev = _last;
-			ptr->_next = _end;
-			_last = ptr;
-		}
-		_size++;
-	}
+				ptr->_prev = NULL;
+				ptr->_next = NULL;
+				ptr->_data = _alloc.allocate(1);
+				_alloc.construct(ptr->_data, val);
+				if (!_size) {
+					ptr->_next = _end;
+					_last = ptr;
+					_first = ptr;
+					_first->_prev = _end;
+					_end->_prev = ptr;
+					_end->_next = ptr;
+				}
+				else {
+					_last->_next = ptr;
+					ptr->_prev = _last;
+					ptr->_next = _end;
+					_end->_prev = ptr;
+					_last = ptr;
+				}
+				_size++;
+			}
 
-	template<typename T, typename Alloc>
-	void list<T, Alloc>::print() {
-		DLLNode<T> *ptr = _first;
+			iterator				erase(iterator position) {
+				DLLNode<T> *ptr = position.getPtr();
+				DLLNode<T> *tmp = ptr->_next;
+				ptr->_prev->_next = ptr->_next;
+				if (ptr == _first) {
+					_end->_next = _first->_next;
+					_first = _first->_next;
+				}
+				else if (ptr == _last)
+					_last = _last->_prev;
+				_alloc.deallocate(ptr->_data, 1);
+				delete ptr;
+				_size--;
+				return (iterator(tmp));
+			}
 
-		while (ptr != _end) {
-			std::cout << *ptr->_data << std::endl;
-			ptr = ptr->_next;
-		}
+			bool					empty() const {
+				return (!_size);
+			}
+			size_type				size() const {
+				return (_size);
+			}
+			size_type				max_size() const {
+				return (std::numeric_limits<size_type>::max());
+			}
 
-	}
+			reference				front() {
+				return (*_first->_data);
+			}
+			const_reference			front() const {
+				return (*_first->_data);
+			}
+			reference				back() {
+				return (*_last->_data);
+			}
+			const_reference			back() const {
+				return (*_last->_data);
+			}
 
-	template<typename T, typename Alloc>
-	bool list<T, Alloc>::empty() const {
-		return (!_size);
-	}
+			iterator				begin() {
+				return (iterator(_end->_next));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::size_type list<T, Alloc>::size() const {
-		return (_size);
-	}
+			const_iterator			begin() const {
+				return (const_iterator(_end->_next));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::size_type list<T, Alloc>::max_size() const {
-		return (std::numeric_limits<size_type>::max());
-	}
+			iterator				end() {
+				return (iterator(_end));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::reference list<T, Alloc>::front() {
-		return (*_first->_data);
-	}
+			const_iterator			end() const {
+				return (const_iterator(_end));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::const_reference list<T, Alloc>::front() const {
-		return (*_first->_data);
-	}
+			reverse_iterator		rbegin() {
+				return (reverse_iterator(_end->_prev));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::reference list<T, Alloc>::back() {
-		return (*_last->_data);
-	}
+			const_reverse_iterator	rbegin() const {
+				return (const_reverse_iterator(_end->_prev));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::const_reference list<T, Alloc>::back() const {
-		return (*_last->_data);
-	}
+			reverse_iterator		rend() {
+				return (reverse_iterator(_end));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::iterator list<T, Alloc>::begin() {
-		return (iterator(_end->_next));
-	}
+			const_reverse_iterator	rend() const {
+				return (const_reverse_iterator(_end));
+			}
 
-	template<typename T, typename Alloc>
-	typename list<T, Alloc>::iterator list<T, Alloc>::end() {
-		return (iterator(_end));
-	}
+			list& operator=(const list& x) {
+				DLLNode<T> *ptr;
+				while (_first && _first != _end) {
+					ptr = _first->_next;
+					_alloc.deallocate(_first->_data, 1);
+					delete _first;
+					_first = ptr;
+				}
+				delete _end;
+
+				_first = NULL;
+				_last = NULL;
+				_end = new DLLNode<T>;
+				_end->_next = _end->_prev = NULL;
+				_end->_data = NULL;
+				_size = 0;
+				_alloc = x._alloc;
+
+				if (x._size) {
+					DLLNode<T> *ptr = x._first;
+					while (ptr != x._end) {
+						push_back(*ptr->_data);
+						ptr = ptr->_next;
+					}
+				}
+				return (*this);
+			}
+
+	};
 
 }
 
