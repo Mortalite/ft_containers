@@ -1,5 +1,5 @@
-#ifndef ITERATOR_H
-#define ITERATOR_H
+#ifndef ITERATOR_HPP
+#define ITERATOR_HPP
 
 #include <iostream>
 
@@ -40,15 +40,14 @@ namespace ft {
 			DLLNode<T>*	getPtr() { return (_ptr); }
 
 			BidirectionalIterator&	operator=(const BidirectionalIterator& other) {
-				if (this != other)
-					_ptr = other._ptr;
+				_ptr = other._ptr;
 				return (*this);
 			}
-			bool					operator==(const BidirectionalIterator& b) const {
-				return (_ptr == b._ptr);
+			bool					operator==(const BidirectionalIterator& other) const {
+				return (_ptr == other._ptr);
 			}
-			bool					operator!=(const BidirectionalIterator& b) const {
-				return (_ptr != b._ptr);
+			bool					operator!=(const BidirectionalIterator& other) const {
+				return (_ptr != other._ptr);
 			}
 			reference				operator*() {
 				return (*_ptr->_data);
@@ -87,7 +86,7 @@ namespace ft {
 			ReverseBidirectionalIterator() {}
 			ReverseBidirectionalIterator(const BidirectionalIterator<T>& other):BidirectionalIterator<T>(other) { }
 			ReverseBidirectionalIterator(DLLNode<T> *node) { this->_ptr = node; }
-			~ReverseBidirectionalIterator() {}
+			virtual ~ReverseBidirectionalIterator() {}
 
 			ReverseBidirectionalIterator& operator++() {
 				BidirectionalIterator<T>::operator--();
@@ -120,7 +119,7 @@ namespace ft {
 			ConstBidirectionalIterator() {}
 			ConstBidirectionalIterator(const BidirectionalIterator<T>& other):BidirectionalIterator<T>(other) { }
 			ConstBidirectionalIterator(DLLNode<T> *node) { this->_ptr = node; }
-			~ConstBidirectionalIterator() {}
+			virtual ~ConstBidirectionalIterator() {}
 
 			ConstBidirectionalIterator&	operator=(const ConstBidirectionalIterator &other) {
 				this->_ptr = other._ptr;
@@ -133,13 +132,13 @@ namespace ft {
 	};
 
 	template<typename T>
-	class ConstReverseBidirectionalIterator: public BidirectionalIterator<T> {
+	class ConstReverseBidirectionalIterator: public ReverseBidirectionalIterator<T> {
 
 		public:
 			ConstReverseBidirectionalIterator() {}
-			ConstReverseBidirectionalIterator(const BidirectionalIterator<T>& other):BidirectionalIterator<T>(other) { }
+			ConstReverseBidirectionalIterator(const ReverseBidirectionalIterator<T>& other): ReverseBidirectionalIterator<T>(other) { }
 			ConstReverseBidirectionalIterator(DLLNode<T> *node) { this->_ptr = node; }
-			~ConstReverseBidirectionalIterator() {}
+			virtual ~ConstReverseBidirectionalIterator() {}
 
 			ConstReverseBidirectionalIterator&	operator=(const ConstReverseBidirectionalIterator &other) {
 				this->_ptr = other._ptr;
