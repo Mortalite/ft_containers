@@ -9,7 +9,7 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 5;
+const	int countRandNumbers = 2;
 typedef int cType;
 
 template<typename T>
@@ -383,8 +383,8 @@ void testMerge() {
 	std::cout << BLUE << "Merge Random not sorted(or sorted) values" << RESET << std::endl;
 	containerPushBack(stdContainer);
 	containerPushBack(stdContainerMerge);
-//	stdContainer.sort();
-//	stdContainerMerge.sort();
+	stdContainer.sort();
+	stdContainerMerge.sort();
 	ftContainer.assign(stdContainer.begin(), stdContainer.end());
 	ftContainerMerge.assign(stdContainerMerge.begin(), stdContainerMerge.end());
 
@@ -399,8 +399,8 @@ void testMerge() {
 	stdContainer.clear();
 	containerPushBack(stdContainer);
 	containerPushBack(stdContainerMerge);
-//	stdContainer.sort();
-//	stdContainerMerge.sort();
+	stdContainer.sort(isGreater);
+	stdContainerMerge.sort(isGreater);
 	ftContainer.assign(stdContainer.begin(), stdContainer.end());
 	ftContainerMerge.assign(stdContainerMerge.begin(), stdContainerMerge.end());
 
@@ -408,6 +408,46 @@ void testMerge() {
 	stdContainer.merge(stdContainerMerge, isGreater);
 
 	ftContainer.merge(ftContainerMerge, isGreater);
+	printCmpIterator(ftContainer, stdContainer);
+}
+
+template<typename T, typename C>
+void testSort() {
+	std::cout << RED << "Sort Function" << RESET << std::endl;
+
+	T ftContainer;
+	containerPushBack(ftContainer);
+	C stdContainer(ftContainer.begin(), ftContainer.end());
+
+	std::cout << BLUE << "Simple Sort" << RESET << std::endl;
+	std::cout << BLUE << "Before Sort" << RESET << std::endl;
+	printCmpIterator(ftContainer, stdContainer);
+
+	std::cout << BLUE << "After Sort" << RESET << std::endl;
+	ftContainer.sort();
+	stdContainer.sort();
+	printCmpIterator(ftContainer, stdContainer);
+
+	std::cout << BLUE << "Predicate Sort" << RESET << std::endl;
+	ftContainer.sort(isGreater);
+	stdContainer.sort(isGreater);
+	printCmpIterator(ftContainer, stdContainer);
+}
+
+template<typename T, typename C>
+void testReverse() {
+	std::cout << BLUE << "Reverse function" << RESET << std::endl;
+
+	T ftContainer;
+	containerPushBack(ftContainer);
+	C stdContainer(ftContainer.begin(), ftContainer.end());
+
+	std::cout << BLUE << "Before reverse" << RESET << std::endl;
+	printCmpIterator(ftContainer, stdContainer);
+
+	std::cout << BLUE << "After reverse" << RESET << std::endl;
+	ftContainer.reverse();
+	stdContainer.reverse();
 	printCmpIterator(ftContainer, stdContainer);
 }
 
@@ -426,6 +466,8 @@ int main() {
 	testRemove<ft::list<cType>, std::list<cType> >();
 	testUnique<ft::list<cType>, std::list<cType> >();
 	testMerge<ft::list<cType>, std::list<cType> >();
+	testSort<ft::list<cType>, std::list<cType> >();
+	testReverse<ft::list<cType>, std::list<cType> >();
 
 	return (0);
 }

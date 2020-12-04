@@ -334,12 +334,11 @@ namespace ft {
 
 			void					merge(list& x) {
 				if (this != &x && x.size()) {
-					iterator first = begin(), end = this->end(), xFirst(x.begin()), xEnd(x.end()), tmp;
+					iterator first = begin(), end = this->end();
+					iterator xFirst = x.begin(), xEnd = x.end();
 					while (first != end && xFirst != xEnd) {
-						if (*first > *xFirst) {
-							tmp = xFirst++;
-							splice(first, x, tmp);
-						}
+						if (*first > *xFirst)
+							splice(first, x, xFirst++);
 						else
 							first++;
 					}
@@ -350,20 +349,54 @@ namespace ft {
 			template<class Compare>
 			void					merge(list& x, Compare comp) {
 				if (this != &x && x.size()) {
-					iterator first(begin()), end(this->end()), xFirst(x.begin()), xEnd(x.end());
-					while (first != end) {
-						if (xFirst != xEnd && comp(*xFirst, *first)) {
-							insert(first, *xFirst);
-							xFirst = x.erase(xFirst);
-						}
+					iterator first = begin(), end = this->end();
+					iterator xFirst = x.begin(), xEnd = x.end();
+					while (first != end && xFirst != xEnd) {
+						if (comp(*xFirst, *first))
+							splice(first, x, xFirst++);
 						else
 							first++;
 					}
-					insert(this->end(), x.begin(), x.end());
-					x.erase(x.begin(), x.end());
+					splice(end, x, x.begin(), x.end());
 				}
 			}
 
+			void 					sort() {
+				iterator first = begin(), end = this->end(), tmp;
+				while (first != end) {
+					tmp = first;
+					while (++tmp != end)
+						if (*first > *tmp)
+							ft::swap(first.getPtr()->_data, tmp.getPtr()->_data);
+					first++;
+				}
+			}
+
+			template<class Compare>
+			void 					sort(Compare comp) {
+				iterator first = begin(), end = this->end(), tmp;
+				while (first != end) {
+					tmp = first;
+					while (++tmp != end)
+						if (comp(*tmp, *first))
+							ft::swap(first.getPtr()->_data, tmp.getPtr()->_data);
+					first++;
+				}
+			}
+
+			void					reverse() {
+				iterator first = this->begin(), end = this->end();
+				for (size_type i = 0; i < _size / 2; i++) {
+					ft::swap(*first++, *--end);
+				}
+//				iterator first = begin(), end = this->end(), tmp;
+//				while (first != end) {
+//					tmp = first++;
+//					ft::swap(tmp.getPtr()->_next, tmp.getPtr()->_prev);
+//				}
+//				ft::swap(_end->_prev, _end->_next);
+//				ft::swap(_first, _last);
+			}
 
 			iterator				begin() {
 					return (iterator(_end->_next));
