@@ -4,6 +4,7 @@
 # include <iostream>
 # include <limits>
 # include "iterator.hpp"
+# include "utils.hpp"
 
 namespace ft {
 
@@ -30,6 +31,37 @@ namespace ft {
 			DLLNode<T>*		_end;
 			size_t			_size;
 			allocator_type	_alloc;
+
+			void 	erase_swap(list& x, iterator i) {
+				DLLNode<T> *ptr = i.getPtr();
+
+				ptr->_prev->_next = ptr->_next;
+				ptr->_next->_prev = ptr->_prev;
+				if (ptr == x._first) {
+					x._end->_next = x._first->_next;
+					x._first = x._first->_next;
+					x._first->_prev = x._end;
+				}
+				else if (ptr == x._last) {
+					x._last = x._last->_prev;
+					x._last->_next = x._end;
+				}
+				x._size--;
+			}
+
+			void 	insert_swap(iterator position, iterator i) {
+				DLLNode<T> *pos = position.getPtr(), *ptr = i.getPtr();
+
+				ptr->_prev = pos->_prev;
+				ptr->_next = pos;
+				pos->_prev->_next = ptr;
+				pos->_prev = ptr;
+				if (pos == _first || _first == NULL)
+					_end->_next = _first = ptr;
+				if (pos == _end || _last == NULL)
+					_end->_prev = _last = ptr;
+				_size++;
+			}
 
 		public:
 
@@ -224,21 +256,10 @@ namespace ft {
 			}
 
 			void 					swap(list& x) {
-				DLLNode<T> *ptr;
-				size_type size;
-
-				size = x._size;
-				x._size = _size;
-				_size = size;
-				ptr = x._first;
-				x._first = _first;
-				_first = ptr;
-				ptr = x._last;
-				x._last = _last;
-				_last = ptr;
-				ptr = x._end;
-				x._end = _end;
-				_end = ptr;
+				ft::swap(_size, x._size);
+				ft::swap(_first, x._first);
+				ft::swap(_last, x._last);
+				ft::swap(_end, x._end);
 			}
 
 			void 					resize(size_type n, value_type val = value_type()) {
@@ -254,22 +275,23 @@ namespace ft {
 			}
 
 			void 					splice(iterator position, list& x) {
-				insert(position, x.begin(), x.end());
-				x.clear();
+				iterator first(x.begin()), end(x.end());
+				while (first != end)
+					splice(position, x, first++);
 			}
 
 			void 					splice(iterator position, list& x, iterator i) {
-				insert(position, *i);
-				x.erase(i);
+				erase_swap(x, i);
+				insert_swap(position, i);
 			}
 
 			void 					splice(iterator position, list& x, iterator first, iterator last) {
-				insert(position, first, last);
-				x.erase(first, last);
+				while (first != last)
+					splice(position, x, first++);
 			}
 
 			void 					remove(const value_type& val) {
-				iterator first(begin()), del(begin());
+				iterator first(begin()), del;
 				while (first != end()) {
 					del = first++;
 					if (*del == val)
@@ -279,13 +301,69 @@ namespace ft {
 
 			template<class Predicate>
 			void					remove_if(Predicate pred) {
-				iterator first(begin()), del(begin());
+				iterator first(begin()), del;
 				while (first != end()) {
 					del = first++;
 					if (pred(*del))
 						erase(del);
 				}
 			}
+
+			void 					unique() {
+				iterator first(begin()), del;
+				while (first != end()) {
+					del = first;
+					if (++del != end() && *first == *del)
+						erase(del);
+					else
+						first++;
+				}
+			}
+
+			template<class BinaryPredicate>
+			void					unique(BinaryPredicate binary_pred) {
+				iterator first(begin()), del;
+				while (first != end()) {
+					del = first;
+					if (++del != end() && binary_pred(*first, *del))
+						erase(del);
+					else
+						first++;
+				}
+			}
+
+			void					merge(list& x) {
+				if (this != &x && x.size()) {
+					iterator first = begin(), end = this->end(), xFirst(x.begin()), xEnd(x.end()), tmp;
+					while (first != end && xFirst != xEnd) {
+						if (*first > *xFirst) {
+							tmp = xFirst++;
+							splice(first, x, tmp);
+						}
+						else
+							first++;
+					}
+					splice(end, x, x.begin(), x.end());
+				}
+			}
+
+			template<class Compare>
+			void					merge(list& x, Compare comp) {
+				if (this != &x && x.size()) {
+					iterator first(begin()), end(this->end()), xFirst(x.begin()), xEnd(x.end());
+					while (first != end) {
+						if (xFirst != xEnd && comp(*xFirst, *first)) {
+							insert(first, *xFirst);
+							xFirst = x.erase(xFirst);
+						}
+						else
+							first++;
+					}
+					insert(this->end(), x.begin(), x.end());
+					x.erase(x.begin(), x.end());
+				}
+			}
+
 
 			iterator				begin() {
 					return (iterator(_end->_next));

@@ -90,13 +90,11 @@ typename T::value_type getRandomValue() {
 }
 
 bool isPositive(const int& val) {
-		return (val > 0);
+	return (val > 0);
 }
 
-template<typename T, typename C>
-T getPredicate(const C& val) {
-	if (typeid(typename T::value_type) == typeid(int))
-		return (isPositive(val));
+bool isGreater(const int& val1, const int& val2) {
+	return (val1 > val2);
 }
 
 template<typename T, typename C>
@@ -346,6 +344,73 @@ void testRemove() {
 
 }
 
+template<typename T, typename C>
+void testUnique() {
+	std::cout << RED << "Unique Function" << RESET << std::endl;
+
+	T ftContainer;
+	C stdContainer;
+
+	std::cout << BLUE << "Random Unique" << RESET << std::endl;
+	for (size_t i = 0; i < countRandNumbers*5; i++)
+		ftContainer.push_back(getRandomValue<T>());
+	stdContainer.assign(ftContainer.begin(), ftContainer.end());
+	printCmpIterator(ftContainer, stdContainer);
+	ftContainer.unique();
+	stdContainer.unique();
+	printCmpIterator(ftContainer, stdContainer);
+
+	std::cout << BLUE << "Random Binary Unique" << RESET << std::endl;
+	ftContainer.clear();
+	for (size_t i = 0; i < countRandNumbers; i++)
+		ftContainer.push_back(getRandomValue<T>());
+	stdContainer.assign(ftContainer.begin(), ftContainer.end());
+	printCmpIterator(ftContainer, stdContainer);
+	ftContainer.unique(isGreater);
+	stdContainer.unique(isGreater);
+	printCmpIterator(ftContainer, stdContainer);
+}
+
+template<typename T, typename C>
+void testMerge() {
+	std::cout << RED << "Merge Function" << RESET << std::endl;
+
+	T ftContainer;
+	T ftContainerMerge;
+	C stdContainer;
+	C stdContainerMerge;
+
+	std::cout << BLUE << "Merge Random not sorted(or sorted) values" << RESET << std::endl;
+	containerPushBack(stdContainer);
+	containerPushBack(stdContainerMerge);
+//	stdContainer.sort();
+//	stdContainerMerge.sort();
+	ftContainer.assign(stdContainer.begin(), stdContainer.end());
+	ftContainerMerge.assign(stdContainerMerge.begin(), stdContainerMerge.end());
+
+	printCmpIterator(stdContainer, stdContainerMerge);
+	stdContainer.merge(stdContainerMerge);
+
+	ftContainer.merge(ftContainerMerge);
+	printCmpIterator(ftContainer, stdContainer);
+
+	std::cout << BLUE << "Merge using predicate" << RESET << std::endl;
+	ftContainer.clear();
+	stdContainer.clear();
+	containerPushBack(stdContainer);
+	containerPushBack(stdContainerMerge);
+//	stdContainer.sort();
+//	stdContainerMerge.sort();
+	ftContainer.assign(stdContainer.begin(), stdContainer.end());
+	ftContainerMerge.assign(stdContainerMerge.begin(), stdContainerMerge.end());
+
+	printCmpIterator(stdContainer, stdContainerMerge);
+	stdContainer.merge(stdContainerMerge, isGreater);
+
+	ftContainer.merge(ftContainerMerge, isGreater);
+	printCmpIterator(ftContainer, stdContainer);
+}
+
 int main() {
 	srand(time(NULL));
 
@@ -359,6 +424,8 @@ int main() {
 	testResize<ft::list<cType>, std::list<cType> >();
 	testSplice<ft::list<cType>, std::list<cType> >();
 	testRemove<ft::list<cType>, std::list<cType> >();
+	testUnique<ft::list<cType>, std::list<cType> >();
+	testMerge<ft::list<cType>, std::list<cType> >();
 
 	return (0);
 }
