@@ -275,7 +275,7 @@ namespace ft {
 			}
 
 			void 					splice(iterator position, list& x) {
-				iterator first(x.begin()), end(x.end());
+				iterator first = x.begin(), end = x.end();
 				while (first != end)
 					splice(position, x, first++);
 			}
@@ -291,7 +291,7 @@ namespace ft {
 			}
 
 			void 					remove(const value_type& val) {
-				iterator first(begin()), del;
+				iterator first = this->begin(), del;
 				while (first != end()) {
 					del = first++;
 					if (*del == val)
@@ -301,7 +301,7 @@ namespace ft {
 
 			template<class Predicate>
 			void					remove_if(Predicate pred) {
-				iterator first(begin()), del;
+				iterator first = this->begin(), del;
 				while (first != end()) {
 					del = first++;
 					if (pred(*del))
@@ -310,7 +310,7 @@ namespace ft {
 			}
 
 			void 					unique() {
-				iterator first(begin()), del;
+				iterator first = this->begin(), del;
 				while (first != end()) {
 					del = first;
 					if (++del != end() && *first == *del)
@@ -322,7 +322,7 @@ namespace ft {
 
 			template<class BinaryPredicate>
 			void					unique(BinaryPredicate binary_pred) {
-				iterator first(begin()), del;
+				iterator first = this->begin(), del;
 				while (first != end()) {
 					del = first;
 					if (++del != end() && binary_pred(*first, *del))
@@ -334,7 +334,7 @@ namespace ft {
 
 			void					merge(list& x) {
 				if (this != &x && x.size()) {
-					iterator first = begin(), end = this->end();
+					iterator first = this->begin(), end = this->end();
 					iterator xFirst = x.begin(), xEnd = x.end();
 					while (first != end && xFirst != xEnd) {
 						if (*first > *xFirst)
@@ -349,7 +349,7 @@ namespace ft {
 			template<class Compare>
 			void					merge(list& x, Compare comp) {
 				if (this != &x && x.size()) {
-					iterator first = begin(), end = this->end();
+					iterator first = this->begin(), end = this->end();
 					iterator xFirst = x.begin(), xEnd = x.end();
 					while (first != end && xFirst != xEnd) {
 						if (comp(*xFirst, *first))
@@ -362,40 +362,32 @@ namespace ft {
 			}
 
 			void 					sort() {
-				iterator first = begin(), end = this->end(), tmp;
+				iterator first = this->begin(), end = this->end(), tmp;
 				while (first != end) {
 					tmp = first;
 					while (++tmp != end)
 						if (*first > *tmp)
-							ft::swap(first.getPtr()->_data, tmp.getPtr()->_data);
+							ft::swap(*first, *tmp);
 					first++;
 				}
 			}
 
 			template<class Compare>
 			void 					sort(Compare comp) {
-				iterator first = begin(), end = this->end(), tmp;
+				iterator first = this->begin(), end = this->end(), tmp;
 				while (first != end) {
 					tmp = first;
 					while (++tmp != end)
 						if (comp(*tmp, *first))
-							ft::swap(first.getPtr()->_data, tmp.getPtr()->_data);
+							ft::swap(*first, *tmp);
 					first++;
 				}
 			}
 
 			void					reverse() {
 				iterator first = this->begin(), end = this->end();
-				for (size_type i = 0; i < _size / 2; i++) {
+				for (size_type i = 0; i < _size / 2; i++)
 					ft::swap(*first++, *--end);
-				}
-//				iterator first = begin(), end = this->end(), tmp;
-//				while (first != end) {
-//					tmp = first++;
-//					ft::swap(tmp.getPtr()->_next, tmp.getPtr()->_prev);
-//				}
-//				ft::swap(_end->_prev, _end->_next);
-//				ft::swap(_first, _last);
 			}
 
 			iterator				begin() {
@@ -450,6 +442,32 @@ namespace ft {
 			}
 
 	};
+
+	template <class T, class Alloc>
+	bool operator==(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return (false);
+		typename list<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
+		for (typename list<T, Alloc>::size_type i = 0; i < lhs.size(); i++)
+			if (*firstLhs++ != *firstRhs++)
+				return (false);
+		return (true);
+	}
+
+	template <class T, class Alloc>
+	bool operator!=(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator<(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+		typename list<T,Alloc>::size_type _cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
+		typename list<T,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
+		for (typename list<T,Alloc>::size_type i = 0; i < _cmpSize; i++)
+			if (*firstLhs++ >= *firstRhs++)
+				return (false);
+		return (lhs.size() < rhs.size());
+	}
 
 }
 

@@ -9,7 +9,7 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 2;
+const	int countRandNumbers = 3;
 typedef int cType;
 
 template<typename T>
@@ -451,6 +451,28 @@ void testReverse() {
 	printCmpIterator(ftContainer, stdContainer);
 }
 
+template<typename T, typename C>
+void testOperators() {
+	std::cout << RED << "Operators function" << RESET << std::endl;
+
+	T ftContainer;
+	containerPushBack(ftContainer);
+	T ftContainerOperator(ftContainer);
+	C stdContainer(ftContainer.begin(), ftContainer.end());
+
+	printCmpIterator(ftContainer, ftContainerOperator);
+	std::cout << BLUE << "Operator== -> " << (ftContainer == ftContainerOperator) << RESET << std::endl;
+	std::cout << BLUE << "Operator< -> " << (ftContainer < ftContainerOperator) << RESET << std::endl;
+
+	ftContainerOperator.clear();
+	containerPushBack(ftContainerOperator);
+	printCmpIterator(ftContainer, ftContainerOperator);
+	std::cout << BLUE << "Operator== -> " << (ftContainer == ftContainerOperator) << RESET << std::endl;
+	std::cout << BLUE << "Operator< -> " << (ftContainer < ftContainerOperator) << RESET << std::endl;
+
+
+}
+
 int main() {
 	srand(time(NULL));
 
@@ -468,6 +490,7 @@ int main() {
 	testMerge<ft::list<cType>, std::list<cType> >();
 	testSort<ft::list<cType>, std::list<cType> >();
 	testReverse<ft::list<cType>, std::list<cType> >();
+	testOperators<ft::list<cType>, std::list<cType> >();
 
 	return (0);
 }
