@@ -1,6 +1,9 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include "iteratorVector.hpp"
+#include "iteratorList.hpp"
+
 namespace ft {
 
 	template <typename T> void swap(T &a, T &b) {
@@ -9,12 +12,9 @@ namespace ft {
 		b = c;
 	}
 
-	template <typename T> T& min(T &a, T &b) {
-		return (b <= a ? b : a);
-	}
-
-	template <typename T> T& max(T &a, T &b) {
-		return (b >= a ? b : a);
+	template<typename T>
+	typename T::difference_type distance(T first, T last) {
+		return (last.getPtr() - first.getPtr());
 	}
 
 }

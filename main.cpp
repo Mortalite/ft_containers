@@ -1,9 +1,11 @@
 #include <iostream>
 #include <typeinfo>
 #include <list>
+#include <vector>
 #include <cstdlib>
 #include "list.hpp"
-#include "iterator.hpp"
+#include "vector.hpp"
+#include "iteratorList.hpp"
 
 #define RED		"\033[31m"
 #define BLUE    "\033[34m"
@@ -116,7 +118,6 @@ void testConstructors() {
 	T ftListCopy(ftListRange);
 	C stdListCopy(stdListRange);
 	printCmpIterator(ftListCopy, stdListCopy);
-
 }
 
 template<typename T, typename C>
@@ -476,6 +477,7 @@ void testOperators() {
 int main() {
 	srand(time(NULL));
 
+	std::cout << RED << "||||||||||LIST||||||||||" << RESET << std::endl;
 	testConstructors<ft::list<cType>, std::list<cType> >();
 	testAssign<ft::list<cType>, std::list<cType> >();
 	testPushFront<ft::list<cType>, std::list<cType> >();
@@ -491,6 +493,9 @@ int main() {
 	testSort<ft::list<cType>, std::list<cType> >();
 	testReverse<ft::list<cType>, std::list<cType> >();
 	testOperators<ft::list<cType>, std::list<cType> >();
+
+	std::cout << RED << "||||||||||VECTOR||||||||||" << RESET << std::endl;
+	testConstructors<ft::vector<cType>, std::vector<cType> >();
 
 	return (0);
 }
