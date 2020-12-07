@@ -12,12 +12,6 @@ namespace ft {
 		DLLNode<T>*	_prev;
 	};
 
-	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag: public input_iterator_tag{};
-	struct bidirectional_iterator_tag: public forward_iterator_tag {};
-	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
-
 	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class IteratorList {
 
@@ -33,31 +27,19 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			IteratorList() {}
-			IteratorList(const IteratorList& other) { _ptr = other._ptr; }
-			IteratorList(DLLNode<T> *node) { _ptr = node; }
+			IteratorList(const IteratorList& other):_ptr(other._ptr) {}
+			IteratorList(DLLNode<T> *node):_ptr(node) {}
 			~IteratorList() {}
 
-			DLLNode<T>*	getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() { return (_ptr); }
+			bool					operator==(const IteratorList& other) const {	return (_ptr == other._ptr);	}
+			bool					operator!=(const IteratorList& other) const {	return (_ptr != other._ptr);	}
+			reference				operator*() {	return (*_ptr->_data);	}
+			pointer 				operator->() const {	return (_ptr->_data);	}
 
 			IteratorList&	operator=(const IteratorList& other) {
 				_ptr = other._ptr;
 				return (*this);
-			}
-
-			bool					operator==(const IteratorList& other) const {
-				return (_ptr == other._ptr);
-			}
-
-			bool					operator!=(const IteratorList& other) const {
-				return (_ptr != other._ptr);
-			}
-
-			reference				operator*() {
-				return (*_ptr->_data);
-			}
-
-			pointer 				operator->() const {
-				return (_ptr->_data);
 			}
 
 			IteratorList&	operator++() {
@@ -86,7 +68,7 @@ namespace ft {
 
 	};
 
-	template<typename T, typename Category = bidirectional_iterator_tag>
+	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class ReverseIteratorList {
 
 		private:
@@ -101,31 +83,19 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ReverseIteratorList() {}
-			ReverseIteratorList(const IteratorList<T>& other): IteratorList<T>(other) { }
-			ReverseIteratorList(DLLNode<T> *node) { this->_ptr = node; }
+			ReverseIteratorList(const IteratorList<T>& other):IteratorList<T>(other) {}
+			ReverseIteratorList(DLLNode<T> *node):_ptr(node) {}
 			~ReverseIteratorList() {}
 
-			DLLNode<T>*	getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() { return (_ptr); }
+			bool					operator==(const ReverseIteratorList& other) const {	return (_ptr == other._ptr);	}
+			bool					operator!=(const ReverseIteratorList& other) const {	return (_ptr != other._ptr);	}
+			reference				operator*() {	return (*_ptr->_data);	}
+			pointer 				operator->() const {	return (_ptr->_data);	}
 
 			ReverseIteratorList&	operator=(const ReverseIteratorList& other) {
 				_ptr = other._ptr;
 				return (*this);
-			}
-
-			bool					operator==(const ReverseIteratorList& other) const {
-				return (_ptr == other._ptr);
-			}
-
-			bool					operator!=(const ReverseIteratorList& other) const {
-				return (_ptr != other._ptr);
-			}
-
-			reference				operator*() {
-				return (*_ptr->_data);
-			}
-
-			pointer 				operator->() const {
-				return (_ptr->_data);
 			}
 
 			ReverseIteratorList& operator++() {
@@ -154,7 +124,7 @@ namespace ft {
 
 	};
 
-	template<typename T, typename Category = bidirectional_iterator_tag>
+	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class ConstIteratorList {
 
 		private:
@@ -169,29 +139,19 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstIteratorList() {}
-			ConstIteratorList(const IteratorList<T>& other): IteratorList<T>(other) { }
-			ConstIteratorList(DLLNode<T> *node) { this->_ptr = node; }
+			ConstIteratorList(const IteratorList<T>& other):IteratorList<T>(other) {}
+			ConstIteratorList(DLLNode<T> *node):_ptr(node) {}
 			~ConstIteratorList() {}
+
+			DLLNode<T>*				getPtr() { return (_ptr); }
+			bool					operator==(const ConstIteratorList& other) const {	return (_ptr == other._ptr);	}
+			bool					operator!=(const ConstIteratorList& other) const {	return (_ptr != other._ptr);	}
+			const reference			operator*() {	return (*_ptr->_data);	}
+			const pointer 			operator->() const {	return (_ptr->_data);	}
 
 			ConstIteratorList&	operator=(const ConstIteratorList& other) {
 				_ptr = other._ptr;
 				return (*this);
-			}
-
-			bool					operator==(const ConstIteratorList& other) const {
-				return (_ptr == other._ptr);
-			}
-
-			bool					operator!=(const ConstIteratorList& other) const {
-				return (_ptr != other._ptr);
-			}
-
-			const reference				operator*() {
-				return (*_ptr->_data);
-			}
-
-			const pointer 			operator->() const {
-				return (_ptr->_data);
 			}
 
 			ConstIteratorList&	operator++() {
@@ -220,7 +180,7 @@ namespace ft {
 
 	};
 
-	template<typename T, typename Category = bidirectional_iterator_tag>
+	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class ConstReverseIteratorList {
 
 		private:
@@ -235,30 +195,21 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstReverseIteratorList() {}
-			ConstReverseIteratorList(const ReverseIteratorList<T>& other): ReverseIteratorList<T>(other) { }
-			ConstReverseIteratorList(DLLNode<T> *node) { this->_ptr = node; }
+			ConstReverseIteratorList(const ReverseIteratorList<T>& other):ReverseIteratorList<T>(other) {}
+			ConstReverseIteratorList(DLLNode<T> *node):_ptr(node) {}
 			~ConstReverseIteratorList() {}
+
+			DLLNode<T>*				getPtr() { return (_ptr); }
+			bool					operator==(const ConstReverseIteratorList& other) const {	return (_ptr == other._ptr);	}
+			bool					operator!=(const ConstReverseIteratorList& other) const {	return (_ptr != other._ptr);	}
+			const reference			operator*() {	return (*_ptr->_data);	}
+			const pointer 			operator->() const {	return (_ptr->_data);	}
 
 			ConstReverseIteratorList&	operator=(const ConstReverseIteratorList& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
 
-			bool					operator==(const ConstReverseIteratorList& other) const {
-				return (_ptr == other._ptr);
-			}
-
-			bool					operator!=(const ConstReverseIteratorList& other) const {
-				return (_ptr != other._ptr);
-			}
-
-			const reference			operator*() {
-				return (*_ptr->_data);
-			}
-
-			const pointer 			operator->() const {
-				return (_ptr->_data);
-			}
 
 			ConstReverseIteratorList& operator++() {
 				if (_ptr && _ptr->_prev)

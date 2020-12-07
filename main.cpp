@@ -32,7 +32,7 @@ void printCmpIterator(T& ftContainer, C& stdContainer) {
 	typename T::iterator ft_it = ftContainer.begin();
 	typename C::iterator std_it = stdContainer.begin();
 
-//	std::cout << BLUE << "printCmpIterator" << RESET << std::endl;
+	std::cout << BLUE << "printCmpIterator" << RESET << std::endl;
 	for ( ; ft_it != ftContainer.end(); ft_it++, std_it++, i++) {
 		std::cout << "ftContainer[" << i << "] = " << *ft_it;
 		std::cout << "\t\t";
@@ -51,10 +51,12 @@ void printRevIterator(T& container) {
 template<typename T, typename C>
 void printCmpRevIterator(T& ftContainer, C& stdContainer) {
 	size_t i = 0;
+
 	if (ftContainer.size() != stdContainer.size()) {
 		std::cerr << "Container diff size" << std::endl;
 		return;
 	}
+
 	typename T::reverse_iterator ft_it = ftContainer.rbegin();
 	typename C::reverse_iterator std_it = stdContainer.rbegin();
 
@@ -103,33 +105,45 @@ template<typename T, typename C>
 void testConstructors() {
 	std::cout << RED << "Constructors" << RESET << std::endl;
 
-	T ftListFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
-	C stdListFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
+	T ftContainerFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
+	C stdContainerFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
 
 	std::cout << BLUE << "Fill Constructor (5, rand<T>())" << RESET << std::endl;
-	printCmpIterator(ftListFill, stdListFill);
+	printCmpIterator(ftContainerFill, stdContainerFill);
 
 	std::cout << BLUE << "Range Constructor" << RESET << std::endl;
-	T ftListRange(ftListFill.begin(), ftListFill.end());
-	C stdListRange(stdListFill.begin(), stdListFill.end());
-	printCmpIterator(ftListRange, stdListRange);
+	T ftContainerRange(ftContainerFill.begin(), ftContainerFill.end());
+	C stdContainerRange(stdContainerFill.begin(), stdContainerFill.end());
+	printCmpIterator(ftContainerRange, stdContainerRange);
 
 	std::cout << BLUE << "Copy Constructor" << RESET << std::endl;
-	T ftListCopy(ftListRange);
-	C stdListCopy(stdListRange);
-	printCmpIterator(ftListCopy, stdListCopy);
+	T ftContainerCopy(ftContainerRange);
+	C stdContainerCopy(stdContainerRange);
+	printCmpIterator(ftContainerCopy, stdContainerCopy);
+}
+
+template<typename T, typename C>
+void testIterators() {
+	std::cout << RED << "Iterators" << RESET << std::endl;
+
+	T ftContainerFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
+	C stdContainerFill(static_cast<size_t>(countRandNumbers), getRandomValue<T>());
+
+	std::cout << BLUE << "Fill Constructor (5, rand<T>())" << RESET << std::endl;
+	printCmpIterator(ftContainerFill, stdContainerFill);
+	printCmpRevIterator(ftContainerFill, stdContainerFill);
 }
 
 template<typename T, typename C>
 void testAssign() {
 	std::cout << RED << "Assign function" << RESET << std::endl;
 
-	T ftList;
-	C stdList;
+	T ftContainer;
+	C stdContainer;
 
-	containerPushBack(stdList);
-	ftList.assign(stdList.begin(), stdList.end());
-	printCmpIterator(ftList, stdList);
+	containerPushBack(stdContainer);
+	ftContainer.assign(stdContainer.begin(), stdContainer.end());
+	printCmpIterator(ftContainer, stdContainer);
 }
 
 template<typename T, typename C>
@@ -172,48 +186,48 @@ template<typename T, typename C>
 void testInsert() {
 	std::cout << RED << "Insert function" << RESET << std::endl;
 
-	T ftList;
+	T ftContainer;
 	typename T::iterator ftIt;
 
-	C stdList(ftList.begin(), ftList.end());
+	C stdContainer(ftContainer.begin(), ftContainer.end());
 	typename C::iterator stdIt;
 
 	typename T::value_type randomValue = getRandomValue<T>();
 	typename T::size_type randomTimes = (abs(getRandomValue<T>()))%4 + 1;
 	std::cout << BLUE << "Insert " << randomValue << " in begin()" << RESET << std::endl;
-	ftIt = ftList.insert(ftList.begin(), randomValue);
-	stdIt = stdList.insert(stdList.begin(), randomValue);
-	printCmpIterator(ftList, stdList);
+	ftIt = ftContainer.insert(ftContainer.begin(), randomValue);
+	stdIt = stdContainer.insert(stdContainer.begin(), randomValue);
+	printCmpIterator(ftContainer, stdContainer);
 	std::cout << BLUE << "Compare returning value" << RESET << std::endl;
 	std::cout << "ftIt = " << *ftIt << "\t\tstdIt = " << *stdIt << std::endl;
 
 	randomValue = getRandomValue<T>();
 	std::cout << BLUE << "Insert " << randomValue << " in end()" << RESET << std::endl;
-	ftIt = ftList.insert(ftList.end(), randomValue);
-	stdIt = stdList.insert(stdList.end(), randomValue);
-	printCmpIterator(ftList, stdList);
+	ftIt = ftContainer.insert(ftContainer.end(), randomValue);
+	stdIt = stdContainer.insert(stdContainer.end(), randomValue);
+	printCmpIterator(ftContainer, stdContainer);
 	std::cout << BLUE << "Compare returning value" << RESET << std::endl;
 	std::cout << "ftIt = " << *ftIt << "\t\tstdIt = " << *stdIt << std::endl;
 
 	randomValue = getRandomValue<T>();
 	std::cout << BLUE << "Insert " << randomValue << " in end()" << RESET << std::endl;
-	ftIt = ftList.insert(ftList.end(), randomValue);
-	stdIt = stdList.insert(stdList.end(), randomValue);
-	printCmpIterator(ftList, stdList);
+	ftIt = ftContainer.insert(ftContainer.end(), randomValue);
+	stdIt = stdContainer.insert(stdContainer.end(), randomValue);
+	printCmpIterator(ftContainer, stdContainer);
 	std::cout << BLUE << "Compare returning value" << RESET << std::endl;
 	std::cout << "ftIt = " << *ftIt << "\t\tstdIt = " << *stdIt << std::endl;
 
 	randomValue = getRandomValue<T>();
 	std::cout << BLUE << "Insert " << randomValue << " in begin() " << randomTimes << " times" << RESET << std::endl;
-	ftList.insert(ftList.begin(), randomTimes, randomValue);
-	stdList.insert(stdList.begin(), randomTimes, randomValue);
-	printCmpIterator(ftList, stdList);
+	ftContainer.insert(ftContainer.begin(), randomTimes, randomValue);
+	stdContainer.insert(stdContainer.begin(), randomTimes, randomValue);
+	printCmpIterator(ftContainer, stdContainer);
 
 	std::cout << BLUE << "Insert previous array in begin()" << RESET << std::endl;
-	T ftContainerCopy(ftList);
-	C stdContainerCopy(stdList);
-	ftContainerCopy.insert(ftContainerCopy.begin(), ftList.begin(), ftList.end());
-	stdContainerCopy.insert(stdContainerCopy.begin(), stdList.begin(), stdList.end());
+	T ftContainerCopy(ftContainer);
+	C stdContainerCopy(stdContainer);
+	ftContainerCopy.insert(ftContainerCopy.begin(), ftContainer.begin(), ftContainer.end());
+	stdContainerCopy.insert(stdContainerCopy.begin(), stdContainer.begin(), stdContainer.end());
 	printCmpIterator(ftContainerCopy, stdContainerCopy);
 }
 
@@ -491,6 +505,7 @@ int main() {
 
 	std::cout << RED << "||||||||||LIST||||||||||" << RESET << std::endl;
 	testConstructors<ft::list<cType>, std::list<cType> >();
+	testIterators<ft::list<cType>, std::list<cType> >();
 	testAssign<ft::list<cType>, std::list<cType> >();
 	testPushFront<ft::list<cType>, std::list<cType> >();
 	testPopFront<ft::list<cType>, std::list<cType> >();
@@ -508,6 +523,7 @@ int main() {
 
 	std::cout << RED << "||||||||||VECTOR||||||||||" << RESET << std::endl;
 	testConstructors<ft::vector<cType>, std::vector<cType> >();
+	testIterators<ft::vector<cType>, std::vector<cType> >();
 	testInsert<ft::vector<cType>, std::vector<cType> >();
 	testErase<ft::vector<cType>, std::vector<cType> >();
 

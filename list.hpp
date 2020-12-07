@@ -465,9 +465,9 @@ namespace ft {
 
 	template <class T, class Alloc>
 	bool operator<(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		typename list<T,Alloc>::size_type _cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
+		typename list<T,Alloc>::size_type cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
 		typename list<T,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
-		for (typename list<T,Alloc>::size_type i = 0; i < _cmpSize; i++)
+		for (typename list<T,Alloc>::size_type i = 0; i < cmpSize; i++)
 			if (*firstLhs++ >= *firstRhs++)
 				return (false);
 		return (lhs.size() < rhs.size());

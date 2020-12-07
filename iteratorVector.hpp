@@ -20,17 +20,17 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			IteratorVector() {}
-			IteratorVector(const IteratorVector& other) { _ptr = other._ptr; }
-			IteratorVector(pointer ptr) { _ptr = ptr; }
+			IteratorVector(const IteratorVector& other):_ptr(other._ptr) {}
+			IteratorVector(pointer ptr):_ptr(ptr) {}
 			~IteratorVector() {}
 
-			T* 				getPtr() { return (_ptr); }
+			pointer			getPtr() const { return (_ptr); }
+			pointer 		operator->() const {	return (_ptr);		}
+			reference		operator*() {	return (*_ptr);		}
+			reference		operator[](int n) const {	return (*(this + n));	}
+			difference_type operator-(const IteratorVector& other) const {		return (_ptr - other._ptr);		}
 			bool 			operator==(const IteratorVector& other) {	return (_ptr == other._ptr);	}
 			bool 			operator!=(const IteratorVector& other) {	return (_ptr != other._ptr);	}
-			reference		operator*() {	return (*_ptr);		}
-			pointer 		operator->() const {	return (_ptr);		}
-			difference_type operator-(const IteratorVector& other) const {		return (_ptr - other._ptr);		}
-			T&				operator[](int n) const {	return (*(this + n));	}
 			bool 			operator==(const IteratorVector& other) const {		return (_ptr == other._ptr);		}
 			bool 			operator!=(const IteratorVector& other) const {		return (_ptr != other._ptr);		}
 			bool 			operator<(const IteratorVector& other) const {		return (_ptr < other._ptr);			}
@@ -87,6 +87,172 @@ namespace ft {
 			}
 
 	};
+
+	template<typename T, typename Category = std::random_access_iterator_tag>
+	class ReverseIteratorVector {
+
+		private:
+			T	*_ptr;
+
+		public:
+
+			typedef std::ptrdiff_t	difference_type;
+			typedef T				value_type;
+			typedef T*				pointer;
+			typedef T&				reference;
+			typedef Category		iterator_category;
+
+			ReverseIteratorVector() {}
+			ReverseIteratorVector(const ReverseIteratorVector& other):_ptr(other._ptr) {}
+			ReverseIteratorVector(pointer ptr):_ptr(ptr) {}
+			~ReverseIteratorVector() {}
+
+			pointer			getPtr() const { return (_ptr); }
+			pointer 		operator->() const {	return (_ptr);		}
+			reference		operator*() const {	return (*(_ptr - 1));	}
+			reference		operator[](int n) const {	return (*(this + n));	}
+			difference_type operator-(const ReverseIteratorVector& other) const {		return (_ptr - other._ptr);		}
+			bool 			operator==(const ReverseIteratorVector& other) {	return (_ptr == other._ptr);	}
+			bool 			operator!=(const ReverseIteratorVector& other) {	return (_ptr != other._ptr);	}
+			bool 			operator==(const ReverseIteratorVector& other) const {		return (_ptr == other._ptr);		}
+			bool 			operator!=(const ReverseIteratorVector& other) const {		return (_ptr != other._ptr);		}
+			bool 			operator<(const ReverseIteratorVector& other) const {		return (_ptr < other._ptr);			}
+			bool 			operator>(const ReverseIteratorVector& other) const {		return (_ptr > other._ptr);			}
+			bool 			operator<=(const ReverseIteratorVector& other) const {		return (_ptr <= other._ptr);		}
+			bool 			operator>=(const ReverseIteratorVector& other) const {		return (_ptr >= other._ptr);		}
+
+			ReverseIteratorVector& operator=(const ReverseIteratorVector& other) {
+				_ptr = other._ptr;
+				return (*this);
+			}
+
+			ReverseIteratorVector&	operator++() {
+				--_ptr;
+				return (*this);
+			}
+
+			ReverseIteratorVector	operator++(int) {
+				ReverseIteratorVector<T, Category> tmp(*this);
+				operator++();
+				return (tmp);
+			}
+
+			ReverseIteratorVector&	operator--() {
+				++_ptr;
+				return (*this);
+			}
+
+			ReverseIteratorVector	operator--(int) {
+				ReverseIteratorVector<T, Category> tmp(*this);
+				operator--();
+				return (tmp);
+			}
+
+			ReverseIteratorVector	operator+(int n) const {
+				ReverseIteratorVector it(*this);
+				return (it -= n);
+			}
+
+
+			ReverseIteratorVector	operator-(int n) const {
+				ReverseIteratorVector it(*this);
+				return (it += n);
+			}
+
+			ReverseIteratorVector& operator+=(int n) const {
+				_ptr -= n;
+				return (*this);
+			}
+
+			ReverseIteratorVector& operator-=(int n) const {
+				_ptr += n;
+				return (*this);
+			}
+
+	};
+
+	template<typename T, typename Category = std::random_access_iterator_tag>
+	class ConstIteratorVector {
+
+		private:
+			T	*_ptr;
+
+		public:
+
+			typedef std::ptrdiff_t	difference_type;
+			typedef T				value_type;
+			typedef T*				pointer;
+			typedef T&				reference;
+			typedef Category		iterator_category;
+
+			ConstIteratorVector() {}
+			ConstIteratorVector(const ConstIteratorVector& other):_ptr(other._ptr) {}
+			ConstIteratorVector(pointer ptr):_ptr(ptr) {}
+			~ConstIteratorVector() {}
+
+			pointer			getPtr() const { return (_ptr); }
+			pointer 		operator->() const {	return (_ptr);		}
+			reference		operator*() const {	return (*_ptr);		}
+			reference 		operator[](int n) const {	return (*(this + n));	}
+			difference_type operator-(const ConstIteratorVector& other) const {		return (_ptr - other._ptr);		}
+			bool 			operator==(const ConstIteratorVector& other) {	return (_ptr == other._ptr);	}
+			bool 			operator!=(const ConstIteratorVector& other) {	return (_ptr != other._ptr);	}
+			bool 			operator==(const ConstIteratorVector& other) const {		return (_ptr == other._ptr);		}
+			bool 			operator!=(const ConstIteratorVector& other) const {		return (_ptr != other._ptr);		}
+			bool 			operator<(const ConstIteratorVector& other) const {		return (_ptr < other._ptr);			}
+			bool 			operator>(const ConstIteratorVector& other) const {		return (_ptr > other._ptr);			}
+			bool 			operator<=(const ConstIteratorVector& other) const {		return (_ptr <= other._ptr);		}
+			bool 			operator>=(const ConstIteratorVector& other) const {		return (_ptr >= other._ptr);		}
+
+			ConstIteratorVector& operator=(const ConstIteratorVector& other) {
+				_ptr = other._ptr;
+				return (*this);
+			}
+
+			ConstIteratorVector&	operator++() {
+				++_ptr;
+				return (*this);
+			}
+
+			ConstIteratorVector	operator++(int) {
+				IteratorVector<T, Category> tmp(*this);
+				operator++();
+				return (tmp);
+			}
+
+			ConstIteratorVector&	operator--() {
+				--_ptr;
+				return (*this);
+			}
+
+			ConstIteratorVector	operator--(int) {
+				IteratorVector<T, Category> tmp(*this);
+				operator--();
+				return (tmp);
+			}
+
+			ConstIteratorVector	operator+(int n) const {
+				ConstIteratorVector it(*this);
+				return (it += n);
+			}
+
+			ConstIteratorVector	operator-(int n) const {
+				ConstIteratorVector it(*this);
+				return (it -= n);
+			}
+
+			ConstIteratorVector& operator+=(int n) const {
+				_ptr += n;
+				return (*this);
+			}
+
+			ConstIteratorVector& operator-=(int n) const {
+				_ptr -= n;
+				return (*this);
+			}
+
+	};
+
 
 }
 

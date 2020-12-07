@@ -17,7 +17,7 @@ namespace ft {
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
 			typedef ft::IteratorVector<T>						iterator;
-//			typedef ft::ReverseIteratorVector<T>				reverse_iterator;
+			typedef ft::ReverseIteratorVector<T>				reverse_iterator;
 //			typedef ft::ConstIteratorVector<T>					const_iterator;
 //			typedef ft::ConstReverseIteratorVector<T>			const_reverse_iterator;
 			typedef std::ptrdiff_t								difference_type;
@@ -107,6 +107,14 @@ namespace ft {
 
 			iterator end() {
 				return (iterator(&_array[_size]));
+			}
+
+			reverse_iterator rbegin() {
+				return (reverse_iterator(&_array[_size]));
+			}
+
+			reverse_iterator rend() {
+				return (reverse_iterator(&_array[0]));
 			}
 
 			/*
@@ -278,6 +286,50 @@ namespace ft {
 					_alloc.destroy(_array + _size);
 			}
 	};
+
+	template <class T, class Alloc>
+	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return (false);
+		for (typename vector<T,Alloc>::size_type i = 0; i < lhs.size(); i++)
+			if (lhs[i] != rhs[i])
+				return (false);
+		return (true);
+	}
+
+	template <class T, class Alloc>
+	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		typename list<T,Alloc>::size_type cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
+		for (typename list<T,Alloc>::size_type i = 0; i < cmpSize; i++)
+			if (lhs[i] >= rhs[i])
+				return (false);
+		return (lhs.size() < rhs.size());
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(rhs > lhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs < rhs));
+	}
+
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
 
 }
 
