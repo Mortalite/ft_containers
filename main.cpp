@@ -11,7 +11,7 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 3;
+const	int countRandNumbers = 4;
 typedef int cType;
 
 template<typename T>
@@ -32,7 +32,7 @@ void printCmpIterator(T& ftContainer, C& stdContainer) {
 	typename T::iterator ft_it = ftContainer.begin();
 	typename C::iterator std_it = stdContainer.begin();
 
-	std::cout << BLUE << "printCmpIterator" << RESET << std::endl;
+//	std::cout << BLUE << "printCmpIterator" << RESET << std::endl;
 	for ( ; ft_it != ftContainer.end(); ft_it++, std_it++, i++) {
 		std::cout << "ftContainer[" << i << "] = " << *ft_it;
 		std::cout << "\t\t";
@@ -210,9 +210,11 @@ void testInsert() {
 	printCmpIterator(ftList, stdList);
 
 	std::cout << BLUE << "Insert previous array in begin()" << RESET << std::endl;
-	ftList.insert(ftList.begin(), ftList.begin(), ftList.end());
-	stdList.insert(stdList.begin(), stdList.begin(), stdList.end());
-	printCmpIterator(ftList, stdList);
+	T ftContainerCopy(ftList);
+	C stdContainerCopy(stdList);
+	ftContainerCopy.insert(ftContainerCopy.begin(), ftList.begin(), ftList.end());
+	stdContainerCopy.insert(stdContainerCopy.begin(), stdList.begin(), stdList.end());
+	printCmpIterator(ftContainerCopy, stdContainerCopy);
 }
 
 template<typename T, typename C>
@@ -222,16 +224,26 @@ void testErase() {
 	T ftContainer;
 	containerPushBack(ftContainer);
 	C stdContainer(ftContainer.begin(), ftContainer.end());
-
-	if (ftContainer.size() != stdContainer.size()) {
-		std::cerr << "Container diff size" << std::endl;
-		return;
-	}
-
-	std::cout << RED << "testErase [begin(), end())" << RESET << std::endl;
 	printCmpIterator(ftContainer, stdContainer);
-	ftContainer.erase(ftContainer.begin(), ftContainer.end());
-	stdContainer.erase(stdContainer.begin(), stdContainer.end());
+
+	typename T::iterator ftIt;
+	typename C::iterator stdIt;
+
+	std::cout << BLUE << "testErase begin()" << RESET << std::endl;
+	ftIt = ftContainer.erase(ftContainer.begin());
+	stdIt = stdContainer.erase(stdContainer.begin());
+	printCmpIterator(ftContainer, stdContainer);
+	std::cout << BLUE << "Compare returning value" << RESET << std::endl;
+	std::cout << "ftIt = " << *ftIt << "\t\tstdIt = " << *stdIt << std::endl;
+
+	std::cout << BLUE << "testErase [begin(), end() - 1)" << RESET << std::endl;
+	ftIt = ftContainer.erase(ftContainer.begin(), --ftContainer.end());
+	stdIt = stdContainer.erase(stdContainer.begin(), --stdContainer.end());
+	printCmpIterator(ftContainer, stdContainer);
+	std::cout << BLUE << "Compare returning value" << RESET << std::endl;
+	std::cout << "ftIt = " << *ftIt << "\t\tstdIt = " << *stdIt << std::endl;
+
+	std::cout << BLUE << "After Erase" << RESET << std::endl;
 	printCmpIterator(ftContainer, stdContainer);
 }
 
@@ -496,6 +508,8 @@ int main() {
 
 	std::cout << RED << "||||||||||VECTOR||||||||||" << RESET << std::endl;
 	testConstructors<ft::vector<cType>, std::vector<cType> >();
+	testInsert<ft::vector<cType>, std::vector<cType> >();
+	testErase<ft::vector<cType>, std::vector<cType> >();
 
 	return (0);
 }

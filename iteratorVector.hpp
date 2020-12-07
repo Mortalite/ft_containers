@@ -1,11 +1,11 @@
 #ifndef ITERATORVECTOR_HPP
 #define ITERATORVECTOR_HPP
 
-#include "iteratorList.hpp"
+#include "utils.hpp"
 
 namespace ft {
 
-	template<typename T, typename Category = bidirectional_iterator_tag>
+	template<typename T, typename Category = std::random_access_iterator_tag>
 	class IteratorVector {
 
 		private:
@@ -24,31 +24,27 @@ namespace ft {
 			IteratorVector(pointer ptr) { _ptr = ptr; }
 			~IteratorVector() {}
 
-			T* getPtr() { return (_ptr); }
+			T* 				getPtr() { return (_ptr); }
+			bool 			operator==(const IteratorVector& other) {	return (_ptr == other._ptr);	}
+			bool 			operator!=(const IteratorVector& other) {	return (_ptr != other._ptr);	}
+			reference		operator*() {	return (*_ptr);		}
+			pointer 		operator->() const {	return (_ptr);		}
+			difference_type operator-(const IteratorVector& other) const {		return (_ptr - other._ptr);		}
+			T&				operator[](int n) const {	return (*(this + n));	}
+			bool 			operator==(const IteratorVector& other) const {		return (_ptr == other._ptr);		}
+			bool 			operator!=(const IteratorVector& other) const {		return (_ptr != other._ptr);		}
+			bool 			operator<(const IteratorVector& other) const {		return (_ptr < other._ptr);			}
+			bool 			operator>(const IteratorVector& other) const {		return (_ptr > other._ptr);			}
+			bool 			operator<=(const IteratorVector& other) const {		return (_ptr <= other._ptr);		}
+			bool 			operator>=(const IteratorVector& other) const {		return (_ptr >= other._ptr);		}
 
 			IteratorVector& operator=(const IteratorVector& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
 
-			bool 			operator==(const IteratorVector& other) {
-				return (_ptr == other._ptr);
-			}
-
-			bool 			operator!=(const IteratorVector& other) {
-				return (_ptr != other._ptr);
-			}
-
-			reference		operator*() {
-				return (*_ptr);
-			}
-
-			pointer 		operator->() const {
-				return (_ptr);
-			}
-
 			IteratorVector&	operator++() {
-				_ptr++;
+				++_ptr;
 				return (*this);
 			}
 
@@ -59,7 +55,7 @@ namespace ft {
 			}
 
 			IteratorVector&	operator--() {
-				_ptr--;
+				--_ptr;
 				return (*this);
 			}
 
@@ -69,6 +65,26 @@ namespace ft {
 				return (tmp);
 			}
 
+			IteratorVector	operator+(int n) const {
+				IteratorVector it(*this);
+				return (it += n);
+			}
+
+
+			IteratorVector	operator-(int n) const {
+				IteratorVector it(*this);
+				return (it -= n);
+			}
+
+			IteratorVector& operator+=(int n) const {
+				_ptr += n;
+				return (*this);
+			}
+
+			IteratorVector& operator-=(int n) const {
+				_ptr -= n;
+				return (*this);
+			}
 
 	};
 

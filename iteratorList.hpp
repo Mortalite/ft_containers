@@ -18,7 +18,7 @@ namespace ft {
 	struct bidirectional_iterator_tag: public forward_iterator_tag {};
 	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 
-	template<typename T, typename Category = bidirectional_iterator_tag>
+	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class IteratorList {
 
 		private:

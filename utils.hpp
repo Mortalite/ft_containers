@@ -1,9 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include "iteratorVector.hpp"
-#include "iteratorList.hpp"
-
 namespace ft {
 
 	template <typename T> void swap(T &a, T &b) {

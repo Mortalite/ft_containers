@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include "iteratorVector.hpp"
+#include <cstring>
 
 namespace ft {
 
@@ -26,8 +27,9 @@ namespace ft {
 			T						*_array;
 			size_type				_size;
 			size_type				_capacity;
-			const static size_type	_scaleFactor = 2;
 			allocator_type			_alloc;
+			const static size_type	_scaleFactor = 2;
+			const static size_type	_initCapacity = 10;
 
 		public:
 
@@ -35,18 +37,18 @@ namespace ft {
 			** Constructors and destructor
 			*/
 			explicit vector (const allocator_type& alloc = allocator_type()) {
-				_array = NULL;
-				_capacity = 0;
-				_size = 0;
 				_alloc = alloc;
+				_array = _alloc.allocate(_initCapacity);
+				_capacity = _initCapacity;
+				_size = 0;
 			}
 
 			explicit vector (size_type n, const value_type& val = value_type(),
 						 	const allocator_type& alloc = allocator_type()) {
-				_array = NULL;
-				_size = 0;
-				_capacity = 0;
 				_alloc = alloc;
+				_array = _alloc.allocate(_initCapacity);
+				_capacity = _initCapacity;
+				_size = 0;
 				resize(n, val);
 			}
 
@@ -85,16 +87,26 @@ namespace ft {
 					_alloc.deallocate(_array, _capacity);
 			}
 
+			vector& operator=(const vector& x) {
+				clear();
+				reserve(x._capacity);
+				_alloc = x._alloc;
+				_size = x._size;
+				_capacity = x._capacity;
+				for (size_type i = 0; i < x._size; i++)
+					_alloc.construct(_array + i, x._array[i]);
+			}
+
 			/*
 			** Iterators
 			*/
 
 			iterator begin() {
-				return (iterator(_array));
+				return (iterator(&_array[0]));
 			}
 
 			iterator end() {
-				return (iterator(_array + _size));
+				return (iterator(&_array[_size]));
 			}
 
 			/*
@@ -186,8 +198,8 @@ namespace ft {
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last) {
 				clear();
-				while (first++ != last)
-					push_back(*first);
+				while (first != last)
+					push_back(*first++);
 			}
 
 			void assign (size_type n, const value_type& val) {
@@ -197,9 +209,7 @@ namespace ft {
 			}
 
 			void push_back(const value_type& val) {
-				if (_capacity == 0)
-					reserve(10);
-				else if (_size + 1 > _capacity)
+				if (_size >= _capacity)
 					reserve(_size * _scaleFactor);
 				_alloc.construct(_array + _size++, val);
 			}
@@ -209,13 +219,58 @@ namespace ft {
 					_alloc.deallocate(_array, --_size);
 			}
 
-			void insert (iterator position, size_type n, const value_type& val) {
-				if (ft::distance(end() - position) > n) {
+			iterator insert (iterator position, const value_type& val) {
+				iterator end = this->end();
+				if (_size >= _capacity)
+					reserve(_size * _scaleFactor);
+				size_type i = _size++;
+				while (position++ != end) {
+					_array[i] = _array[i - 1];
+					i--;
+				}
+				_array[i] = val;
+				return (iterator(_array + i));
+			}
 
+			void insert (iterator position, size_type n, const value_type& val) {
+				while (n--)
+					position = insert(position, val);
+			}
+
+			template <class InputIterator>
+			void insert (iterator position, InputIterator first, InputIterator last) {
+				while (first != last) {
+					position = insert(position, *first++);
+					position++;
 				}
-				else {
-					
-				}
+			}
+
+			iterator erase(iterator position) {
+				difference_type dist = position - this->begin(), size = this->size();
+
+				_alloc.destroy(_array + dist);
+				for (difference_type i = dist; i < size - 1; i++)
+					_array[i] = _array[i + 1];
+				_size--;
+				return (iterator(_array + dist));
+			}
+
+			iterator erase(iterator first, iterator last) {
+				difference_type begin = first - this->begin(), len = last - first;
+
+				_size -= len;
+				for (difference_type i = begin; i < len; i++)
+					_alloc.destroy(_array + i);
+				for (difference_type i = begin; i < _size; i++)
+					_array[i] = _array[i + len];
+				return (iterator(_array + begin));
+			}
+
+			void swap (vector& x) {
+				ft::swap(_array, x._array);
+				ft::swap(_size, x._size);
+				ft::swap(_capacity, x._capacity);
+				ft::swap(_alloc, x._alloc);
 			}
 
 			void clear() {
