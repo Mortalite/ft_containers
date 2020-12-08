@@ -9,6 +9,9 @@ namespace ft {
 	template<class T, class Alloc = std::allocator<T> >
 	class vector {
 
+		/*
+		** Typedefs
+		*/
 		public:
 			typedef T											value_type;
 			typedef Alloc										allocator_type;
@@ -18,11 +21,14 @@ namespace ft {
 			typedef typename allocator_type::const_pointer		const_pointer;
 			typedef ft::IteratorVector<T>						iterator;
 			typedef ft::ReverseIteratorVector<T>				reverse_iterator;
-//			typedef ft::ConstIteratorVector<T>					const_iterator;
-//			typedef ft::ConstReverseIteratorVector<T>			const_reverse_iterator;
+			typedef ft::ConstIteratorVector<T>					const_iterator;
+			typedef ft::ConstReverseIteratorVector<T>			const_reverse_iterator;
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;
 
+		/*
+		** Class members
+		*/
 		private:
 			T						*_array;
 			size_type				_size;
@@ -95,6 +101,7 @@ namespace ft {
 				_capacity = x._capacity;
 				for (size_type i = 0; i < x._size; i++)
 					_alloc.construct(_array + i, x._array[i]);
+				return (*this);
 			}
 
 			/*
@@ -282,8 +289,8 @@ namespace ft {
 			}
 
 			void clear() {
-				while (_size--)
-					_alloc.destroy(_array + _size);
+				while (_size)
+					_alloc.destroy(_array + --_size);
 			}
 	};
 

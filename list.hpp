@@ -11,6 +11,9 @@ namespace ft {
 	template<typename T, typename Alloc = std::allocator<T> >
 	class list {
 
+		/*
+		** Typedefs
+		*/
 		public:
 			typedef T											value_type;
 			typedef Alloc										allocator_type;
@@ -25,6 +28,9 @@ namespace ft {
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;
 
+		/*
+		** Class members and private functions
+		*/
 		private:
 			DLLNode<T>*		_first;
 			DLLNode<T>*		_last;
@@ -65,6 +71,9 @@ namespace ft {
 
 		public:
 
+			/*
+			** Constructors, destructor and assignment operator
+			*/
 			explicit list(const allocator_type& alloc = allocator_type()) {
 				_end = new DLLNode<T>;
 				_first = _last = _end->_next = _end->_prev = _end;
@@ -117,6 +126,64 @@ namespace ft {
 				delete _end;
 			}
 
+			list& operator=(const list& x) {
+				clear();
+				delete _end;
+
+				_end = new DLLNode<T>;
+				_first = _last = _end->_next = _end->_prev = _end;
+				_end->_data = NULL;
+				_size = 0;
+				_alloc = x._alloc;
+
+				if (x._size) {
+					DLLNode<T> *ptr = x._first;
+					while (ptr != x._end) {
+						push_back(*ptr->_data);
+						ptr = ptr->_next;
+					}
+				}
+				return (*this);
+			}
+
+			/*
+			** Iterators
+			*/
+			iterator				begin() {
+				return (iterator(_end->_next));
+			}
+
+			const_iterator			begin() const {
+				return (const_iterator(_end->_next));
+			}
+
+			iterator				end() {
+				return (iterator(_end));
+			}
+
+			const_iterator			end() const {
+				return (const_iterator(_end));
+			}
+
+			reverse_iterator		rbegin() {
+				return (reverse_iterator(_end->_prev));
+			}
+
+			const_reverse_iterator	rbegin() const {
+				return (const_reverse_iterator(_end->_prev));
+			}
+
+			reverse_iterator		rend() {
+				return (reverse_iterator(_end));
+			}
+
+			const_reverse_iterator	rend() const {
+				return (const_reverse_iterator(_end));
+			}
+
+			/*
+			** Capacity
+			*/
 			bool					empty() const {
 				return (!_size);
 			}
@@ -129,6 +196,9 @@ namespace ft {
 				return (std::numeric_limits<size_type>::max());
 			}
 
+			/*
+			** Element access
+			*/
 			reference				front() {
 				return (*_first->_data);
 			}
@@ -142,6 +212,9 @@ namespace ft {
 				return (*_last->_data);
 			}
 
+			/*
+			** Modifiers
+			*/
 			template <class InputIterator>
 			void					assign(InputIterator first, InputIterator last) {
 				clear();
@@ -243,10 +316,11 @@ namespace ft {
 					_first = _first->_next;
 					_first->_prev = _end;
 				}
-				else if (ptr == _last) {
+				if (ptr == _last) {
 					_last = _last->_prev;
 					_last->_next = _end;
 				}
+				_alloc.destroy(ptr->_data);
 				_alloc.deallocate(ptr->_data, 1);
 				delete ptr;
 				_size--;
@@ -278,6 +352,9 @@ namespace ft {
 					pop_back();
 			}
 
+			/*
+			** Operations
+			*/
 			void 					splice(iterator position, list& x) {
 				iterator first = x.begin(), end = x.end();
 				while (first != end)
@@ -394,61 +471,13 @@ namespace ft {
 					ft::swap(*first++, *--end);
 			}
 
-			iterator				begin() {
-					return (iterator(_end->_next));
-			}
-
-			const_iterator			begin() const {
-				return (const_iterator(_end->_next));
-			}
-
-			iterator				end() {
-				return (iterator(_end));
-			}
-
-			const_iterator			end() const {
-				return (const_iterator(_end));
-			}
-
-			reverse_iterator		rbegin() {
-				return (reverse_iterator(_end->_prev));
-			}
-
-			const_reverse_iterator	rbegin() const {
-				return (const_reverse_iterator(_end->_prev));
-			}
-
-			reverse_iterator		rend() {
-				return (reverse_iterator(_end));
-			}
-
-			const_reverse_iterator	rend() const {
-				return (const_reverse_iterator(_end));
-			}
-
-			list& operator=(const list& x) {
-				clear();
-
-				_end = new DLLNode<T>;
-				_first = _last = _end->_next = _end->_prev = _end;
-				_end->_data = NULL;
-				_size = 0;
-				_alloc = x._alloc;
-
-				if (x._size) {
-					DLLNode<T> *ptr = x._first;
-					while (ptr != x._end) {
-						push_back(*ptr->_data);
-						ptr = ptr->_next;
-					}
-				}
-				return (*this);
-			}
-
 	};
 
+	/*
+	** Non-member function overloads
+	*/
 	template <class T, class Alloc>
-	bool operator==(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator==	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
 		typename list<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
@@ -459,12 +488,12 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	bool operator!=(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator!=	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return (!(lhs == rhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator<(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator<	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		typename list<T,Alloc>::size_type cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
 		typename list<T,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
 		for (typename list<T,Alloc>::size_type i = 0; i < cmpSize; i++)

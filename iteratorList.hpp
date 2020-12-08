@@ -5,6 +5,9 @@
 
 namespace ft {
 
+	/*
+	** Double-linked-list node for list
+	*/
 	template<typename T> class DLLNode {
 	public:
 		T*			_data;
@@ -98,25 +101,25 @@ namespace ft {
 				return (*this);
 			}
 
-			ReverseIteratorList& operator++() {
+			ReverseIteratorList&	operator++() {
 				if (_ptr && _ptr->_prev)
 					_ptr = _ptr->_prev;
 				return (*this);
 			}
 
-			ReverseIteratorList operator++(int) {
+			ReverseIteratorList		operator++(int) {
 				ReverseIteratorList<T> tmp(*this);
 				operator++();
 				return (tmp);
 			}
 
-			ReverseIteratorList& operator--() {
+			ReverseIteratorList&	operator--() {
 				if (_ptr && _ptr->_next)
 					_ptr = _ptr->_next;
 				return (*this);
 			}
 
-			ReverseIteratorList operator--(int) {
+			ReverseIteratorList		operator--(int) {
 				ReverseIteratorList<T> tmp(*this);
 				operator--();
 				return (tmp);
@@ -146,8 +149,8 @@ namespace ft {
 			DLLNode<T>*				getPtr() { return (_ptr); }
 			bool					operator==(const ConstIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ConstIteratorList& other) const {	return (_ptr != other._ptr);	}
-			const reference			operator*() {	return (*_ptr->_data);	}
-			const pointer 			operator->() const {	return (_ptr->_data);	}
+			const T&				operator*() {	return (*_ptr->_data);	}
+			const T*	 			operator->() const {	return (_ptr->_data);	}
 
 			ConstIteratorList&	operator=(const ConstIteratorList& other) {
 				_ptr = other._ptr;
@@ -202,34 +205,33 @@ namespace ft {
 			DLLNode<T>*				getPtr() { return (_ptr); }
 			bool					operator==(const ConstReverseIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ConstReverseIteratorList& other) const {	return (_ptr != other._ptr);	}
-			const reference			operator*() {	return (*_ptr->_data);	}
-			const pointer 			operator->() const {	return (_ptr->_data);	}
+			const T&				operator*() {	return (*_ptr->_data);	}
+			const T*	 			operator->() const {	return (_ptr->_data);	}
 
 			ConstReverseIteratorList&	operator=(const ConstReverseIteratorList& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
 
-
-			ConstReverseIteratorList& operator++() {
+			ConstReverseIteratorList&	operator++() {
 				if (_ptr && _ptr->_prev)
 					_ptr = _ptr->_prev;
 				return (*this);
 			}
 
-			ConstReverseIteratorList operator++(int) {
+			ConstReverseIteratorList	operator++(int) {
 				ConstReverseIteratorList<T> tmp(*this);
 				operator++();
 				return (tmp);
 			}
 
-			ConstReverseIteratorList& operator--() {
+			ConstReverseIteratorList&	operator--() {
 				if (_ptr && _ptr->_next)
 					_ptr = _ptr->_next;
 				return (*this);
 			}
 
-			ConstReverseIteratorList operator--(int) {
+			ConstReverseIteratorList	operator--(int) {
 				ConstReverseIteratorList<T> tmp(*this);
 				operator--();
 				return (tmp);

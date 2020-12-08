@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "list.hpp"
 #include "vector.hpp"
+#include "stack.hpp"
 #include "iteratorList.hpp"
 
 #define RED		"\033[31m"
@@ -144,6 +145,12 @@ void testAssign() {
 	containerPushBack(stdContainer);
 	ftContainer.assign(stdContainer.begin(), stdContainer.end());
 	printCmpIterator(ftContainer, stdContainer);
+
+	T ftContainer2;
+	ftContainer2.assign(11, (typename T::size_type)10);
+	C stdContainer2;
+	stdContainer2.assign(11,(typename C::size_type)10);
+	printCmpIterator(ftContainer2, stdContainer2);
 }
 
 template<typename T, typename C>
@@ -524,8 +531,16 @@ int main() {
 	std::cout << RED << "||||||||||VECTOR||||||||||" << RESET << std::endl;
 	testConstructors<ft::vector<cType>, std::vector<cType> >();
 	testIterators<ft::vector<cType>, std::vector<cType> >();
+	testAssign<ft::vector<cType>, std::vector<cType> >();
 	testInsert<ft::vector<cType>, std::vector<cType> >();
 	testErase<ft::vector<cType>, std::vector<cType> >();
+	testSwap<ft::vector<cType>, ft::vector<cType> >();
+	testOperators<ft::vector<cType>, std::vector<cType> >();
 
+	ft::stack<cType, ft::list<cType> > stack;
+	stack.push((cType)(10));
+//	ft::stack<cType, ft::list<cType> > stack2;
+//	stack2.push((cType)(10));
+//	std::cout << BLUE << "==" << (stack == stack2) << RESET << std::endl;
 	return (0);
 }
