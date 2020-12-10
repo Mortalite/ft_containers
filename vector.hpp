@@ -231,7 +231,7 @@ namespace ft {
 
 			void pop_back() {
 				if (!empty())
-					_alloc.deallocate(_array, --_size);
+					_alloc.destroy(_array, --_size);
 			}
 
 			iterator insert (iterator position, const value_type& val) {

@@ -1,12 +1,12 @@
-#ifndef STACK_HPP
-#define STACK_HPP
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 
 #include "list.hpp"
 
 namespace ft {
 
-	template<class T, class Container = list <T> >
-	class stack {
+	template <class T, class Container = list<T> >
+	class queue {
 
 		/*
 		** Typedefs
@@ -20,41 +20,49 @@ namespace ft {
 		** Class member
 		*/
 		private:
-			container_type 		container;
+			Container 			container;
 
 		public:
 			/*
 			** Constructor
 			*/
-			explicit 			stack (const container_type& ctnr = container_type()) {
+			explicit 			queue (const container_type& ctnr = container_type()) {
 				container = ctnr;
 			}
 
 			/*
 			** Member functions
 			*/
-			bool				empty() const {
-				return (container.empty());
+			bool 				empty() const {
+				return (list.empty());
 			}
 
-			size_type			size() const {
-				return (container.size());
+			size_type 			size() const {
+				return (list.size());
 			}
 
-			value_type&			top() {
-				return (container.back());
+			value_type& 		front() {
+				return (list.front());
 			}
 
-			const value_type&	top() const {
-				return (container.back());
+			const value_type& 	front() const {
+				return (list.front());
 			}
 
-			void				push (const value_type& val) {
-				container.push_back(val);
+			value_type& 		back() {
+				return (list.back());
 			}
 
-			void				pop() {
-				container.pop_back();
+			const value_type& 	back() const {
+				return (list.back());
+			}
+
+			void 				push (const value_type& val) {
+				list.push_back(val);
+			}
+
+			void 				pop() {
+				list.pop_front();
 			}
 
 			/*
