@@ -20,49 +20,49 @@ namespace ft {
 		** Class member
 		*/
 		private:
-			Container 			container;
+			Container 			_container;
 
 		public:
 			/*
 			** Constructor
 			*/
 			explicit 			queue (const container_type& ctnr = container_type()) {
-				container = ctnr;
+				_container = ctnr;
 			}
 
 			/*
 			** Member functions
 			*/
 			bool 				empty() const {
-				return (list.empty());
+				return (_container.empty());
 			}
 
 			size_type 			size() const {
-				return (list.size());
+				return (_container.size());
 			}
 
 			value_type& 		front() {
-				return (list.front());
+				return (_container.front());
 			}
 
 			const value_type& 	front() const {
-				return (list.front());
+				return (_container.front());
 			}
 
 			value_type& 		back() {
-				return (list.back());
+				return (_container.back());
 			}
 
 			const value_type& 	back() const {
-				return (list.back());
+				return (_container.back());
 			}
 
 			void 				push (const value_type& val) {
-				list.push_back(val);
+				_container.push_back(val);
 			}
 
 			void 				pop() {
-				list.pop_front();
+				_container.pop_front();
 			}
 
 			/*

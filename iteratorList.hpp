@@ -8,7 +8,8 @@ namespace ft {
 	/*
 	** Double-linked-list node for list
 	*/
-	template<typename T> class DLLNode {
+	template<typename T>
+	class DLLNode {
 	public:
 		T*			_data;
 		DLLNode<T>*	_next;

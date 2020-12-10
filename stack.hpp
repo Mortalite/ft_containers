@@ -20,41 +20,41 @@ namespace ft {
 		** Class member
 		*/
 		private:
-			container_type 		container;
+			container_type 		_container;
 
 		public:
 			/*
 			** Constructor
 			*/
 			explicit 			stack (const container_type& ctnr = container_type()) {
-				container = ctnr;
+				_container = ctnr;
 			}
 
 			/*
 			** Member functions
 			*/
 			bool				empty() const {
-				return (container.empty());
+				return (_container.empty());
 			}
 
 			size_type			size() const {
-				return (container.size());
+				return (_container.size());
 			}
 
 			value_type&			top() {
-				return (container.back());
+				return (_container.back());
 			}
 
 			const value_type&	top() const {
-				return (container.back());
+				return (_container.back());
 			}
 
 			void				push (const value_type& val) {
-				container.push_back(val);
+				_container.push_back(val);
 			}
 
 			void				pop() {
-				container.pop_back();
+				_container.pop_back();
 			}
 
 			/*
