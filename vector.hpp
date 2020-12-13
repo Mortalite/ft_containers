@@ -132,7 +132,7 @@ namespace ft {
 			}
 
 			size_type	max_size() const {
-				return (std::numeric_limits<size_type>::max());
+				return (_alloc.max_size());
 			}
 
 			void 		resize (size_type n, value_type val = value_type()) {

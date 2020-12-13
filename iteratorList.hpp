@@ -10,10 +10,12 @@ namespace ft {
 	*/
 	template<typename T>
 	class DLLNode {
-	public:
-		T*			_data;
-		DLLNode<T>*	_next;
-		DLLNode<T>*	_prev;
+
+		public:
+			T*			_data;
+			DLLNode<T>*	_next;
+			DLLNode<T>*	_prev;
+
 	};
 
 	template<typename T, typename Category = std::bidirectional_iterator_tag>

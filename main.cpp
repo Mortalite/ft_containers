@@ -6,6 +6,7 @@
 #include "list.hpp"
 #include "vector.hpp"
 #include "stack.hpp"
+#include "map.hpp"
 #include "iteratorList.hpp"
 
 #define RED		"\033[31m"
@@ -537,10 +538,15 @@ int main() {
 	testSwap<ft::vector<cType>, ft::vector<cType> >();
 	testOperators<ft::vector<cType>, std::vector<cType> >();
 
-	ft::stack<cType, ft::list<cType> > stack;
-	stack.push((cType)(10));
+/*	ft::stack<cType, ft::list<cType> > stack;
+	stack.push((cType)(10));*/
 //	ft::stack<cType, ft::list<cType> > stack2;
 //	stack2.push((cType)(10));
 //	std::cout << BLUE << "==" << (stack == stack2) << RESET << std::endl;
+	ft::map<int, int> map;
+	map.insert(std::make_pair(1, 10));
+	map.insert(std::make_pair(2, 25));
+	map.insert(std::make_pair(3, 35));
+	map.runPostOrderTreeWalk();
 	return (0);
 }

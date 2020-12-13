@@ -193,7 +193,7 @@ namespace ft {
 			}
 
 			size_type				max_size() const {
-				return (std::numeric_limits<size_type>::max());
+				return (_alloc.max_size());
 			}
 
 			/*
@@ -202,12 +202,15 @@ namespace ft {
 			reference				front() {
 				return (*_first->_data);
 			}
+
 			const_reference			front() const {
 				return (*_first->_data);
 			}
+
 			reference				back() {
 				return (*_last->_data);
 			}
+
 			const_reference			back() const {
 				return (*_last->_data);
 			}
