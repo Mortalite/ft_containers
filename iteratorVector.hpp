@@ -29,8 +29,6 @@ namespace ft {
 			reference		operator*() {	return (*_ptr);		}
 			reference		operator[](int n) const {	return (*(this + n));	}
 			difference_type operator-(const IteratorVector& other) const {		return (_ptr - other._ptr);		}
-			bool 			operator==(const IteratorVector& other) {	return (_ptr == other._ptr);	}
-			bool 			operator!=(const IteratorVector& other) {	return (_ptr != other._ptr);	}
 			bool 			operator==(const IteratorVector& other) const {		return (_ptr == other._ptr);		}
 			bool 			operator!=(const IteratorVector& other) const {		return (_ptr != other._ptr);		}
 			bool 			operator<(const IteratorVector& other) const {		return (_ptr < other._ptr);			}
@@ -112,8 +110,6 @@ namespace ft {
 			reference		operator*() const {	return (*(_ptr - 1));	}
 			reference		operator[](int n) const {	return (*(this + n));	}
 			difference_type operator-(const ReverseIteratorVector& other) const {		return (_ptr - other._ptr);		}
-			bool 			operator==(const ReverseIteratorVector& other) {	return (_ptr == other._ptr);	}
-			bool 			operator!=(const ReverseIteratorVector& other) {	return (_ptr != other._ptr);	}
 			bool 			operator==(const ReverseIteratorVector& other) const {		return (_ptr == other._ptr);		}
 			bool 			operator!=(const ReverseIteratorVector& other) const {		return (_ptr != other._ptr);		}
 			bool 			operator<(const ReverseIteratorVector& other) const {		return (_ptr < other._ptr);			}
@@ -195,8 +191,6 @@ namespace ft {
 			const value_type&	operator*() const {	return (*_ptr);	}
 			reference 			operator[](int n) const {	return (*(this + n));	}
 			difference_type 	operator-(const ConstIteratorVector& other) const {		return (_ptr - other._ptr);		}
-			bool 				operator==(const ConstIteratorVector& other) {	return (_ptr == other._ptr);	}
-			bool 				operator!=(const ConstIteratorVector& other) {	return (_ptr != other._ptr);	}
 			bool 				operator==(const ConstIteratorVector& other) const {		return (_ptr == other._ptr);		}
 			bool 				operator!=(const ConstIteratorVector& other) const {		return (_ptr != other._ptr);		}
 			bool 				operator<(const ConstIteratorVector& other) const {		return (_ptr < other._ptr);			}
@@ -278,8 +272,6 @@ namespace ft {
 			const value_type&	operator*() const {	return (*_ptr);	}
 			reference 			operator[](int n) const {	return (*(this + n));	}
 			difference_type 	operator-(const ConstReverseIteratorVector& other) const {		return (_ptr - other._ptr);		}
-			bool 				operator==(const ConstReverseIteratorVector& other) {	return (_ptr == other._ptr);	}
-			bool 				operator!=(const ConstReverseIteratorVector& other) {	return (_ptr != other._ptr);	}
 			bool 				operator==(const ConstReverseIteratorVector& other) const {		return (_ptr == other._ptr);		}
 			bool 				operator!=(const ConstReverseIteratorVector& other) const {		return (_ptr != other._ptr);		}
 			bool 				operator<(const ConstReverseIteratorVector& other) const {		return (_ptr < other._ptr);			}

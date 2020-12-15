@@ -35,7 +35,7 @@ namespace ft {
 			DLLNode<T>*		_first;
 			DLLNode<T>*		_last;
 			DLLNode<T>*		_end;
-			size_t			_size;
+			size_type		_size;
 			allocator_type	_alloc;
 
 			void 	erase_swap(list& x, iterator i) {

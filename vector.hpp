@@ -108,34 +108,34 @@ namespace ft {
 			** Iterators
 			*/
 
-			iterator begin() {
+			iterator 			begin() {
 				return (iterator(&_array[0]));
 			}
 
-			iterator end() {
+			iterator 			end() {
 				return (iterator(&_array[_size]));
 			}
 
-			reverse_iterator rbegin() {
+			reverse_iterator 	rbegin() {
 				return (reverse_iterator(&_array[_size]));
 			}
 
-			reverse_iterator rend() {
+			reverse_iterator 	rend() {
 				return (reverse_iterator(&_array[0]));
 			}
 
 			/*
 			** Capacity
 			*/
-			size_type 	size() const {
+			size_type 			size() const {
 				return (_size);
 			}
 
-			size_type	max_size() const {
+			size_type			max_size() const {
 				return (_alloc.max_size());
 			}
 
-			void 		resize (size_type n, value_type val = value_type()) {
+			void 				resize (size_type n, value_type val = value_type()) {
 				reserve(n);
 
 				for (size_type i = _size; i < n; i++)
@@ -144,15 +144,15 @@ namespace ft {
 				_size = n;
 			}
 
-			size_type capacity() const {
+			size_type			capacity() const {
 				return (_capacity);
 			}
 
-			bool empty() const {
+			bool				empty() const {
 				return (_size == 0);
 			}
 
-			void reserve (size_type n) {
+			void				reserve (size_type n) {
 				if (n > _capacity) {
 					T* array = _alloc.allocate(n);
 
@@ -178,31 +178,31 @@ namespace ft {
 				return (_array[n]);
 			}
 
-			reference at (size_type n) {
+			reference		at (size_type n) {
 				if (n >= _size)
 					throw std::out_of_range("Out of range");
 				return (_array[n]);
 			}
 
-			const_reference at (size_type n) const {
+			const_reference	at (size_type n) const {
 				if (n >= _size)
 					throw std::out_of_range("Out of range");
 				return (_array[n]);
 			}
 
-			reference front() {
+			reference		front() {
 				return (_array[0]);
 			}
 
-			const_reference front() const {
+			const_reference	front() const {
 				return (_array[0]);
 			}
 
-			reference back() {
+			reference		back() {
 				return (_array[_size - 1]);
 			}
 
-			const_reference back() const {
+			const_reference	back() const {
 				return (_array[_size - 1]);
 			}
 
@@ -211,30 +211,30 @@ namespace ft {
 			*/
 
 			template <class InputIterator>
-			void assign (InputIterator first, InputIterator last) {
+			void			assign (InputIterator first, InputIterator last) {
 				clear();
 				while (first != last)
 					push_back(*first++);
 			}
 
-			void assign (size_type n, const value_type& val) {
+			void			assign (size_type n, const value_type& val) {
 				clear();
 				while (n--)
 					push_back(val);
 			}
 
-			void push_back(const value_type& val) {
+			void			push_back(const value_type& val) {
 				if (_size >= _capacity)
 					reserve(_size * _scaleFactor);
 				_alloc.construct(_array + _size++, val);
 			}
 
-			void pop_back() {
+			void			pop_back() {
 				if (!empty())
 					_alloc.destroy(_array, --_size);
 			}
 
-			iterator insert (iterator position, const value_type& val) {
+			iterator		insert (iterator position, const value_type& val) {
 				iterator end = this->end();
 				if (_size >= _capacity)
 					reserve(_size * _scaleFactor);
@@ -247,20 +247,20 @@ namespace ft {
 				return (iterator(_array + i));
 			}
 
-			void insert (iterator position, size_type n, const value_type& val) {
+			void			insert (iterator position, size_type n, const value_type& val) {
 				while (n--)
 					position = insert(position, val);
 			}
 
 			template <class InputIterator>
-			void insert (iterator position, InputIterator first, InputIterator last) {
+			void			insert (iterator position, InputIterator first, InputIterator last) {
 				while (first != last) {
 					position = insert(position, *first++);
 					position++;
 				}
 			}
 
-			iterator erase(iterator position) {
+			iterator		erase(iterator position) {
 				difference_type dist = position - this->begin(), size = this->size();
 
 				_alloc.destroy(_array + dist);
@@ -270,7 +270,7 @@ namespace ft {
 				return (iterator(_array + dist));
 			}
 
-			iterator erase(iterator first, iterator last) {
+			iterator		erase(iterator first, iterator last) {
 				difference_type begin = first - this->begin(), len = last - first;
 
 				_size -= len;
@@ -281,14 +281,14 @@ namespace ft {
 				return (iterator(_array + begin));
 			}
 
-			void swap (vector& x) {
+			void			swap (vector& x) {
 				ft::swap(_array, x._array);
 				ft::swap(_size, x._size);
 				ft::swap(_capacity, x._capacity);
 				ft::swap(_alloc, x._alloc);
 			}
 
-			void clear() {
+			void			clear() {
 				while (_size)
 					_alloc.destroy(_array + --_size);
 			}
