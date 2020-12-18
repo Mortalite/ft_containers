@@ -543,10 +543,12 @@ int main() {
 //	ft::stack<cType, ft::list<cType> > stack2;
 //	stack2.push((cType)(10));
 //	std::cout << BLUE << "==" << (stack == stack2) << RESET << std::endl;
-	ft::map<int, int> map;
+	ft::map<const int, int> map;
 	map.insert(std::make_pair(1, 10));
 	map.insert(std::make_pair(2, 25));
 	map.insert(std::make_pair(3, 35));
 	map.runPostOrderTreeWalk();
+//	ft::map<const int,int>::iterator it = map.begin();
+//	std::cout << BLUE << it.getPtr()->_data->first << RESET << std::endl;
 	return (0);
 }

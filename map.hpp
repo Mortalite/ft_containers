@@ -37,6 +37,8 @@ namespace ft {
 		*/
 		private:
 			TreeNode<const Key,T>*	_root;
+			TreeNode<const Key,T>*	_begin;
+			TreeNode<const Key,T>*	_end;
 			key_compare				_comp;
 			allocator_type			_alloc;
 			size_type				_size;
@@ -58,6 +60,9 @@ namespace ft {
 			explicit map (const key_compare& comp = key_compare(),
 						  const allocator_type& alloc = allocator_type()) {
 				_root = NULL;
+				_begin = _end = new TreeNode<const Key,T>;
+				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_begin->_data = _end->_data = NULL;
 				_comp = comp;
 				_alloc = alloc;
 				_size = 0;
@@ -66,6 +71,14 @@ namespace ft {
 			/*
 			** Iterators
 			*/
+			iterator	begin() {
+				return (iterator(_begin));
+			}
+
+			iterator	end() {
+				return (iterator(_end));
+			}
+
 
 			/*
 			** Capacity
@@ -92,47 +105,44 @@ namespace ft {
 			*/
 
 			std::pair<iterator,bool> insert (const value_type& val) {
-/*				TreeNode<Key,T> *y = NULL;
-				TreeNode<Key,T> *x = _root;
-				TreeNode<Key,T> *z = new TreeNode<Key,T>;
-				z->_data = _alloc.allocate(1);
-				_alloc.construct(z->_data, val);
-				while (x) {
-					y = x;
-					if (z->_data->first < x->_data->first)
-						x = x->_left;
-					else
-						x = x->_right;
-				}
-				z->_parent = y;
-				if (!y)
-					_root = z;
-				else if (z->_data->first < y->_data->first)
-					y->_left = z;
-				else
-					y->_right = z;*/
 				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = _root;
-				while (x) {
+				while (x && x != _end) {
 					y = x;
-					if (val.first == x->_data->first)
-						return (std::make_pair(iterator(x), false));
-					else if (val.first < x->_data->first)
+					if (_comp(val.first, x->_data->first))
 						x = x->_left;
-					else
+					else if (_comp(x->_data->first, val.first))
 						x = x->_right;
+					else
+						return (std::make_pair(iterator(x), false));
 				}
 				TreeNode<const Key,T> *z = new TreeNode<const Key,T>;
 				z->_data = _alloc.allocate(1);
 				_alloc.construct(z->_data, val);
 				z->_parent = y;
-				if (!y)
-					_root = z;
-				else if (z->_data->first < y->_data->first)
-					y->_left = z;
-				else
+				z->_left = NULL;
+				z->_right = NULL;
+				if (!y) {
+					z->_right = _end;
+					_root = _begin = _end->_parent = z;
+				}
+				else if (_comp(z->_data->first, y->_data->first))
+					y->_left = _begin = z;
+				else {
 					y->_right = z;
+					z->_right = _end;
+					_end->_parent = z;
+				}
+				_size++;
 				return (std::make_pair(iterator(z), true));
+			}
+
+			iterator insert (iterator position, const value_type& val) {
+
+			}
+
+			void	clear() {
+
 			}
 
 			void runPostOrderTreeWalk() {
@@ -140,7 +150,7 @@ namespace ft {
 			}
 
 			void postOrderTreeWalk(TreeNode<const Key,T>* treeNode) {
-				if (!treeNode)
+				if (!treeNode || treeNode == _end)
 					return ;
 				postOrderTreeWalk(treeNode->_left);
 				postOrderTreeWalk(treeNode->_right);
