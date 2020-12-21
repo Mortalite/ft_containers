@@ -68,6 +68,39 @@ namespace ft {
 				_size = 0;
 			}
 
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last,
+				 const key_compare& comp = key_compare(),
+				 const allocator_type& alloc = allocator_type()) {
+				_root = NULL;
+				_begin = _end = new TreeNode<const Key,T>;
+				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_comp = comp;
+				_alloc = alloc;
+				_size = 0;
+				while (first != last)
+					insert(*first++);
+			}
+
+			map (const map& x) {
+				_root = NULL;
+				_begin = _end = new TreeNode<const Key,T>;
+				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_comp = x._comp;
+				_alloc = x._alloc;
+				_size = 0;
+
+				if (x.size()) {
+					iterator first = x.begin(), last = x.end();
+					while (first != last)
+						insert(*first++);
+				}
+			}
+
+			~map() {
+
+			}
+
 			/*
 			** Iterators
 			*/
@@ -98,7 +131,9 @@ namespace ft {
 			/*
 			** Element access
 			*/
-
+			mapped_type& operator[](const key_type& k) {
+				return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+			};
 
 			/*
 			** Modifiers
@@ -107,10 +142,13 @@ namespace ft {
 			std::pair<iterator,bool> insert (const value_type& val) {
 				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = _root;
+				bool isRightMost = true;
 				while (x && x != _end) {
 					y = x;
-					if (_comp(val.first, x->_data->first))
+					if (_comp(val.first, x->_data->first)) {
 						x = x->_left;
+						isRightMost = false;
+					}
 					else if (_comp(x->_data->first, val.first))
 						x = x->_right;
 					else
@@ -120,8 +158,7 @@ namespace ft {
 				z->_data = _alloc.allocate(1);
 				_alloc.construct(z->_data, val);
 				z->_parent = y;
-				z->_left = NULL;
-				z->_right = NULL;
+				z->_left = z->_right = NULL;
 				if (!y) {
 					z->_right = _end;
 					_root = _begin = _end->_parent = z;
@@ -130,8 +167,10 @@ namespace ft {
 					y->_left = _begin = z;
 				else {
 					y->_right = z;
-					z->_right = _end;
-					_end->_parent = z;
+					if (isRightMost) {
+						z->_right = _end;
+						_end->_parent = z;
+					}
 				}
 				_size++;
 				return (std::make_pair(iterator(z), true));
@@ -142,7 +181,13 @@ namespace ft {
 			}
 
 			void	clear() {
+				iterator first = this->begin(), last = this->end();
 
+				while (first != last) {
+					_alloc.destroy(&(*first));
+					first++;
+					_size--;
+				}
 			}
 
 			void runPostOrderTreeWalk() {
@@ -155,6 +200,18 @@ namespace ft {
 				postOrderTreeWalk(treeNode->_left);
 				postOrderTreeWalk(treeNode->_right);
 				std::cout << "first = " << treeNode->_data->first << ", second = " << treeNode->_data->second << std::endl;
+			}
+
+			void runInOrderTreeWalk() {
+				InOrderTreeWalk(_root);
+			}
+
+			void InOrderTreeWalk(TreeNode<const Key,T>* treeNode) {
+				if (!treeNode || treeNode == _end)
+					return ;
+				InOrderTreeWalk(treeNode->_left);
+				std::cout << "first = " << treeNode->_data->first << ", second = " << treeNode->_data->second << std::endl;
+				InOrderTreeWalk(treeNode->_right);
 			}
 
 			/*

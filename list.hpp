@@ -127,20 +127,20 @@ namespace ft {
 			}
 
 			list& operator=(const list& x) {
-				clear();
-				delete _end;
+				if (this != x) {
+					clear();
+					delete _end;
 
-				_end = new DLLNode<T>;
-				_first = _last = _end->_next = _end->_prev = _end;
-				_end->_data = NULL;
-				_size = 0;
-				_alloc = x._alloc;
+					_end = new DLLNode<T>;
+					_first = _last = _end->_next = _end->_prev = _end;
+					_end->_data = NULL;
+					_size = 0;
+					_alloc = x._alloc;
 
-				if (x._size) {
-					DLLNode<T> *ptr = x._first;
-					while (ptr != x._end) {
-						push_back(*ptr->_data);
-						ptr = ptr->_next;
+					if (x._size) {
+						iterator first = x.begin(), last = x.end();
+						while (first != last)
+							push_back(*first++);
 					}
 				}
 				return (*this);

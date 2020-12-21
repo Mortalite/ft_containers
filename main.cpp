@@ -2,6 +2,7 @@
 #include <typeinfo>
 #include <list>
 #include <vector>
+#include <map>
 #include <cstdlib>
 #include "list.hpp"
 #include "vector.hpp"
@@ -22,6 +23,14 @@ void printIterator(T& container) {
 	std::cout << BLUE << "printIterator" << RESET << std::endl;
 	for (typename T::iterator it = container.begin(); it != container.end(); it++)
 		std::cout << "container[" << i++ << "] = " << *it << std::endl;
+}
+
+template<typename T>
+void printIteratorMap(T& container) {
+	size_t i = 0;
+	std::cout << BLUE << "printIterator" << RESET << std::endl;
+	for (typename T::iterator it = container.begin(); it != container.end(); it++)
+		std::cout << "container[" << i++ << "] = (" << (*it).first << ", " << (*it).second << ")" << std::endl;
 }
 
 template<typename T, typename C>
@@ -547,7 +556,20 @@ int main() {
 	map.insert(std::make_pair(1, 10));
 	map.insert(std::make_pair(2, 25));
 	map.insert(std::make_pair(3, 35));
-	map.runPostOrderTreeWalk();
+	map.insert(std::make_pair(-50, 9309203));
+	map.insert(std::make_pair(-27, -1));
+	map.insert(std::make_pair(-150, 1000));
+	printIteratorMap(map);
+//	map.runInOrderTreeWalk();
+
+//	std::map<int, int> stdMap;
+//	stdMap.insert(std::make_pair(1, 10));
+//	stdMap.insert(std::make_pair(2, 25));
+//	stdMap.insert(std::make_pair(3, 35));
+//	stdMap.insert(std::make_pair(-50, 9309203));
+//	stdMap.insert(std::make_pair(-27, -1));
+//	stdMap.insert(std::make_pair(-150, 1000));
+//	printIteratorMap(stdMap);
 //	ft::map<const int,int>::iterator it = map.begin();
 //	std::cout << BLUE << it.getPtr()->_data->first << RESET << std::endl;
 	return (0);
