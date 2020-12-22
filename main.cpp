@@ -553,24 +553,37 @@ int main() {
 //	stack2.push((cType)(10));
 //	std::cout << BLUE << "==" << (stack == stack2) << RESET << std::endl;
 	ft::map<const int, int> map;
+	// 1,2,3,-50,-27,-150,-56,-1950,-1890,-10
 	map.insert(std::make_pair(1, 10));
-	map.insert(std::make_pair(2, 25));
-	map.insert(std::make_pair(3, 35));
+	map.insert(std::make_pair(40, 25));
+	map.insert(std::make_pair(100, 35));
+	map.insert(std::make_pair(20, 35));
 	map.insert(std::make_pair(-50, 9309203));
 	map.insert(std::make_pair(-27, -1));
 	map.insert(std::make_pair(-150, 1000));
+	map.insert(std::make_pair(-56, 933));
+	map.insert(std::make_pair(-1950, 3));
+	map.insert(std::make_pair(-1890, 103));
+	map.insert(std::make_pair(-10, 99203));
+
 	printIteratorMap(map);
+	map.erase(map.begin());
+	printIteratorMap(map);
+
 //	map.runInOrderTreeWalk();
 
-//	std::map<int, int> stdMap;
-//	stdMap.insert(std::make_pair(1, 10));
-//	stdMap.insert(std::make_pair(2, 25));
-//	stdMap.insert(std::make_pair(3, 35));
-//	stdMap.insert(std::make_pair(-50, 9309203));
-//	stdMap.insert(std::make_pair(-27, -1));
-//	stdMap.insert(std::make_pair(-150, 1000));
-//	printIteratorMap(stdMap);
-//	ft::map<const int,int>::iterator it = map.begin();
-//	std::cout << BLUE << it.getPtr()->_data->first << RESET << std::endl;
+	std::map<int, int> stdMap;
+	stdMap.insert(std::make_pair(1, 10));
+	stdMap.insert(std::make_pair(40, 25));
+	stdMap.insert(std::make_pair(100, 35));
+	stdMap.insert(std::make_pair(20, 35));
+	stdMap.insert(std::make_pair(-50, 9309203));
+	stdMap.insert(std::make_pair(-27, -1));
+	stdMap.insert(std::make_pair(-150, 1000));
+	stdMap.insert(std::make_pair(-56, 933));
+	stdMap.insert(std::make_pair(-1950, 3));
+	stdMap.insert(std::make_pair(-1890, 103));
+	stdMap.insert(std::make_pair(-10, 99203));
+	printIteratorMap(stdMap);
 	return (0);
 }

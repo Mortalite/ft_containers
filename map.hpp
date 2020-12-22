@@ -43,15 +43,45 @@ namespace ft {
 			allocator_type			_alloc;
 			size_type				_size;
 
-			TreeNode<Key,T>* treeSearch(TreeNode<Key,T> root, value_type& val) {
-				while (root && val != root._data->first) {
-					if (val < root._data->first)
-						root = root._left;
-					else
-						root = root._right;
-				}
-				return (root);
+			TreeNode<const Key,T>* treeMinimum(TreeNode<const Key,T>* ptr) {
+				TreeNode<const Key,T>* leftMost = ptr;
+
+				while (leftMost->_left)
+					leftMost = leftMost->_left;
+
+				return (leftMost);
 			}
+
+			TreeNode<const Key,T>* treeMaximum(TreeNode<const Key,T>* ptr) {
+				TreeNode<const Key,T>* rightMost = ptr;
+
+				while (rightMost->_right)
+					rightMost = rightMost->_right;
+
+				return (rightMost);
+			}
+
+			void refresh_iterators() {
+				TreeNode<const Key,T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
+
+				_begin = leftMost;
+				if (_end && _end->_parent && _end->_parent->_right != _end) {
+					rightMost->_right = _end;
+					_end->_parent = rightMost;
+				}
+			}
+
+			void transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {
+				if (!first->_parent)
+					_root = second;
+				else if (first == first->_parent->_left)
+					first->_parent->_left = second;
+				else
+					first->_parent->_right = second;
+				if (second)
+					second->_parent = first->_parent;
+			}
+
 
 		public:
 			/*
@@ -98,7 +128,8 @@ namespace ft {
 			}
 
 			~map() {
-
+				clear();
+				delete _end;
 			}
 
 			/*
@@ -142,13 +173,10 @@ namespace ft {
 			std::pair<iterator,bool> insert (const value_type& val) {
 				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = _root;
-				bool isRightMost = true;
 				while (x && x != _end) {
 					y = x;
-					if (_comp(val.first, x->_data->first)) {
+					if (_comp(val.first, x->_data->first))
 						x = x->_left;
-						isRightMost = false;
-					}
 					else if (_comp(x->_data->first, val.first))
 						x = x->_right;
 					else
@@ -165,14 +193,10 @@ namespace ft {
 				}
 				else if (_comp(z->_data->first, y->_data->first))
 					y->_left = _begin = z;
-				else {
+				else
 					y->_right = z;
-					if (isRightMost) {
-						z->_right = _end;
-						_end->_parent = z;
-					}
-				}
 				_size++;
+				refresh_iterators();
 				return (std::make_pair(iterator(z), true));
 			}
 
@@ -180,14 +204,40 @@ namespace ft {
 
 			}
 
-			void	clear() {
-				iterator first = this->begin(), last = this->end();
+			template <class InputIterator>
+			void insert (InputIterator first, InputIterator last) {
+				while (first != last)
+					insert(*first++);
+			}
 
-				while (first != last) {
-					_alloc.destroy(&(*first));
-					first++;
-					_size--;
+			void erase (iterator position) {
+				TreeNode<const Key,T>* ptr = position.getPtr(), *y;
+
+				if (!ptr->_left)
+					transplant(ptr, ptr->_right);
+				else if (!ptr->_right)
+					transplant(ptr, ptr->_left);
+				else {
+					y = treeMinimum(ptr->_right);
+					if (y->_parent != ptr) {
+						transplant(y, y->_right);
+						y->_right = ptr->_right;
+						y->_right->_parent = y;
+					}
+					transplant(ptr, y);
+					y->_left = ptr->_left;
+					y->_left->_parent = y;
 				}
+				_alloc.destroy(ptr->_data);
+				_alloc.deallocate(ptr->_data, 1);
+				delete ptr;
+				_size--;
+				refresh_iterators();
+			}
+
+			void	clear() {
+				while (!empty())
+					erase(this->begin());
 			}
 
 			void runPostOrderTreeWalk() {

@@ -19,7 +19,6 @@ namespace ft {
 
 		private:
 			TreeNode<const Key,T>*	_ptr;
-			TreeNode<const Key,T>*	_prevPtr;
 
 		public:
 
@@ -30,8 +29,8 @@ namespace ft {
 			typedef Category 					iterator_category;
 
 			IteratorMap() {}
-			IteratorMap(const IteratorMap &other):_ptr(other._ptr),_prevPtr(NULL) {}
-			IteratorMap(TreeNode<const Key,T> *node):_ptr(node),_prevPtr(NULL) {}
+			IteratorMap(const IteratorMap &other):_ptr(other._ptr) {}
+			IteratorMap(TreeNode<const Key,T> *node):_ptr(node) {}
 			~IteratorMap() {}
 
 			TreeNode<const Key,T>*	getPtr() { return (_ptr); }
@@ -46,23 +45,17 @@ namespace ft {
 			}
 
 			IteratorMap &operator++() {
-				if (_ptr) {
-					if (_ptr->_left && _prevPtr != _ptr->_left && _prevPtr != _ptr->_right) {
-						_prevPtr = _ptr;
+				if (_ptr->_right)
+				{
+					_ptr = _ptr->_right;
+					while (_ptr->_left)
 						_ptr = _ptr->_left;
-					}
-					else if (_ptr->_right && _prevPtr != _ptr->_right) {
-						_prevPtr = _ptr;
-						_ptr = _ptr->_right;
-					}
-					else if (_prevPtr == _ptr->_parent) {
-						_prevPtr = _ptr->_parent;
-						_ptr = _ptr->_parent->_parent;
-					}
-					else {
-						_prevPtr = _ptr;
+				}
+				else
+				{
+					while (_ptr->_parent && _ptr == _ptr->_parent->_right)
 						_ptr = _ptr->_parent;
-					}
+					_ptr = _ptr->_parent;
 				}
 				return (*this);
 			}
