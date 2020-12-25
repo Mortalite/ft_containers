@@ -32,6 +32,22 @@ namespace ft {
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;
 
+			class value_compare: public std::binary_function<value_type, value_type, bool>
+			{
+				friend class map;
+			protected:
+				Compare comp;
+				value_compare (Compare c) : comp(c) {}
+			public:
+				typedef bool result_type;
+				typedef value_type first_argument_type;
+				typedef value_type second_argument_type;
+				bool operator() (const value_type& x, const value_type& y) const
+				{
+					return comp(x.first, y.first);
+				}
+			};
+
 		/*
 		** Class members
 		*/
@@ -201,7 +217,33 @@ namespace ft {
 			}
 
 			iterator insert (iterator position, const value_type& val) {
-
+				TreeNode<const Key,T> *y = NULL;
+				TreeNode<const Key,T> *x = position;
+				while (x && x != _end) {
+					y = x;
+					if (_comp(val.first, x->_data->first))
+						x = x->_left;
+					else if (_comp(x->_data->first, val.first))
+						x = x->_right;
+					else
+						return (iterator(x));
+				}
+				TreeNode<const Key,T> *z = new TreeNode<const Key,T>;
+				z->_data = _alloc.allocate(1);
+				_alloc.construct(z->_data, val);
+				z->_parent = y;
+				z->_left = z->_right = NULL;
+				if (!y) {
+					z->_right = _end;
+					_root = _begin = _end->_parent = z;
+				}
+				else if (_comp(z->_data->first, y->_data->first))
+					y->_left = _begin = z;
+				else
+					y->_right = z;
+				_size++;
+				refresh_iterators();
+				return (iterator(z));
 			}
 
 			template <class InputIterator>
@@ -235,43 +277,112 @@ namespace ft {
 				refresh_iterators();
 			}
 
+			size_type erase (const key_type& k) {
+				iterator del = find(k);
+				if (del == end())
+					return (0);
+				erase(del);
+				return (1);
+			}
+
+			void erase (iterator first, iterator last) {
+				iterator tmp;
+
+				while (first != last) {
+					tmp = first++;
+					erase(tmp);
+				}
+			}
+
+			void swap (map& x) {
+				ft::swap(_root, x._root);
+				ft::swap(_begin, x._begin);
+				ft::swap(_end, x._end);
+				ft::swap(_comp, x._comp);
+				ft::swap(_alloc, x._alloc);
+				ft::swap(_size, x._size);
+			}
+
 			void	clear() {
 				while (!empty())
 					erase(this->begin());
 			}
 
-			void runPostOrderTreeWalk() {
-				postOrderTreeWalk(_root);
-			}
-
-			void postOrderTreeWalk(TreeNode<const Key,T>* treeNode) {
-				if (!treeNode || treeNode == _end)
-					return ;
-				postOrderTreeWalk(treeNode->_left);
-				postOrderTreeWalk(treeNode->_right);
-				std::cout << "first = " << treeNode->_data->first << ", second = " << treeNode->_data->second << std::endl;
-			}
-
-			void runInOrderTreeWalk() {
-				InOrderTreeWalk(_root);
-			}
-
-			void InOrderTreeWalk(TreeNode<const Key,T>* treeNode) {
-				if (!treeNode || treeNode == _end)
-					return ;
-				InOrderTreeWalk(treeNode->_left);
-				std::cout << "first = " << treeNode->_data->first << ", second = " << treeNode->_data->second << std::endl;
-				InOrderTreeWalk(treeNode->_right);
-			}
-
 			/*
 			** Observers
 			*/
+			key_compare		key_comp() const {
+				return (_comp);
+			}
+
+			value_compare	value_comp() const {
+				return (value_compare(_comp));
+			}
 
 			/*
 			** Operations
 			*/
+			iterator find (const key_type& k) {
+				iterator first = this->begin(), last = this->end();
 
+				while (first != last) {
+					if (!_comp((*first).first, k) && !_comp(k, (*first).first))
+						return (first);
+					first++;
+				}
+				return (last);
+			}
+
+/*			const_iterator find (const key_type& k) const {
+				const_iterator first = this->begin(), last = this->end();
+
+				while (first != last) {
+					if (!_comp((*first).first, k) && !_comp(k, (*first).first))
+						return (first);
+					first++;
+				}
+				return (last);
+			}*/
+
+/*			size_type count (const key_type& k) const {
+				return (this->find(k) != this->end());
+			}*/
+
+			iterator lower_bound (const key_type& k) {
+				iterator first = begin(), last = end();
+
+				while (first != last) {
+					if (!(_comp((*first).first, k)))
+						return (first);
+					first++;
+				}
+				return (last);
+			}
+
+//			const_iterator lower_bound (const key_type& k) const {
+//
+//			}
+
+			iterator upper_bound (const key_type& k) {
+				iterator first = begin(), last = end();
+
+				while (first != last) {
+					if (_comp(k, (*first).first))
+						return (first);
+					first++;
+				}
+				return (last);
+			}
+
+//			const_iterator upper_bound (const key_type& k) const {
+//
+//			}
+
+			std::pair<iterator,iterator>	equal_range (const key_type& k) {
+				iterator upperBound = upper_bound(k);
+
+
+			}
 
 	};
 

@@ -61,7 +61,7 @@ namespace ft {
 			}
 
 			IteratorMap operator++(int) {
-				IteratorMap<const Key, T, Category> tmp(*this);
+				IteratorMap<Key, T, Category> tmp(*this);
 				operator++();
 				return (tmp);
 			}
@@ -72,7 +72,7 @@ namespace ft {
 			}
 
 			IteratorMap operator--(int) {
-				IteratorMap<const Key, T, Category> tmp(*this);
+				IteratorMap<Key, T, Category> tmp(*this);
 				operator--();
 				return (tmp);
 			}
