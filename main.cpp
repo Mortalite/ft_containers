@@ -557,6 +557,7 @@ void printRevIteratorMap(T& container) {
 
 template<typename T, typename C>
 void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
+	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
 	size_t i = 0;
 
 	if (mainContainer.size() != alterContainer.size()) {
@@ -575,10 +576,30 @@ void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
 }
 
 template<typename T, typename C>
+void printCmpRevIteratorMap(T& mainContainer, C& alterContainer) {
+	std::cout << BLUE << "ReverseIterator" << RESET << std::endl;
+	size_t i = 0;
+
+	if (mainContainer.size() != alterContainer.size()) {
+		std::cerr << "Container diff size" << std::endl;
+		return;
+	}
+	typename T::reverse_iterator mainIt = mainContainer.rbegin();
+	typename C::reverse_iterator alterIt = alterContainer.rbegin();
+
+	for ( ; mainIt != mainContainer.rend(); mainIt++, alterIt++, i++) {
+		std::stringstream stringStream;
+		stringStream << "mainContainer[" << i << "] = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
+		std::cout << std::setw(printMargin) << std::left << stringStream.str();
+		std::cout << "alterContainer[" << i << "] = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
+	}
+}
+
+template<typename T, typename C>
 void testMapConstructors() {
 	std::cout << RED << "Constructors" << RESET << std::endl;
 
-	std::cout << BLUE << "Fill Constructor (rand<T>(), rand<T>())" << RESET << std::endl;
+	std::cout << BLUE << "Fill (rand<T>(), rand<T>())" << RESET << std::endl;
 	T mainContainerFill;
 	C alterContainerFill;
 
@@ -595,11 +616,10 @@ void testMapConstructors() {
 	C alterContainerIt(alterContainerFill.begin(), alterContainerFill.end());
 	printCmpIteratorMap(mainContainerIt, alterContainerIt);
 
-
-//	std::cout << BLUE << "Copy constructor" << RESET << std::endl;
-//	T mainContainerCopy(mainContainerIt);
-//	C alterContainerCopy(alterContainerIt);
-//	printCmpIteratorMap(mainContainerCopy, alterContainerCopy);
+	std::cout << BLUE << "Copy constructor" << RESET << std::endl;
+	T mainContainerCopy(mainContainerIt);
+	C alterContainerCopy(alterContainerIt);
+	printCmpIteratorMap(mainContainerCopy, alterContainerCopy);
 
 }
 
@@ -607,7 +627,7 @@ template<typename T, typename C>
 void testMapIterators() {
 	std::cout << RED << "Iterators" << RESET << std::endl;
 
-	std::cout << BLUE << "Fill Constructor (rand<T>(), rand<T>())" << RESET << std::endl;
+	std::cout << BLUE << "Fill (rand<T>(), rand<T>())" << RESET << std::endl;
 	T mainContainerFill;
 	C alterContainerFill;
 
@@ -617,10 +637,34 @@ void testMapIterators() {
 		mainContainerFill.insert(std::make_pair(keyTmp, mappedTmp));
 		alterContainerFill.insert(std::make_pair(keyTmp, mappedTmp));
 	}
-	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
 	printCmpIteratorMap(mainContainerFill, alterContainerFill);
-	std::cout << "size = " << mainContainerFill.size() << " - " << alterContainerFill.size();
+	printCmpRevIteratorMap(mainContainerFill, alterContainerFill);
 
+}
+
+template<typename T, typename C>
+void testMapInsert() {
+	std::cout << RED << "Insert function" << RESET << std::endl;
+
+	std::cout << BLUE << "Insert pair(rand<T>(), rand<T>())" << RESET << std::endl;
+	T mainContainer;
+	C alterContainer;
+
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+		typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
+		mainContainer.insert(std::make_pair(keyTmp, mappedTmp));
+		alterContainer.insert(std::make_pair(keyTmp, mappedTmp));
+	}
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Insert end(rand<T>(), rand<T>())" << RESET << std::endl;
+	typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+	typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
+	mainContainer.insert(mainContainer.end(), std::make_pair(keyTmp, mappedTmp));
+	alterContainer.insert(alterContainer.end(), std::make_pair(keyTmp, mappedTmp));
+
+	printCmpIteratorMap(mainContainer, alterContainer);
 }
 
 void testList() {
@@ -655,9 +699,11 @@ void testVector() {
 }
 
 void testMap() {
-	testMapConstructors<ft::map<const int, int, small<int> >, std::map<const int, int, small<int> > >();
+	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
 //	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
 	testMapIterators<ft::map<const int, int>, std::map<const int, int> >();
+	testMapInsert<ft::map<const int, int>, std::map<const int, int> >();
+
 }
 
 int main() {
@@ -667,45 +713,5 @@ int main() {
 //	testVector();
 	testMap();
 
-/*	ft::stack<cType, ft::list<cType> > stack;
-	stack.push((cType)(10));*/
-//	ft::stack<cType, ft::list<cType> > stack2;
-//	stack2.push((cType)(10));
-//	std::cout << BLUE << "==" << (stack == stack2) << RESET << std::endl;
-/*	ft::map<const int, int> map;
-	// 1,2,3,-50,-27,-150,-56,-1950,-1890,-10
-	map.insert(std::make_pair(1, 10));
-	map.insert(std::make_pair(40, 25));
-	map.insert(std::make_pair(100, 35));
-	map.insert(std::make_pair(20, 35));
-	map.insert(std::make_pair(-50, 9309203));
-	map.insert(std::make_pair(-27, -1));
-	map.insert(std::make_pair(-150, 1000));
-	map.insert(std::make_pair(-56, 933));
-	map.insert(std::make_pair(-1950, 3));
-	map.insert(std::make_pair(-1890, 103));
-	map.insert(std::make_pair(-10, 99203));
-
-	printIteratorMap(map);
-	map.erase(map.begin());
-	printIteratorMap(map);
-
-	std::cout << RED << ((*map.find(-50)).first) << RESET << std::endl;
-//	std::cout << map.count(-50) << std::endl;
-//	map.runInOrderTreeWalk();
-
-	std::map<int, int> stdMap;
-	stdMap.insert(std::make_pair(1, 10));
-	stdMap.insert(std::make_pair(40, 25));
-	stdMap.insert(std::make_pair(100, 35));
-	stdMap.insert(std::make_pair(20, 35));
-	stdMap.insert(std::make_pair(-50, 9309203));
-	stdMap.insert(std::make_pair(-27, -1));
-	stdMap.insert(std::make_pair(-150, 1000));
-	stdMap.insert(std::make_pair(-56, 933));
-	stdMap.insert(std::make_pair(-1950, 3));
-	stdMap.insert(std::make_pair(-1890, 103));
-	stdMap.insert(std::make_pair(-10, 99203));
-	printIteratorMap(stdMap);*/
 	return (0);
 }

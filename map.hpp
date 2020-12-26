@@ -26,9 +26,9 @@ namespace ft {
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
 			typedef ft::IteratorMap<Key,T>						iterator;
-//			typedef ft::ReverseIteratorList<T>					reverse_iterator;
-//			typedef ft::ConstIteratorList<T>					const_iterator;
-//			typedef ft::ConstReverseIteratorList<T>				const_reverse_iterator;
+			typedef ft::ReverseIteratorMap<Key,T>				reverse_iterator;
+			typedef ft::ConstIteratorMap<Key,T>					const_iterator;
+			typedef ft::ConstReverseIteratorMap<Key,T>			const_reverse_iterator;
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;
 
@@ -59,25 +59,25 @@ namespace ft {
 			allocator_type			_alloc;
 			size_type				_size;
 
-			TreeNode<const Key,T>* treeMinimum(TreeNode<const Key,T>* ptr) {
+			TreeNode<const Key,T>*	treeMinimum(TreeNode<const Key,T>* ptr) {
 				TreeNode<const Key,T>* leftMost = ptr;
 
-				while (leftMost->_left)
+				while (leftMost && leftMost->_left)
 					leftMost = leftMost->_left;
 
 				return (leftMost);
 			}
 
-			TreeNode<const Key,T>* treeMaximum(TreeNode<const Key,T>* ptr) {
+			TreeNode<const Key,T>*	treeMaximum(TreeNode<const Key,T>* ptr) {
 				TreeNode<const Key,T>* rightMost = ptr;
 
-				while (rightMost->_right)
+				while (rightMost && rightMost->_right)
 					rightMost = rightMost->_right;
 
 				return (rightMost);
 			}
 
-			void refresh_iterators() {
+			void					refresh_iterators() {
 				TreeNode<const Key,T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
 
 				_begin = leftMost;
@@ -91,7 +91,7 @@ namespace ft {
 				}*/
 			}
 
-			void transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {
+			void					transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {
 				if (!first->_parent)
 					_root = second;
 				else if (first == first->_parent->_left)
@@ -111,7 +111,7 @@ namespace ft {
 						  const allocator_type& alloc = allocator_type()) {
 				_root = NULL;
 				_begin = _end = new TreeNode<const Key,T>;
-				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 				_begin->_data = _end->_data = NULL;
 				_comp = comp;
 				_alloc = alloc;
@@ -124,7 +124,7 @@ namespace ft {
 				 const allocator_type& alloc = allocator_type()) {
 				_root = NULL;
 				_begin = _end = new TreeNode<const Key,T>;
-				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 				_comp = comp;
 				_alloc = alloc;
 				_size = 0;
@@ -135,13 +135,13 @@ namespace ft {
 			map (const map& x) {
 				_root = NULL;
 				_begin = _end = new TreeNode<const Key,T>;
-				_begin->_left = _begin->_right = _end->_left = _end->_right = NULL;
+				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 				_comp = x._comp;
 				_alloc = x._alloc;
 				_size = 0;
 
 				if (x.size()) {
-					iterator first = x.begin(), last = x.end();
+					const_iterator first = x.begin(), last = x.end();
 					while (first != last)
 						insert(*first++);
 				}
@@ -155,19 +155,42 @@ namespace ft {
 			/*
 			** Iterators
 			*/
-			iterator	begin() {
+			iterator				begin() {
 				return (iterator(_begin));
 			}
 
-			iterator	end() {
+			const_iterator			begin() const {
+				return (const_iterator(_begin));
+			}
+
+			iterator				end() {
 				return (iterator(_end));
 			}
 
+			const_iterator 			end() const {
+				return (const_iterator(_end));
+			}
+
+			reverse_iterator		rbegin() {
+				return (reverse_iterator(_end));
+			}
+
+			const_reverse_iterator	rbegin() const {
+				return (const_reverse_iterator(_end));
+			}
+
+			reverse_iterator 		rend() {
+				return (reverse_iterator(_begin));
+			}
+
+			const_reverse_iterator	rend() const {
+				return (const_reverse_iterator(_end));
+			}
 
 			/*
 			** Capacity
 			*/
-			bool 		empty() const {
+			bool		empty() const {
 				return (_size == 0);
 			}
 
@@ -190,7 +213,7 @@ namespace ft {
 			** Modifiers
 			*/
 
-			std::pair<iterator,bool> insert (const value_type& val) {
+			std::pair<iterator,bool>	insert (const value_type& val) {
 				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = _root;
 				while (x && x != _end) {
@@ -220,9 +243,13 @@ namespace ft {
 				return (std::make_pair(iterator(z), true));
 			}
 
-			iterator insert (iterator position, const value_type& val) {
+			iterator					insert (iterator position, const value_type& val) {
 				TreeNode<const Key,T> *y = NULL;
-				TreeNode<const Key,T> *x = position;
+				TreeNode<const Key,T> *x = position.getPtr();
+				while (x->_parent && _comp(x->_parent->_data->first, val.first))
+					x = x->_parent;
+				if (x && x == _end && x->_parent)
+					y = x->_parent;
 				while (x && x != _end) {
 					y = x;
 					if (_comp(val.first, x->_data->first))
@@ -251,12 +278,12 @@ namespace ft {
 			}
 
 			template <class InputIterator>
-			void insert (InputIterator first, InputIterator last) {
+			void						insert (InputIterator first, InputIterator last) {
 				while (first != last)
 					insert(*first++);
 			}
 
-			void erase (iterator position) {
+			void						erase (iterator position) {
 				TreeNode<const Key,T>* ptr = position.getPtr(), *y;
 
 				if (!ptr->_left)
@@ -281,7 +308,7 @@ namespace ft {
 				refresh_iterators();
 			}
 
-			size_type erase (const key_type& k) {
+			size_type					erase (const key_type& k) {
 				iterator del = find(k);
 				if (del == end())
 					return (0);
@@ -289,7 +316,7 @@ namespace ft {
 				return (1);
 			}
 
-			void erase (iterator first, iterator last) {
+			void						erase (iterator first, iterator last) {
 				iterator tmp;
 
 				while (first != last) {
@@ -298,7 +325,7 @@ namespace ft {
 				}
 			}
 
-			void swap (map& x) {
+			void						swap (map& x) {
 				ft::swap(_root, x._root);
 				ft::swap(_begin, x._begin);
 				ft::swap(_end, x._end);
@@ -307,7 +334,7 @@ namespace ft {
 				ft::swap(_size, x._size);
 			}
 
-			void	clear() {
+			void						clear() {
 				while (!empty())
 					erase(this->begin());
 			}
@@ -326,7 +353,7 @@ namespace ft {
 			/*
 			** Operations
 			*/
-			iterator find (const key_type& k) {
+			iterator		find (const key_type& k) {
 				iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
@@ -337,7 +364,7 @@ namespace ft {
 				return (last);
 			}
 
-/*			const_iterator find (const key_type& k) const {
+			const_iterator	find (const key_type& k) const {
 				const_iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
@@ -346,13 +373,13 @@ namespace ft {
 					first++;
 				}
 				return (last);
-			}*/
+			}
 
-/*			size_type count (const key_type& k) const {
+			size_type		count (const key_type& k) const {
 				return (this->find(k) != this->end());
-			}*/
+			}
 
-			iterator lower_bound (const key_type& k) {
+			iterator		lower_bound (const key_type& k) {
 				iterator first = begin(), last = end();
 
 				while (first != last) {
@@ -363,11 +390,11 @@ namespace ft {
 				return (last);
 			}
 
-//			const_iterator lower_bound (const key_type& k) const {
+//			const_iterator	lower_bound (const key_type& k) const {
 //
 //			}
 
-			iterator upper_bound (const key_type& k) {
+			iterator		upper_bound (const key_type& k) {
 				iterator first = begin(), last = end();
 
 				while (first != last) {
@@ -378,7 +405,7 @@ namespace ft {
 				return (last);
 			}
 
-//			const_iterator upper_bound (const key_type& k) const {
+//			const_iterator	upper_bound (const key_type& k) const {
 //
 //			}
 
