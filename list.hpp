@@ -94,7 +94,7 @@ namespace ft {
 		 	}
 
 		 	template<class InputIterator>
-		 	list (	InputIterator first, InputIterator last, \
+		 	list(	InputIterator first, InputIterator last, \
 		 			const allocator_type& alloc = allocator_type()) {
 				_end = new DLLNode<T>;
 				_first = _last = _end->_next = _end->_prev = _end;

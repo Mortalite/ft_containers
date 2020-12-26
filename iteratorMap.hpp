@@ -67,7 +67,18 @@ namespace ft {
 			}
 
 			IteratorMap &operator--() {
-				_ptr = _ptr->_prev;
+				if (_ptr->_left)
+				{
+					_ptr = _ptr->_left;
+					while (_ptr->_right)
+						_ptr = _ptr->_right;
+				}
+				else
+				{
+					while (_ptr->_parent && _ptr == _ptr->_parent->_left)
+						_ptr = _ptr->_parent;
+					_ptr = _ptr->_parent;
+				}
 				return (*this);
 			}
 

@@ -85,6 +85,10 @@ namespace ft {
 					rightMost->_right = _end;
 					_end->_parent = rightMost;
 				}
+/*				if (_begin && _begin->_parent && _begin->_parent->_left != _begin) {
+					leftMost->_left = _begin;
+					_begin->_parent = leftMost;
+				}*/
 			}
 
 			void transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {

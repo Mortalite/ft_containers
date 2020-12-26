@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <typeinfo>
 #include <list>
 #include <vector>
@@ -13,7 +15,8 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 4;
+const	int countRandNumbers = 3;
+const	int printMargin = 45;
 typedef int cType;
 
 template<typename T>
@@ -64,9 +67,10 @@ void printCmpRevIterator(T& mainContainer, C& alterContainer) {
 
 	std::cout << BLUE << "printCmpRevIterator" << RESET << std::endl;
 	for ( ; mainIt != mainContainer.rend(); mainIt++, alterIt++, i++) {
-		std::cout << "ft_container[" << i << "] = " << *mainIt;
-		std::cout << "\t\t";
-		std::cout << "std_container[" << i << "] = " << *alterIt << std::endl;
+		std::stringstream stringStream;
+		stringStream << "mainContainer[" << i << "] = " << *mainIt;
+		std::cout << std::setw(printMargin) << std::left << stringStream.str();
+		std::cout << "alterContainer[" << i << "] = " << *alterIt << std::endl;
 	}
 }
 
@@ -544,9 +548,17 @@ void printIteratorMap(T& container) {
 		std::cout << "container[" << i++ << "] = (" << (*it).first << ", " << (*it).second << ")" << std::endl;
 }
 
+template<typename T>
+void printRevIteratorMap(T& container) {
+	size_t i = 0;
+	for (typename T::iterator it = container.rbegin(); it != container.rend(); it++)
+		std::cout << "container[" << i++ << "] = (" << (*it).first << ", " << (*it).second << ")" << std::endl;
+}
+
 template<typename T, typename C>
 void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
 	size_t i = 0;
+
 	if (mainContainer.size() != alterContainer.size()) {
 		std::cerr << "Container diff size" << std::endl;
 		return;
@@ -555,8 +567,9 @@ void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
 	typename C::iterator alterIt = alterContainer.begin();
 
 	for ( ; mainIt != mainContainer.end(); mainIt++, alterIt++, i++) {
-		std::cout << "mainContainer[" << i << "] = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
-		std::cout << "\t\t";
+		std::stringstream stringStream;
+		stringStream << "mainContainer[" << i << "] = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
+		std::cout << std::setw(printMargin) << std::left << stringStream.str();
 		std::cout << "alterContainer[" << i << "] = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
 	}
 }
@@ -582,6 +595,7 @@ void testMapConstructors() {
 	C alterContainerIt(alterContainerFill.begin(), alterContainerFill.end());
 	printCmpIteratorMap(mainContainerIt, alterContainerIt);
 
+
 //	std::cout << BLUE << "Copy constructor" << RESET << std::endl;
 //	T mainContainerCopy(mainContainerIt);
 //	C alterContainerCopy(alterContainerIt);
@@ -589,7 +603,25 @@ void testMapConstructors() {
 
 }
 
+template<typename T, typename C>
+void testMapIterators() {
+	std::cout << RED << "Iterators" << RESET << std::endl;
 
+	std::cout << BLUE << "Fill Constructor (rand<T>(), rand<T>())" << RESET << std::endl;
+	T mainContainerFill;
+	C alterContainerFill;
+
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+		typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
+		mainContainerFill.insert(std::make_pair(keyTmp, mappedTmp));
+		alterContainerFill.insert(std::make_pair(keyTmp, mappedTmp));
+	}
+	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
+	printCmpIteratorMap(mainContainerFill, alterContainerFill);
+	std::cout << "size = " << mainContainerFill.size() << " - " << alterContainerFill.size();
+
+}
 
 void testList() {
 	std::cout << RED << "||||||||||LIST||||||||||" << RESET << std::endl;
@@ -625,13 +657,13 @@ void testVector() {
 void testMap() {
 	testMapConstructors<ft::map<const int, int, small<int> >, std::map<const int, int, small<int> > >();
 //	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
-
+	testMapIterators<ft::map<const int, int>, std::map<const int, int> >();
 }
 
 int main() {
 	srand(time(NULL));
 
-	testList();
+//	testList();
 //	testVector();
 	testMap();
 
