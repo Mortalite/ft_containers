@@ -15,7 +15,7 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 3;
+const	int countRandNumbers = 4;
 const	int printMargin = 45;
 typedef int cType;
 
@@ -309,15 +309,10 @@ void testSwap() {
 	C alterContainer;
 	containerPushBack(alterContainer);
 
-	if (mainContainer.size() != alterContainer.size()) {
-		std::cerr << "Container diff size" << std::endl;
-		return;
-	}
-
-	std::cout << RED << "Before Swap" << RESET << std::endl;
+	std::cout << BLUE << "Before Swap" << RESET << std::endl;
 	printCmpIterator(mainContainer, alterContainer);
 	mainContainer.swap(alterContainer);
-	std::cout << RED << "After Swap" << RESET << std::endl;
+	std::cout << BLUE << "After Swap" << RESET << std::endl;
 	printCmpIterator(mainContainer, alterContainer);
 }
 
@@ -595,6 +590,25 @@ void printCmpRevIteratorMap(T& mainContainer, C& alterContainer) {
 	}
 }
 
+template<typename T>
+void mapRandomInsert(T& container) {
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+		typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
+		container.insert(std::make_pair(keyTmp, mappedTmp));
+	}
+}
+
+template<typename T, typename C>
+void mapRandomInsert(T& mainContainer, C& alterContainer) {
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+		typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
+		mainContainer.insert(std::make_pair(keyTmp, mappedTmp));
+		alterContainer.insert(std::make_pair(keyTmp, mappedTmp));
+	}
+}
+
 template<typename T, typename C>
 void testMapConstructors() {
 	std::cout << RED << "Constructors" << RESET << std::endl;
@@ -650,21 +664,128 @@ void testMapInsert() {
 	T mainContainer;
 	C alterContainer;
 
-	for (size_t i = 0; i < countRandNumbers; i++) {
-		typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
-		typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
-		mainContainer.insert(std::make_pair(keyTmp, mappedTmp));
-		alterContainer.insert(std::make_pair(keyTmp, mappedTmp));
-	}
+	mapRandomInsert(mainContainer, alterContainer);
 	printCmpIteratorMap(mainContainer, alterContainer);
 
-	std::cout << BLUE << "Insert end(rand<T>(), rand<T>())" << RESET << std::endl;
+	std::cout << BLUE << "Insert in end(rand<T>(), rand<T>())" << RESET << std::endl;
 	typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
 	typename T::mapped_type mappedTmp = getRandomValueByType<typename T::mapped_type>();
 	mainContainer.insert(mainContainer.end(), std::make_pair(keyTmp, mappedTmp));
 	alterContainer.insert(alterContainer.end(), std::make_pair(keyTmp, mappedTmp));
-
 	printCmpIteratorMap(mainContainer, alterContainer);
+
+	T mainContainerRand;
+	C alterContainerRand;
+
+	std::cout << BLUE << "Random map" << RESET << std::endl;
+	mapRandomInsert(mainContainerRand, alterContainerRand);
+	printCmpIteratorMap(mainContainerRand, alterContainerRand);
+
+	std::cout << BLUE << "Insert using reverse iterator" << RESET << std::endl;
+	mainContainer.insert(mainContainerRand.rbegin(), mainContainerRand.rend());
+	alterContainer.insert(alterContainerRand.rbegin(), alterContainerRand.rend());
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+}
+
+template<typename T, typename C>
+void testMapErase() {
+	std::cout << RED << "Erase function" << RESET << std::endl;
+
+	T mainContainer;
+	C alterContainer;
+	mapRandomInsert(mainContainer, alterContainer);
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Erase from begin" << RESET << std::endl;
+	mainContainer.erase(mainContainer.begin());
+	alterContainer.erase(alterContainer.begin());
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Erase from --end" << RESET << std::endl;
+	mainContainer.erase(--mainContainer.end());
+	alterContainer.erase(--alterContainer.end());
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Random map" << RESET << std::endl;
+	mapRandomInsert(mainContainer, alterContainer);
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Erase [begin, end)" << RESET << std::endl;
+	mainContainer.erase(mainContainer.begin(), mainContainer.end());
+	alterContainer.erase(alterContainer.begin(), alterContainer.end());
+	std::cout << BLUE << "After Erase" << RESET << std::endl;
+	printCmpIteratorMap(mainContainer, alterContainer);
+}
+
+template<typename T, typename C>
+void testMapSwap() {
+	std::cout << RED << "Swap function" << RESET << std::endl;
+
+	T mainContainer;
+	C alterContainer;
+	mapRandomInsert(mainContainer);
+	mapRandomInsert(alterContainer);
+
+	std::cout << BLUE << "Before Swap" << RESET << std::endl;
+	printCmpIteratorMap(mainContainer, alterContainer);
+	mainContainer.swap(alterContainer);
+	std::cout << BLUE << "After Swap" << RESET << std::endl;
+	printCmpIteratorMap(mainContainer, alterContainer);
+}
+
+template<typename T, typename C>
+void testMapOperations() {
+	std::cout << RED << "Map operations" << RESET << std::endl;
+
+	T mainContainer;
+	C alterContainer;
+	mapRandomInsert(mainContainer);
+	mapRandomInsert(alterContainer);
+
+	typename T::iterator mainIt;
+	typename C::iterator alterIt;
+
+	std::cout << BLUE << "Random map" << RESET << std::endl;
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Find iterator to begin + 1 and change value" << RESET << std::endl;
+	mainIt = mainContainer.find((*(++mainContainer.begin())).first);
+	alterIt = alterContainer.find((*(++alterContainer.begin())).first);
+	if (mainIt != mainContainer.end() && alterIt != alterContainer.end()) {
+		std::cout << "mainIt = " << (*mainIt).first << ", alterIt = " << (*alterIt).first << std::endl;
+		(*mainIt).second = 1000000;
+		(*alterIt).second = -1000000;
+	}
+	printCmpIteratorMap(mainContainer, alterContainer);
+
+	std::cout << BLUE << "Count begin key" << RESET << std::endl;
+	typename T::size_type countMain = mainContainer.count((*(++mainContainer.begin())).first);
+	typename T::size_type countAlter = alterContainer.count((*(++alterContainer.begin())).first);
+	std::cout << "mainCount = " << countMain << ", alterCount = " << countAlter << std::endl;
+
+	std::cout << BLUE << "Count random key" << RESET << std::endl;
+	typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
+	countMain = mainContainer.count(keyTmp);
+	countAlter = alterContainer.count(keyTmp);
+	std::cout << "key = " << keyTmp << ", mainCount = " << countMain << ", alterCount = " << countAlter << std::endl;
+
+	mainContainer.clear();
+
+	mainContainer['a']=20;
+	mainContainer['b']=40;
+	mainContainer['c']=60;
+	mainContainer['d']=80;
+	mainContainer['e']=100;
+
+
+	std::cout << BLUE << "Lower bound" << RESET << std::endl;
+	mainIt = mainContainer.lower_bound ('b');
+	std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
+
+	std::cout << BLUE << "Upper bound" << RESET << std::endl;
+	mainIt = mainContainer.upper_bound ('d');
+	std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
 }
 
 void testList() {
@@ -703,7 +824,9 @@ void testMap() {
 //	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
 	testMapIterators<ft::map<const int, int>, std::map<const int, int> >();
 	testMapInsert<ft::map<const int, int>, std::map<const int, int> >();
-
+	testMapErase<ft::map<const int, int>, std::map<const int, int> >();
+	testMapSwap<ft::map<const int, int>, ft::map<const int, int> >();
+	testMapOperations<ft::map<const int, int>, std::map<const int, int> >();
 }
 
 int main() {

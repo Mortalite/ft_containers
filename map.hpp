@@ -85,10 +85,6 @@ namespace ft {
 					rightMost->_right = _end;
 					_end->_parent = rightMost;
 				}
-/*				if (_begin && _begin->_parent && _begin->_parent->_left != _begin) {
-					leftMost->_left = _begin;
-					_begin->_parent = leftMost;
-				}*/
 			}
 
 			void					transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {
@@ -206,7 +202,7 @@ namespace ft {
 			** Element access
 			*/
 			mapped_type& operator[](const key_type& k) {
-				return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+				return ((*((this->insert(std::make_pair(k,mapped_type()))).first)).second);
 			};
 
 			/*
@@ -244,12 +240,16 @@ namespace ft {
 			}
 
 			iterator					insert (iterator position, const value_type& val) {
-				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = position.getPtr();
-				while (x->_parent && _comp(x->_parent->_data->first, val.first))
+				TreeNode<const Key,T> *y = NULL;
+
+				while (x->_parent) {
 					x = x->_parent;
-				if (x && x == _end && x->_parent)
-					y = x->_parent;
+					y = x;
+					if (!_comp(x->_data->first, val.first))
+						break ;
+				}
+
 				while (x && x != _end) {
 					y = x;
 					if (_comp(val.first, x->_data->first))
@@ -390,9 +390,16 @@ namespace ft {
 				return (last);
 			}
 
-//			const_iterator	lower_bound (const key_type& k) const {
-//
-//			}
+			const_iterator	lower_bound (const key_type& k) const {
+				const_iterator first = begin(), last = end();
+
+				while (first != last) {
+					if (!(_comp((*first).first, k)))
+						return (first);
+					first++;
+				}
+				return (last);
+			}
 
 			iterator		upper_bound (const key_type& k) {
 				iterator first = begin(), last = end();
@@ -405,9 +412,16 @@ namespace ft {
 				return (last);
 			}
 
-//			const_iterator	upper_bound (const key_type& k) const {
-//
-//			}
+			const_iterator	upper_bound (const key_type& k) const {
+				const_iterator first = begin(), last = end();
+
+				while (first != last) {
+					if (_comp(k, (*first).first))
+						return (first);
+					first++;
+				}
+				return (last);
+			}
 
 			std::pair<iterator,iterator>	equal_range (const key_type& k) {
 				iterator upperBound = upper_bound(k);
