@@ -423,11 +423,15 @@ namespace ft {
 				return (last);
 			}
 
-			std::pair<iterator,iterator>	equal_range (const key_type& k) {
-				iterator upperBound = upper_bound(k);
-
-
+			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
+				return (std::make_pair(lower_bound(k), upper_bound(k)));
 			}
+
+			std::pair<iterator,iterator>	equal_range (const key_type& k) {
+				return (std::make_pair(lower_bound(k), upper_bound(k)));
+			}
+
+
 
 	};
 

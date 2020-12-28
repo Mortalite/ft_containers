@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <cstdlib>
+
 #include "list.hpp"
 #include "vector.hpp"
 #include "stack.hpp"
@@ -15,14 +16,15 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-const	int countRandNumbers = 4;
-const	int printMargin = 45;
-typedef int cType;
+size_t countRandNumbers = 4;
+size_t printMargin = 45;
+typedef	int	cType;
+
 
 template<typename T>
 void printIterator(T& container) {
 	size_t i = 0;
-	std::cout << BLUE << "printIterator" << RESET << std::endl;
+	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
 	for (typename T::iterator it = container.begin(); it != container.end(); it++)
 		std::cout << "container[" << i++ << "] = " << *it << std::endl;
 }
@@ -37,7 +39,7 @@ void printCmpIterator(T& mainContainer, C& alterContainer) {
 	typename T::iterator mainIt = mainContainer.begin();
 	typename C::iterator alterIt = alterContainer.begin();
 
-	std::cout << BLUE << "printCmpIterator" << RESET << std::endl;
+	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
 	for ( ; mainIt != mainContainer.end(); mainIt++, alterIt++, i++) {
 		std::cout << "mainContainer[" << i << "] = " << *mainIt;
 		std::cout << "\t\t";
@@ -48,7 +50,7 @@ void printCmpIterator(T& mainContainer, C& alterContainer) {
 template<typename T>
 void printRevIterator(T& container) {
 	size_t i = container.size();
-	std::cout << BLUE << "printRevIterator" << RESET << std::endl;
+	std::cout << BLUE << "ReverseIterator" << RESET << std::endl;
 	for (typename T::reverse_iterator it = container.rbegin(); it != container.rend(); it++)
 		std::cout << "container[" << --i << "] = " << *it << std::endl;
 }
@@ -65,7 +67,7 @@ void printCmpRevIterator(T& mainContainer, C& alterContainer) {
 	typename T::reverse_iterator mainIt = mainContainer.rbegin();
 	typename C::reverse_iterator alterIt = alterContainer.rbegin();
 
-	std::cout << BLUE << "printCmpRevIterator" << RESET << std::endl;
+	std::cout << BLUE << "ReverseIterator" << RESET << std::endl;
 	for ( ; mainIt != mainContainer.rend(); mainIt++, alterIt++, i++) {
 		std::stringstream stringStream;
 		stringStream << "mainContainer[" << i << "] = " << *mainIt;
@@ -81,8 +83,10 @@ void containerPushBack(T& container) {
 	for (size_t i = 0; i < countRandNumbers; i++) {
 		if (typeid(typename T::value_type) == typeid(int))
 			container.push_back(rand() % (intMax - intMin) + intMin);
-		else if (typeid(typename T::value_type) == typeid(float) || typeid(typename T::value_type) == typeid(double))
-			container.push_back(static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(floatMax - floatMin))) + floatMin);
+		else if (typeid(typename T::value_type) == typeid(float) || typeid(typename T::value_type) == typeid(double)) {
+			double scale = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+			container.push_back(scale * (floatMax - floatMin) + floatMin);
+		}
 	}
 }
 
@@ -93,8 +97,10 @@ typename T::value_type getRandomValue() {
 	for (size_t i = 0; i < countRandNumbers; i++) {
 		if (typeid(typename T::value_type) == typeid(int))
 			return (rand() % (intMax - intMin) + intMin);
-		else if (typeid(typename T::value_type) == typeid(float) || typeid(typename T::value_type) == typeid(double))
-			return (static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(floatMax - floatMin))));
+		else if (typeid(typename T::value_type) == typeid(float) || typeid(typename T::value_type) == typeid(double)) {
+			double scale = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+			return (scale * (floatMax - floatMin) + floatMin);
+		}
 	}
 	return (0);
 }
@@ -106,8 +112,10 @@ T getRandomValueByType() {
 	for (size_t i = 0; i < countRandNumbers; i++) {
 		if (typeid(T) == typeid(int))
 			return (rand() % (intMax - intMin) + intMin);
-		else if (typeid(T) == typeid(float) || typeid(T) == typeid(double))
-			return (static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(floatMax - floatMin))));
+		else if (typeid(T) == typeid(float) || typeid(T) == typeid(double)) {
+			double scale = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+			return (scale * (floatMax - floatMin) + floatMin);
+		}
 	}
 	return (0);
 }
@@ -786,6 +794,15 @@ void testMapOperations() {
 	std::cout << BLUE << "Upper bound" << RESET << std::endl;
 	mainIt = mainContainer.upper_bound ('d');
 	std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
+
+	std::cout << BLUE << "Equal range iterator" << RESET << std::endl;
+	std::pair<typename T::iterator, typename T::iterator> equalRange = mainContainer.equal_range('b');
+	mainIt = equalRange.first;
+	while (mainIt != equalRange.second) {
+		std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
+		mainIt++;
+	}
+
 }
 
 void testList() {
@@ -820,8 +837,8 @@ void testVector() {
 }
 
 void testMap() {
-	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
-//	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
+//	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
+	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
 	testMapIterators<ft::map<const int, int>, std::map<const int, int> >();
 	testMapInsert<ft::map<const int, int>, std::map<const int, int> >();
 	testMapErase<ft::map<const int, int>, std::map<const int, int> >();
@@ -832,8 +849,8 @@ void testMap() {
 int main() {
 	srand(time(NULL));
 
-//	testList();
-//	testVector();
+	testList();
+	testVector();
 	testMap();
 
 	return (0);

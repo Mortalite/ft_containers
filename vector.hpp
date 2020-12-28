@@ -1,8 +1,8 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include "iteratorVector.hpp"
 #include <cstring>
+#include "iteratorVector.hpp"
 
 namespace ft {
 
@@ -67,7 +67,7 @@ namespace ft {
 				_capacity = size;
 				if (size > 0) {
 					_array = _alloc.allocate(_size);
-					for (size_type i = 0; i < size; i++)
+					for (difference_type i = 0; i < size; i++)
 						_alloc.construct(_array + i, *first++);
 				}
 				else
@@ -278,7 +278,7 @@ namespace ft {
 				_size -= len;
 				for (difference_type i = begin; i < len; i++)
 					_alloc.destroy(_array + i);
-				for (difference_type i = begin; i < _size; i++)
+				for (size_type i = begin; i < _size; i++)
 					_array[i] = _array[i + len];
 				return (iterator(_array + begin));
 			}
