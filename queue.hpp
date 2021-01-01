@@ -68,12 +68,12 @@ namespace ft {
 			/*
 			** Non-member functions overloads
 			*/
-			friend bool operator==(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container == rhs.container);	}
-			friend bool operator!=(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container != rhs.container);	}
-			friend bool operator<(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container < rhs.container);	}
-			friend bool operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container <= rhs.container);	}
-			friend bool operator>(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container > rhs.container);	}
-			friend bool operator>=(const stack<T,Container>& lhs, const stack<T,Container>& rhs) {	return (lhs.container >= rhs.container);	}
+			friend bool operator==(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container == rhs._container);	}
+			friend bool operator!=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container != rhs._container);	}
+			friend bool operator<(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container < rhs._container);	}
+			friend bool operator<=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container <= rhs._container);	}
+			friend bool operator>(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container > rhs._container);	}
+			friend bool operator>=(const queue<T,Container>& lhs, const queue<T,Container>& rhs) {	return (lhs._container >= rhs._container);	}
 
 	};
 

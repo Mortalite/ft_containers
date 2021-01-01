@@ -480,7 +480,7 @@ namespace ft {
 	** Non-member function overloads
 	*/
 	template <class T, class Alloc>
-	bool operator==	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator==(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
 		typename list<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
@@ -491,13 +491,13 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	bool operator!=	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator!=(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return (!(lhs == rhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator<	(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		typename list<T,Alloc>::size_type cmpSize = (lhs.size() > rhs.size() ? rhs.size() : lhs.size());
+	bool operator<(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+		typename list<T,Alloc>::size_type cmpSize = min(lhs.size(), rhs.size());
 		typename list<T,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
 		for (typename list<T,Alloc>::size_type i = 0; i < cmpSize; i++)
 			if (*firstLhs++ >= *firstRhs++)
@@ -506,22 +506,22 @@ namespace ft {
 	}
 
 	template <class T, class Alloc>
-	bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		return (!(rhs > lhs));
+	bool operator<=(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+		return (!(rhs < lhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator>(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return (rhs < lhs);
 	}
 
 	template <class T, class Alloc>
-	bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
+	bool operator>=(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
 		return (!(lhs < rhs));
 	}
 
 	template <class T, class Alloc>
-	void swap (list<T,Alloc>& x, list<T,Alloc>& y) {
+	void swap(list<T,Alloc>& x, list<T,Alloc>& y) {
 		x.swap(y);
 	}
 

@@ -2,16 +2,18 @@
 #include <iomanip>
 #include <sstream>
 #include <typeinfo>
+#include <cstdlib>
 #include <list>
-#include <stack>
 #include <vector>
 #include <map>
-#include <cstdlib>
+#include <stack>
+#include <queue>
 
 #include "list.hpp"
 #include "vector.hpp"
-#include "stack.hpp"
 #include "map.hpp"
+#include "stack.hpp"
+#include "queue.hpp"
 
 #define RED		"\033[31m"
 #define BLUE    "\033[34m"
@@ -524,43 +526,30 @@ template<typename T, typename C>
 void testOperators() {
 	std::cout << RED << "Operators function" << RESET << std::endl;
 
-	T mainContainer;
-	containerPushBack(mainContainer);
-	T mainContainerOperator(mainContainer);
-	C alterContainer(mainContainer.begin(), mainContainer.end());
+	T mainContainerFirst;
+	T mainContainerSecond;
+	C alterContainerFirst;
+	C alterContainerSecond;
 
-	printCmpIterator(mainContainer, mainContainerOperator);
-	std::cout << BLUE << "Operator== -> " << (mainContainer == mainContainerOperator) << RESET << std::endl;
-	std::cout << BLUE << "Operator< -> " << (mainContainer < mainContainerOperator) << RESET << std::endl;
+	size_t tmp = countRandNumbers;
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(mainContainerFirst);
+	mainContainerSecond = mainContainerFirst;
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(alterContainerFirst);
+	alterContainerSecond = alterContainerFirst;
+	ft::swap(tmp, countRandNumbers);
 
-	mainContainerOperator.clear();
-	containerPushBack(mainContainerOperator);
-	printCmpIterator(mainContainer, mainContainerOperator);
-	std::cout << BLUE << "Operator== -> " << (mainContainer == mainContainerOperator) << RESET << std::endl;
-	std::cout << BLUE << "Operator< -> " << (mainContainer < mainContainerOperator) << RESET << std::endl;
+	std::cout << BLUE << std::setw(15) << "Compare " << std::setw(5) << "ft" << std::setw(5) << "std" << RESET << std::endl;
+	std::cout << std::setw(15) << "==" << std::setw(5) << (mainContainerFirst == mainContainerSecond) << std::setw(5) << (alterContainerFirst == alterContainerSecond) << std::endl;
+	std::cout << std::setw(15) << "!=" << std::setw(5) << (mainContainerFirst != mainContainerSecond) << std::setw(5) << (alterContainerFirst != alterContainerSecond) << std::endl;
+	std::cout << std::setw(15) << "<" << std::setw(5) << (mainContainerFirst < mainContainerSecond) << std::setw(5) << (alterContainerFirst < alterContainerSecond) << std::endl;
+	std::cout << std::setw(15) << "<=" << std::setw(5) << (mainContainerFirst <= mainContainerSecond) << std::setw(5) << (alterContainerFirst <= alterContainerSecond) << std::endl;
+	std::cout << std::setw(15) << ">" << std::setw(5) << (mainContainerFirst > mainContainerSecond) << std::setw(5) << (alterContainerFirst > alterContainerSecond) << std::endl;
+	std::cout << std::setw(15) << ">=" << std::setw(5) << (mainContainerFirst >= mainContainerSecond) << std::setw(5) << (alterContainerFirst >= alterContainerSecond) << std::endl;
 
 
 }
-
-// Stack
-
-template<typename T>
-void stackRandomInsert(T& mainContainer) {
-	for (size_t i = 0; i < countRandNumbers; i++) {
-		typename T::value_type valueTmp = getRandomValueByType<typename T::value_type>();
-		mainContainer.push(valueTmp);
-	}
-}
-
-template<typename T, typename C>
-void stackRandomInsert(T& mainContainer, C& alterContainer) {
-	for (size_t i = 0; i < countRandNumbers; i++) {
-		typename T::value_type valueTmp = getRandomValueByType<typename T::value_type>();
-		mainContainer.push(valueTmp);
-		alterContainer.push(valueTmp);
-	}
-}
-
 
 // Map
 
@@ -823,6 +812,8 @@ void testMapOperations() {
 
 }
 
+// Stack
+
 template<typename T, typename C, typename K>
 void testStackAll() {
 
@@ -855,8 +846,15 @@ void testStackAll() {
 		stdStack.pop();
 	}
 
-	for (typename K::iterator it = containerSecond.begin(); it != containerSecond.end(); it++)
-		*it = abs(*it) * 10;
+	containerFirst.clear();
+	containerSecond.clear();
+
+	size_t tmp = countRandNumbers;
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(containerFirst);
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(containerSecond);
+	ft::swap(tmp, countRandNumbers);
 
 	T ftStackFirst(containerFirst);
 	T ftStackSecond(containerSecond);
@@ -865,8 +863,9 @@ void testStackAll() {
 	C stdStackSecond(containerSecond);
 
 	std::cout << BLUE << "First and second stack" << RESET << std::endl;
-	printCmpIterator(containerFirst, containerSecond);
-	
+	printIterator(containerFirst);
+	printIterator(containerSecond);
+
 	std::cout << BLUE << std::setw(15) << "Compare " << std::setw(5) << "ft" << std::setw(5) << "std" << RESET << std::endl;
 	std::cout << std::setw(15) << "==" << std::setw(5) << (ftStackFirst == ftStackSecond) << std::setw(5) << (stdStackFirst == stdStackSecond) << std::endl;
 	std::cout << std::setw(15) << "!=" << std::setw(5) << (ftStackFirst != ftStackSecond) << std::setw(5) << (stdStackFirst != stdStackSecond) << std::endl;
@@ -877,8 +876,78 @@ void testStackAll() {
 
 }
 
+// Queue
+
+template<typename T, typename C, typename K>
+void testQueueAll() {
+
+	K containerFirst;
+	K containerSecond;
+
+	containerPushBack(containerFirst);
+	containerPushBack(containerSecond);
+
+	T ftQueueEmpty;
+	C stdQueueEmpty;
+
+	std::cout << "ft : Empty = " << ftQueueEmpty.empty() << " , Size = " << ftQueueEmpty.size() << std::endl;
+	std::cout << "std : Empty = " << stdQueueEmpty.empty() << " , Size = " << stdQueueEmpty.size() << std::endl;
+
+	T ftQueue(containerFirst);
+	C stdQueue(containerFirst);
+
+	std::cout << "ft : front = " << ftQueue.front() << ", Back = " << ftQueue.back() << ", Empty = ";
+	std::cout << ftQueue.empty() << " , Size = " << ftQueue.size() << std::endl;
+
+	std::cout << "std : front = " << stdQueue.front() << ", Back = " << stdQueue.back() << ", Empty = ";
+	std::cout << stdQueue.empty() << " , Size = " << stdQueue.size() << std::endl;
+
+	std::cout << BLUE << "Push 10" << RESET << std::endl;
+	ftQueue.push(10);
+	stdQueue.push(10);
+
+	while (!ftQueue.empty()) {
+		std::cout << "ft : front = " << ftQueue.front() << ", Back = " << ftQueue.back() << ", Empty = ";
+		std::cout << ftQueue.empty() << " , Size = " << ftQueue.size() << std::endl;
+		std::cout << "std : front = " << stdQueue.front() << ", Back = " << stdQueue.back() << ", Empty = ";
+		std::cout << stdQueue.empty() << " , Size = " << stdQueue.size() << std::endl;
+		ftQueue.pop();
+		stdQueue.pop();
+	}
+
+	containerFirst.clear();
+	containerSecond.clear();
+
+	size_t tmp = countRandNumbers;
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(containerFirst);
+	countRandNumbers = rand() % tmp + rand() % tmp;
+	containerPushBack(containerSecond);
+	ft::swap(tmp, countRandNumbers);
+
+	T ftQueueFirst(containerFirst);
+	T ftQueueSecond(containerSecond);
+
+	C stdStackFirst(containerFirst);
+	C stdStackSecond(containerSecond);
+
+	std::cout << BLUE << "First and second queue" << RESET << std::endl;
+	printIterator(containerFirst);
+	printIterator(containerSecond);
+
+	std::cout << BLUE << std::setw(15) << "Compare " << std::setw(5) << "ft" << std::setw(5) << "std" << RESET << std::endl;
+	std::cout << std::setw(15) << "==" << std::setw(5) << (ftQueueFirst == ftQueueSecond) << std::setw(5) << (stdStackFirst == stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "!=" << std::setw(5) << (ftQueueFirst != ftQueueSecond) << std::setw(5) << (stdStackFirst != stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "<" << std::setw(5) << (ftQueueFirst < ftQueueSecond) << std::setw(5) << (stdStackFirst < stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "<=" << std::setw(5) << (ftQueueFirst <= ftQueueSecond) << std::setw(5) << (stdStackFirst <= stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << ">" << std::setw(5) << (ftQueueFirst > ftQueueSecond) << std::setw(5) << (stdStackFirst > stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << ">=" << std::setw(5) << (ftQueueFirst >= ftQueueSecond) << std::setw(5) << (stdStackFirst >= stdStackSecond) << std::endl;
+
+}
+
 void testList() {
 	std::cout << RED << "||||||||||LIST||||||||||" << RESET << std::endl;
+
 	testConstructors<ft::list<cType>, std::list<cType> >();
 	testIterators<ft::list<cType>, std::list<cType> >();
 	testAssign<ft::list<cType>, std::list<cType> >();
@@ -897,17 +966,9 @@ void testList() {
 	testOperators<ft::list<cType>, std::list<cType> >();
 }
 
-void testStack() {
-	std::cout << RED << "||||||||||STACK||||||||||" << RESET << std::endl;
-
-//	typedef ft::vector<cType> underContainer;
-	typedef ft::list<cType> underContainer;
-
-	testStackAll<ft::stack<cType, underContainer>, std::stack<cType, underContainer>,  underContainer>();
-}
-
 void testVector() {
 	std::cout << RED << "||||||||||VECTOR||||||||||" << RESET << std::endl;
+
 	testConstructors<ft::vector<cType>, std::vector<cType> >();
 	testIterators<ft::vector<cType>, std::vector<cType> >();
 	testAssign<ft::vector<cType>, std::vector<cType> >();
@@ -918,6 +979,8 @@ void testVector() {
 }
 
 void testMap() {
+	std::cout << RED << "||||||||||MAP||||||||||" << RESET << std::endl;
+
 //	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
 	testMapConstructors<ft::map<int, int>, std::map<int, int> >();
 	testMapIterators<ft::map<const int, int>, std::map<const int, int> >();
@@ -927,13 +990,32 @@ void testMap() {
 	testMapOperations<ft::map<const int, int>, std::map<const int, int> >();
 }
 
+void testStack() {
+	std::cout << RED << "||||||||||STACK||||||||||" << RESET << std::endl;
+
+//	typedef ft::vector<cType> underContainer;
+	typedef ft::list<cType> underContainer;
+
+	testStackAll<ft::stack<cType, underContainer>, std::stack<cType, underContainer>,  underContainer>();
+}
+
+void testQueue() {
+	std::cout << RED << "||||||||||QUEUE||||||||||" << RESET << std::endl;
+
+//	typedef ft::vector<cType> underContainer;
+	typedef ft::list<cType> underContainer;
+
+	testQueueAll<ft::queue<cType, underContainer>, std::queue<cType, underContainer>,  underContainer>();
+}
+
 int main() {
 	srand(time(NULL));
 
 //	testList();
-	testStack();
 //	testVector();
 //	testMap();
+//	testStack();
+	testQueue();
 
 	return (0);
 }
