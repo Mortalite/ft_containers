@@ -94,7 +94,7 @@ namespace ft {
 			}
 
 			vector& operator=(const vector& x) {
-				if (this != x) {
+				if (this != &x) {
 					clear();
 					reserve(x._capacity);
 					_alloc = x._alloc;
@@ -233,7 +233,7 @@ namespace ft {
 
 			void				pop_back() {
 				if (!empty())
-					_alloc.destroy(_array, --_size);
+					_alloc.destroy(_array + --_size);
 			}
 
 			iterator			insert(iterator position, const value_type& val) {

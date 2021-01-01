@@ -21,7 +21,6 @@ size_t countRandNumbers = 4;
 size_t printMargin = 45;
 typedef	int	cType;
 
-
 template<typename T>
 void printIterator(T& container) {
 	size_t i = 0;
@@ -824,53 +823,57 @@ void testMapOperations() {
 
 }
 
-template<typename T, typename C>
+template<typename T, typename C, typename K>
 void testStackAll() {
 
-	T ftStackDefault;
-	C stdStackDefault;
+	K containerFirst;
+	K containerSecond;
 
-	std::cout << "ft : Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
-	std::cout << "std : Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
+	containerPushBack(containerFirst);
+	containerPushBack(containerSecond);
 
-	std::cout << BLUE << "Random push" << RESET << std::endl;
-	stackRandomInsert(ftStackDefault, stdStackDefault);
-	std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
-	std::cout << "std : Top = " << stdStackDefault.top() << ", Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
+	T ftStackEmpty;
+	C stdStackEmpty;
+
+	std::cout << "ft : Empty = " << ftStackEmpty.empty() << " , Size = " << ftStackEmpty.size() << std::endl;
+	std::cout << "std : Empty = " << stdStackEmpty.empty() << " , Size = " << stdStackEmpty.size() << std::endl;
+
+	T ftStack(containerFirst);
+	C stdStack(containerFirst);
+
+	std::cout << "ft : Top = " << ftStack.top() << ", Empty = " << ftStack.empty() << " , Size = " << ftStack.size() << std::endl;
+	std::cout << "std : Top = " << stdStack.top() << ", Empty = " << stdStack.empty() << " , Size = " << stdStack.size() << std::endl;
 
 	std::cout << BLUE << "Push 10" << RESET << std::endl;
-	ftStackDefault.push(10);
-	stdStackDefault.push(10);
+	ftStack.push(10);
+	stdStack.push(10);
 
-	while (!ftStackDefault.empty()) {
-		std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
-		std::cout << "std : Top = " << stdStackDefault.top() << ", Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
-		ftStackDefault.pop();
-		stdStackDefault.pop();
+	while (!ftStack.empty()) {
+		std::cout << "ft : Top = " << ftStack.top() << ", Empty = " << ftStack.empty() << " , Size = " << ftStack.size() << std::endl;
+		std::cout << "std : Top = " << stdStack.top() << ", Empty = " << stdStack.empty() << " , Size = " << stdStack.size() << std::endl;
+		ftStack.pop();
+		stdStack.pop();
 	}
 
-	T ftStackAdd;
-	std::cout << BLUE << "Random push" << RESET << std::endl;
-	stackRandomInsert(ftStackDefault);
-	stackRandomInsert(ftStackAdd);
-	std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
-	std::cout << "std : Top = " << ftStackAdd.top() << ", Empty = " << ftStackAdd.empty() << " , Size = " << ftStackAdd.size() << std::endl;
+	for (typename K::iterator it = containerSecond.begin(); it != containerSecond.end(); it++)
+		*it = abs(*it) * 10;
 
-	std::cout << BLUE << "Compare" << RESET << std::endl;
-	std::cout << "== = " << (ftStackDefault == ftStackAdd) << std::endl;
-	std::cout << "!= = " << (ftStackDefault != ftStackAdd) << std::endl;
-	std::cout << "< = " << (ftStackDefault < ftStackAdd) << std::endl;
-	std::cout << "<= = " << (ftStackDefault <= ftStackAdd) << std::endl;
-	std::cout << "> = " << (ftStackDefault > ftStackAdd) << std::endl;
-	std::cout << ">= = " << (ftStackDefault >= ftStackAdd) << std::endl;
+	T ftStackFirst(containerFirst);
+	T ftStackSecond(containerSecond);
 
-	size_t count = countRandNumbers - 1;
-	while (!ftStackDefault.empty()) {
-		std::cout << "ftStackDefault[" << count << "] = " << ftStackDefault.top() << "\t\tftStackAdd[" << count << "] = " << ftStackAdd.top() << std::endl;
-		ftStackDefault.pop();
-		ftStackAdd.pop();
-		count--;
-	}
+	C stdStackFirst(containerFirst);
+	C stdStackSecond(containerSecond);
+
+	std::cout << BLUE << "First and second stack" << RESET << std::endl;
+	printCmpIterator(containerFirst, containerSecond);
+	
+	std::cout << BLUE << std::setw(15) << "Compare " << std::setw(5) << "ft" << std::setw(5) << "std" << RESET << std::endl;
+	std::cout << std::setw(15) << "==" << std::setw(5) << (ftStackFirst == ftStackSecond) << std::setw(5) << (stdStackFirst == stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "!=" << std::setw(5) << (ftStackFirst != ftStackSecond) << std::setw(5) << (stdStackFirst != stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "<" << std::setw(5) << (ftStackFirst < ftStackSecond) << std::setw(5) << (stdStackFirst < stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << "<=" << std::setw(5) << (ftStackFirst <= ftStackSecond) << std::setw(5) << (stdStackFirst <= stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << ">" << std::setw(5) << (ftStackFirst > ftStackSecond) << std::setw(5) << (stdStackFirst > stdStackSecond) << std::endl;
+	std::cout << std::setw(15) << ">=" << std::setw(5) << (ftStackFirst >= ftStackSecond) << std::setw(5) << (stdStackFirst >= stdStackSecond) << std::endl;
 
 }
 
@@ -897,7 +900,10 @@ void testList() {
 void testStack() {
 	std::cout << RED << "||||||||||STACK||||||||||" << RESET << std::endl;
 
-	testStackAll<ft::stack<cType>, std::stack<cType> >();
+//	typedef ft::vector<cType> underContainer;
+	typedef ft::list<cType> underContainer;
+
+	testStackAll<ft::stack<cType, underContainer>, std::stack<cType, underContainer>,  underContainer>();
 }
 
 void testVector() {
