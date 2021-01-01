@@ -127,7 +127,7 @@ namespace ft {
 			}
 
 			list& operator=(const list& x) {
-				if (this != x) {
+				if (this != &x) {
 					clear();
 					delete _end;
 
@@ -138,7 +138,7 @@ namespace ft {
 					_alloc = x._alloc;
 
 					if (x._size) {
-						iterator first = x.begin(), last = x.end();
+						const_iterator first = x.begin(), last = x.end();
 						while (first != last)
 							push_back(*first++);
 					}

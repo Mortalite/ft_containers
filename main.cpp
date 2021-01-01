@@ -3,6 +3,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <list>
+#include <stack>
 #include <vector>
 #include <map>
 #include <cstdlib>
@@ -542,6 +543,26 @@ void testOperators() {
 
 }
 
+// Stack
+
+template<typename T>
+void stackRandomInsert(T& mainContainer) {
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::value_type valueTmp = getRandomValueByType<typename T::value_type>();
+		mainContainer.push(valueTmp);
+	}
+}
+
+template<typename T, typename C>
+void stackRandomInsert(T& mainContainer, C& alterContainer) {
+	for (size_t i = 0; i < countRandNumbers; i++) {
+		typename T::value_type valueTmp = getRandomValueByType<typename T::value_type>();
+		mainContainer.push(valueTmp);
+		alterContainer.push(valueTmp);
+	}
+}
+
+
 // Map
 
 template<typename T>
@@ -798,9 +819,57 @@ void testMapOperations() {
 	std::cout << BLUE << "Equal range iterator" << RESET << std::endl;
 	std::pair<typename T::iterator, typename T::iterator> equalRange = mainContainer.equal_range('b');
 	mainIt = equalRange.first;
-	while (mainIt != equalRange.second) {
-		std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
-		mainIt++;
+	while (mainIt != equalRange.second)
+		std::cout << "mainIt = " << static_cast<char>((*(mainIt++)).first) << std::endl;
+
+}
+
+template<typename T, typename C>
+void testStackAll() {
+
+	T ftStackDefault;
+	C stdStackDefault;
+
+	std::cout << "ft : Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
+	std::cout << "std : Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
+
+	std::cout << BLUE << "Random push" << RESET << std::endl;
+	stackRandomInsert(ftStackDefault, stdStackDefault);
+	std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
+	std::cout << "std : Top = " << stdStackDefault.top() << ", Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
+
+	std::cout << BLUE << "Push 10" << RESET << std::endl;
+	ftStackDefault.push(10);
+	stdStackDefault.push(10);
+
+	while (!ftStackDefault.empty()) {
+		std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
+		std::cout << "std : Top = " << stdStackDefault.top() << ", Empty = " << stdStackDefault.empty() << " , Size = " << stdStackDefault.size() << std::endl;
+		ftStackDefault.pop();
+		stdStackDefault.pop();
+	}
+
+	T ftStackAdd;
+	std::cout << BLUE << "Random push" << RESET << std::endl;
+	stackRandomInsert(ftStackDefault);
+	stackRandomInsert(ftStackAdd);
+	std::cout << "ft : Top = " << ftStackDefault.top() << ", Empty = " << ftStackDefault.empty() << " , Size = " << ftStackDefault.size() << std::endl;
+	std::cout << "std : Top = " << ftStackAdd.top() << ", Empty = " << ftStackAdd.empty() << " , Size = " << ftStackAdd.size() << std::endl;
+
+	std::cout << BLUE << "Compare" << RESET << std::endl;
+	std::cout << "== = " << (ftStackDefault == ftStackAdd) << std::endl;
+	std::cout << "!= = " << (ftStackDefault != ftStackAdd) << std::endl;
+	std::cout << "< = " << (ftStackDefault < ftStackAdd) << std::endl;
+	std::cout << "<= = " << (ftStackDefault <= ftStackAdd) << std::endl;
+	std::cout << "> = " << (ftStackDefault > ftStackAdd) << std::endl;
+	std::cout << ">= = " << (ftStackDefault >= ftStackAdd) << std::endl;
+
+	size_t count = countRandNumbers - 1;
+	while (!ftStackDefault.empty()) {
+		std::cout << "ftStackDefault[" << count << "] = " << ftStackDefault.top() << "\t\tftStackAdd[" << count << "] = " << ftStackAdd.top() << std::endl;
+		ftStackDefault.pop();
+		ftStackAdd.pop();
+		count--;
 	}
 
 }
@@ -823,6 +892,12 @@ void testList() {
 	testSort<ft::list<cType>, std::list<cType> >();
 	testReverse<ft::list<cType>, std::list<cType> >();
 	testOperators<ft::list<cType>, std::list<cType> >();
+}
+
+void testStack() {
+	std::cout << RED << "||||||||||STACK||||||||||" << RESET << std::endl;
+
+	testStackAll<ft::stack<cType>, std::stack<cType> >();
 }
 
 void testVector() {
@@ -849,9 +924,10 @@ void testMap() {
 int main() {
 	srand(time(NULL));
 
-	testList();
-	testVector();
-	testMap();
+//	testList();
+	testStack();
+//	testVector();
+//	testMap();
 
 	return (0);
 }
