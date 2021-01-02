@@ -3,4 +3,4 @@ project(ft_containers)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(ft_containers main.cpp list.hpp iteratorList.hpp utils.hpp vector.hpp iteratorVector.hpp stack.hpp queue.hpp map.hpp iteratorMap.hpp)
+add_executable(ft_containers main.cpp list.hpp iteratorList.hpp utils.hpp vector.hpp iteratorVector.hpp stack.hpp queue.hpp map.hpp iteratorMap.hpp multimap.h)

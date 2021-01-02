@@ -14,12 +14,13 @@
 #include "map.hpp"
 #include "stack.hpp"
 #include "queue.hpp"
+#include "multimap.h"
 
 #define RED		"\033[31m"
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-size_t countRandNumbers = 4;
+size_t countRandNumbers = 5;
 size_t printMargin = 15;
 size_t mapMarginCoeff = 3;
 typedef	int	cType;
@@ -107,8 +108,8 @@ typename T::value_type getRandomValue() {
 
 template<typename T>
 T getRandomValueByType() {
-	int intMin = -500, intMax = 500;
-	float floatMin = -500.0, floatMax = 500.0;
+	int intMin = -10, intMax = 10;
+	float floatMin = -10.0, floatMax = 10.0;
 	for (size_t i = 0; i < countRandNumbers; i++) {
 		if (typeid(T) == typeid(int))
 			return (rand() % (intMax - intMin) + intMin);
@@ -817,8 +818,7 @@ void testMapOperations() {
 
 template <typename T, typename C>
 void testMapNonMember() {
-	std::cout << RED << "Operators function" << RESET << std::endl;
-	std::cout << RED << "Operators function" << RESET << std::endl;
+	std::cout << RED << "Non-member function" << RESET << std::endl;
 
 	T mainContainerFirst;
 	T mainContainerSecond;
@@ -1045,15 +1045,33 @@ void testQueue() {
 	testQueueAll<ft::queue<cType, underContainer>, std::queue<cType, underContainer>,  underContainer>();
 }
 
+void testMultiMap() {
+	std::cout << RED << "||||||||||MULTIMAP||||||||||" << RESET << std::endl;
+
+//	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
+//	testMapConstructors<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+//	testMapIterators<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapInsert<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+//	testMapErase<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+//	testMapSwap<ft::multimap<cType, cType>, ft::multimap<cType, cType> >();
+//	testMapOperations<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+//	testMapNonMember<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+
+}
+
 int main() {
 	srand(time(NULL));
-
 	std::cout.setf(std::ios::left);
-	testList();
-	testVector();
-	testMap();
-	testStack();
-	testQueue();
+
+	std::cout << RED << "Mandatory part" << RESET << std::endl;
+//	testList();
+//	testVector();
+//	testMap();
+//	testStack();
+//	testQueue();
+
+	std::cout << RED << "Bonus part" << RESET << std::endl;
+	testMultiMap();
 
 	return (0);
 }
