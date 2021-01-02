@@ -497,12 +497,7 @@ namespace ft {
 
 	template <class T, class Alloc>
 	bool operator<(const list<T,Alloc>& lhs, const list<T,Alloc>& rhs) {
-		typename list<T,Alloc>::size_type cmpSize = min(lhs.size(), rhs.size());
-		typename list<T,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
-		for (typename list<T,Alloc>::size_type i = 0; i < cmpSize; i++)
-			if (*firstLhs++ >= *firstRhs++)
-				return (false);
-		return (lhs.size() < rhs.size());
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>

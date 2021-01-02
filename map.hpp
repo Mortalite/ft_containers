@@ -148,6 +148,27 @@ namespace ft {
 				delete _end;
 			}
 
+			map& operator=(const map& x) {
+				if (this != &x) {
+					clear();
+					delete _end;
+
+					_root = NULL;
+					_begin = _end = new TreeNode<const Key,T>;
+					_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
+					_comp = x._comp;
+					_alloc = x._alloc;
+					_size = 0;
+
+					if (x.size()) {
+						const_iterator first = x.begin(), last = x.end();
+						while (first != last)
+							insert(*first++);
+					}
+				}
+				return (*this);
+			}
+
 			/*
 			** Iterators
 			*/
@@ -434,6 +455,50 @@ namespace ft {
 
 
 	};
+
+	/*
+	** Non-member function overloads
+	*/
+	template <class T, class Alloc>
+	bool operator==(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return (false);
+		typename map<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
+		for (typename map<T, Alloc>::size_type i = 0; i < lhs.size(); i++)
+			if (*firstLhs++ != *firstRhs++)
+				return (false);
+		return (true);
+	}
+
+	template <class T, class Alloc>
+	bool operator!=(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator<(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template <class T, class Alloc>
+	bool operator<=(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		return (!(rhs < lhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator>(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>=(const map<T,Alloc>& lhs, const map<T,Alloc>& rhs) {
+		return (!(lhs < rhs));
+	}
+
+	template <class T, class Alloc>
+	void swap(map<T,Alloc>& x, map<T,Alloc>& y) {
+		x.swap(y);
+	}
 
 }
 
