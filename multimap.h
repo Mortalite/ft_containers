@@ -255,7 +255,7 @@ namespace ft {
 				while (x->_parent) {
 					x = x->_parent;
 					y = x;
-					if (!_comp(x->_data->first, val.first))
+					if (_comp(x->_data->first, val.first))
 						break ;
 				}
 

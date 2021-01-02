@@ -20,7 +20,7 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-size_t countRandNumbers = 5;
+size_t countRandNumbers = 500;
 size_t printMargin = 15;
 size_t mapMarginCoeff = 3;
 typedef	int	cType;
@@ -36,6 +36,8 @@ void printIterator(T& container) {
 template<typename T, typename C>
 void printCmpIterator(T& mainContainer, C& alterContainer) {
 	size_t i = 0;
+	bool isEqual = true;
+
 	if (mainContainer.size() != alterContainer.size()) {
 		std::cerr << "Container diff size" << std::endl;
 		return;
@@ -47,7 +49,15 @@ void printCmpIterator(T& mainContainer, C& alterContainer) {
 	for ( ; mainIt != mainContainer.end(); mainIt++, alterIt++, i++) {
 		std::cout << "mainContainer[" << i << "] = " << std::setw(printMargin) << *mainIt;
 		std::cout << "alterContainer[" << i << "] = " << *alterIt << std::endl;
+		if (*mainIt != *alterIt)
+			isEqual = false;
 	}
+
+	if (isEqual)
+		std::cout << "Containers are equal" << std::endl;
+	else
+		std::cout << "Containers are not equal" << std::endl;
+
 }
 
 template<typename T>
@@ -539,7 +549,7 @@ void testOperators() {
 	ft::swap(tmp, countRandNumbers);
 
 	C alterContainerFirst(mainContainerFirst.begin(), mainContainerFirst.end());
-	C alterContainerSecond(mainContainerFirst.begin(), mainContainerFirst.end());
+	C alterContainerSecond(mainContainerSecond.begin(), mainContainerSecond.end());
 
 	std::cout << BLUE << std::setw(15) << "Compare " << std::setw(5) << "ft" << std::setw(5) << "std" << RESET << std::endl;
 	std::cout << std::setw(15) << "==" << std::setw(5) << (mainContainerFirst == mainContainerSecond) << std::setw(5) << (alterContainerFirst == alterContainerSecond) << std::endl;
@@ -574,7 +584,9 @@ void printRevIteratorMap(T& container) {
 template<typename T, typename C>
 void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
 	std::cout << BLUE << "ForwardIterator" << RESET << std::endl;
+
 	size_t i = 0;
+	bool isEqual = true;
 
 	if (mainContainer.size() != alterContainer.size()) {
 		std::cerr << "Container diff size" << std::endl;
@@ -588,7 +600,15 @@ void printCmpIteratorMap(T& mainContainer, C& alterContainer) {
 		stringStream << "mainContainer[" << i << "] = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
 		std::cout << std::setw(printMargin * mapMarginCoeff) << stringStream.str();
 		std::cout << "alterContainer[" << i << "] = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
+		if ((*mainIt).first != (*alterIt).first || (*mainIt).second != (*alterIt).second)
+			isEqual = false;
 	}
+
+	if (isEqual)
+		std::cout << "Containers are equal" << std::endl;
+	else
+		std::cout << "Containers are not equal" << std::endl;
+
 }
 
 template<typename T, typename C>
@@ -596,6 +616,8 @@ void printCmpRevIteratorMap(T& mainContainer, C& alterContainer) {
 	std::cout << BLUE << "ReverseIterator" << RESET << std::endl;
 
 	size_t i = 0;
+	bool isEqual = true;
+
 	if (mainContainer.size() != alterContainer.size()) {
 		std::cerr << "Container diff size" << std::endl;
 		return;
@@ -608,7 +630,15 @@ void printCmpRevIteratorMap(T& mainContainer, C& alterContainer) {
 		stringStream << "mainContainer[" << i << "] = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
 		std::cout << std::setw(printMargin * mapMarginCoeff) << stringStream.str();
 		std::cout << "alterContainer[" << i << "] = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
+		if ((*mainIt).first != (*alterIt).first || (*mainIt).second != (*alterIt).second)
+			isEqual = false;
 	}
+
+	if (isEqual)
+		std::cout << "Containers are equal" << std::endl;
+	else
+		std::cout << "Containers are not equal" << std::endl;
+
 }
 
 template<typename T>
@@ -760,9 +790,8 @@ void testMapOperations() {
 	std::cout << RED << "Map operations" << RESET << std::endl;
 
 	T mainContainer;
-	C alterContainer;
 	mapRandomInsert(mainContainer);
-	mapRandomInsert(alterContainer);
+	C alterContainer(mainContainer.begin(), mainContainer.end());
 
 	typename T::iterator mainIt;
 	typename C::iterator alterIt;
@@ -770,49 +799,54 @@ void testMapOperations() {
 	std::cout << BLUE << "Random map" << RESET << std::endl;
 	printCmpIteratorMap(mainContainer, alterContainer);
 
-	std::cout << BLUE << "Find iterator to begin + 1 and change value" << RESET << std::endl;
+	std::cout << BLUE << "Find iterator to begin + 1" << RESET << std::endl;
 	mainIt = mainContainer.find((*(++mainContainer.begin())).first);
 	alterIt = alterContainer.find((*(++alterContainer.begin())).first);
-	if (mainIt != mainContainer.end() && alterIt != alterContainer.end()) {
+	if (mainIt != mainContainer.end() && alterIt != alterContainer.end())
 		std::cout << "mainIt = " << (*mainIt).first << ", alterIt = " << (*alterIt).first << std::endl;
-		(*mainIt).second = 1000000;
-		(*alterIt).second = -1000000;
-	}
-	printCmpIteratorMap(mainContainer, alterContainer);
 
-	std::cout << BLUE << "Count begin key" << RESET << std::endl;
+	std::cout << BLUE << "Count (begin + 1) key" << RESET << std::endl;
 	typename T::size_type countMain = mainContainer.count((*(++mainContainer.begin())).first);
 	typename T::size_type countAlter = alterContainer.count((*(++alterContainer.begin())).first);
 	std::cout << "mainCount = " << countMain << ", alterCount = " << countAlter << std::endl;
 
 	std::cout << BLUE << "Count random key" << RESET << std::endl;
 	typename T::key_type keyTmp = getRandomValueByType<typename T::key_type>();
-	countMain = mainContainer.count(keyTmp);
-	countAlter = alterContainer.count(keyTmp);
-	std::cout << "key = " << keyTmp << ", mainCount = " << countMain << ", alterCount = " << countAlter << std::endl;
+	std::cout << "key = " << keyTmp << ", mainCount = " << mainContainer.count(keyTmp) <<\
+		", alterCount = " << alterContainer.count(keyTmp) << std::endl;
 
-	mainContainer.clear();
+	keyTmp = getRandomValueByType<typename T::key_type>();
+	std::cout << BLUE << "Lower bound of " << keyTmp << RESET << std::endl;
+	mainIt = mainContainer.lower_bound(keyTmp);
+	alterIt = alterContainer.lower_bound(keyTmp);
+	if (mainIt != mainContainer.end())
+		std::cout << "mainIt = (" << (*mainIt).first << ", " << (*mainIt).second << ")" << std::endl;
+	if (alterIt != alterContainer.end())
+		std::cout << "alterIt = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
 
-	mainContainer['a']=20;
-	mainContainer['b']=40;
-	mainContainer['c']=60;
-	mainContainer['d']=80;
-	mainContainer['e']=100;
+	keyTmp = getRandomValueByType<typename T::key_type>();
+	std::cout << BLUE << "Upper bound of " << keyTmp << RESET << std::endl;
+	mainIt = mainContainer.upper_bound(keyTmp);
+	alterIt = alterContainer.upper_bound(keyTmp);
+	if (mainIt != mainContainer.end())
+		std::cout << "mainIt = (" << (*mainIt).first << ", " << (*mainIt).second << ")" << std::endl;
+	if (alterIt != alterContainer.end())
+		std::cout << "alterIt = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
 
-
-	std::cout << BLUE << "Lower bound" << RESET << std::endl;
-	mainIt = mainContainer.lower_bound ('b');
-	std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
-
-	std::cout << BLUE << "Upper bound" << RESET << std::endl;
-	mainIt = mainContainer.upper_bound ('d');
-	std::cout << "mainIt = " << static_cast<char>((*mainIt).first) << std::endl;
-
-	std::cout << BLUE << "Equal range iterator" << RESET << std::endl;
-	std::pair<typename T::iterator, typename T::iterator> equalRange = mainContainer.equal_range('b');
-	mainIt = equalRange.first;
-	while (mainIt != equalRange.second)
-		std::cout << "mainIt = " << static_cast<char>((*(mainIt++)).first) << std::endl;
+	keyTmp = getRandomValueByType<typename T::key_type>();
+	std::cout << BLUE << "Equal range iterator of " << keyTmp << RESET << std::endl;
+	std::pair<typename T::iterator, typename T::iterator> equalRangeMain = mainContainer.equal_range(keyTmp);
+	std::pair<typename C::iterator, typename C::iterator> equalRangeAlter = alterContainer.equal_range(keyTmp);
+	mainIt = equalRangeMain.first;
+	alterIt = equalRangeAlter.first;
+	while (mainIt != equalRangeMain.second) {
+		std::stringstream stringStream;
+		stringStream << "mainIt = (" << (*mainIt).first << ", " << (*mainIt).second << ")";
+		std::cout << std::setw(printMargin * mapMarginCoeff) << stringStream.str();
+		std::cout << "alterIt = (" << (*alterIt).first << ", " << (*alterIt).second << ")" << std::endl;
+		mainIt++;
+		alterIt++;
+	}
 
 }
 
@@ -999,6 +1033,7 @@ void testList() {
 	testSort<ft::list<cType>, std::list<cType> >();
 	testReverse<ft::list<cType>, std::list<cType> >();
 	testOperators<ft::list<cType>, std::list<cType> >();
+
 }
 
 void testVector() {
@@ -1049,13 +1084,13 @@ void testMultiMap() {
 	std::cout << RED << "||||||||||MULTIMAP||||||||||" << RESET << std::endl;
 
 //	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
-//	testMapConstructors<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-//	testMapIterators<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapConstructors<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapIterators<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
 	testMapInsert<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-//	testMapErase<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-//	testMapSwap<ft::multimap<cType, cType>, ft::multimap<cType, cType> >();
-//	testMapOperations<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-//	testMapNonMember<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapErase<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapSwap<ft::multimap<cType, cType>, ft::multimap<cType, cType> >();
+	testMapOperations<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapNonMember<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
 
 }
 
@@ -1071,7 +1106,7 @@ int main() {
 //	testQueue();
 
 	std::cout << RED << "Bonus part" << RESET << std::endl;
-	testMultiMap();
+//	testMultiMap();
 
 	return (0);
 }

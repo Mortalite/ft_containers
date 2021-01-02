@@ -266,7 +266,7 @@ namespace ft {
 				while (x->_parent) {
 					x = x->_parent;
 					y = x;
-					if (!_comp(x->_data->first, val.first))
+					if (_comp(x->_data->first, val.first))
 						break ;
 				}
 
@@ -400,7 +400,7 @@ namespace ft {
 			}
 
 			iterator		lower_bound (const key_type& k) {
-				iterator first = begin(), last = end();
+				iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
 					if (!(_comp((*first).first, k)))
@@ -411,7 +411,7 @@ namespace ft {
 			}
 
 			const_iterator	lower_bound (const key_type& k) const {
-				const_iterator first = begin(), last = end();
+				const_iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
 					if (!(_comp((*first).first, k)))
@@ -422,7 +422,7 @@ namespace ft {
 			}
 
 			iterator		upper_bound (const key_type& k) {
-				iterator first = begin(), last = end();
+				iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
 					if (_comp(k, (*first).first))
@@ -433,7 +433,7 @@ namespace ft {
 			}
 
 			const_iterator	upper_bound (const key_type& k) const {
-				const_iterator first = begin(), last = end();
+				const_iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
 					if (_comp(k, (*first).first))
@@ -444,11 +444,11 @@ namespace ft {
 			}
 
 			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
-				return (std::make_pair(lower_bound(k), upper_bound(k)));
+				return (std::make_pair(this->lower_bound(k), this->upper_bound(k)));
 			}
 
 			std::pair<iterator,iterator>	equal_range (const key_type& k) {
-				return (std::make_pair(lower_bound(k), upper_bound(k)));
+				return (std::make_pair(this->lower_bound(k), this->upper_bound(k)));
 			}
 
 	};
