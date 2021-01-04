@@ -332,7 +332,7 @@ namespace ft {
 
 			iterator 				erase(iterator first, iterator last) {
 				while (first != last)
-					erase(first++);
+					first = erase(first);
 				return (iterator(_first));
 			}
 
@@ -426,7 +426,7 @@ namespace ft {
 						else
 							first++;
 					}
-					splice(end, x, x.begin(), x.end());
+					splice(this->end(), x, x.begin(), x.end());
 				}
 			}
 

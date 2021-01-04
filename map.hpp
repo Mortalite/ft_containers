@@ -81,7 +81,7 @@ namespace ft {
 				TreeNode<const Key,T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
 
 				_begin = leftMost;
-				if (_end && _end->_parent && _end->_parent->_right != _end) {
+				if (_end->_parent && _end->_parent->_right != _end) {
 					rightMost->_right = _end;
 					_end->_parent = rightMost;
 				}
@@ -230,8 +230,9 @@ namespace ft {
 			** Modifiers
 			*/
 			std::pair<iterator,bool>	insert (const value_type& val) {
-				TreeNode<const Key,T> *y = NULL;
 				TreeNode<const Key,T> *x = _root;
+				TreeNode<const Key,T> *y = NULL;
+
 				while (x && x != _end) {
 					y = x;
 					if (_comp(val.first, x->_data->first))
@@ -246,12 +247,23 @@ namespace ft {
 				_alloc.construct(z->_data, val);
 				z->_parent = y;
 				z->_left = z->_right = NULL;
-				if (!y) {
+				if (_root == _end) {
+					z->_left = _root->_left;
+					z->_right = _end;
+					if (_root->_left)
+						_root->_left->_parent = z;
+					if (_root->_right)
+						_root->_right->_parent = z;
+					_end->_left = _end->_right = NULL;
+					_end->_parent = z;
+					_root = z;
+				}
+				else if (!y) {
 					z->_right = _end;
 					_root = _begin = _end->_parent = z;
 				}
 				else if (_comp(z->_data->first, y->_data->first))
-					y->_left = _begin = z;
+					y->_left = z;
 				else
 					y->_right = z;
 				_size++;
