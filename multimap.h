@@ -79,7 +79,7 @@ namespace ft {
 				TreeNode<const Key,T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
 
 				_begin = leftMost;
-				if (_end && _end->_parent && _end->_parent->_right != _end) {
+				if (rightMost != _end) {
 					rightMost->_right = _end;
 					_end->_parent = rightMost;
 				}
@@ -295,7 +295,7 @@ namespace ft {
 
 				if (!ptr->_left)
 					transplant(ptr, ptr->_right);
-				else if (!ptr->_right)
+				else if (!ptr->_right || ptr->_right == _end)
 					transplant(ptr, ptr->_left);
 				else {
 					y = treeMinimum(ptr->_right);

@@ -29,17 +29,17 @@ namespace ft {
 			typedef Category 					iterator_category;
 
 			IteratorMap() {}
-			IteratorMap(const IteratorMap &other):_ptr(other._ptr) {}
-			IteratorMap(TreeNode<const Key,T> *node):_ptr(node) {}
+			IteratorMap(const IteratorMap& other):_ptr(other._ptr) {}
+			IteratorMap(TreeNode<const Key,T>* node):_ptr(node) {}
 			~IteratorMap() {}
 
-			TreeNode<const Key,T>*	getPtr() { return (_ptr); }
+			TreeNode<const Key,T>*	getPtr() const { return (_ptr); }
 			pointer operator->() const { return (_ptr->_data); }
-			reference operator*() { return (*_ptr->_data); }
-			bool operator==(const IteratorMap &other) const { return (_ptr == other._ptr); }
-			bool operator!=(const IteratorMap &other) const { return (_ptr != other._ptr); }
+			reference operator*() const { return (*_ptr->_data); }
+			bool operator==(const IteratorMap& other) const { return (_ptr == other._ptr); }
+			bool operator!=(const IteratorMap& other) const { return (_ptr != other._ptr); }
 
-			IteratorMap &operator=(const IteratorMap &other) {
+			IteratorMap &operator=(const IteratorMap& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
@@ -105,13 +105,14 @@ namespace ft {
 			typedef Category 					iterator_category;
 
 			ReverseIteratorMap() {}
-			ReverseIteratorMap(const ReverseIteratorMap &other):_ptr(other._ptr) {}
-			ReverseIteratorMap(TreeNode<const Key,T> *node):_ptr(node) {}
+			ReverseIteratorMap(const IteratorMap<Key,T>& other):_ptr(other.getPtr()) {}
+			ReverseIteratorMap(const ReverseIteratorMap& other):_ptr(other._ptr) {}
+			ReverseIteratorMap(TreeNode<const Key,T>* node):_ptr(node) {}
 			~ReverseIteratorMap() {}
 
-			TreeNode<const Key,T>*	getPtr() { return (_ptr); }
+			TreeNode<const Key,T>*	getPtr() const { return (_ptr); }
 			pointer operator->() const { return (_ptr->_data); }
-			reference operator*() {
+			reference operator*() const {
 				TreeNode<const Key,T>* tmp = _ptr;
 
 				if (tmp->_left)
@@ -128,10 +129,10 @@ namespace ft {
 				}
 				return (*tmp->_data);
 			}
-			bool operator==(const ReverseIteratorMap &other) const { return (_ptr == other._ptr); }
-			bool operator!=(const ReverseIteratorMap &other) const { return (_ptr != other._ptr); }
+			bool operator==(const ReverseIteratorMap& other) const { return (_ptr == other._ptr); }
+			bool operator!=(const ReverseIteratorMap& other) const { return (_ptr != other._ptr); }
 
-			ReverseIteratorMap &operator=(const ReverseIteratorMap &other) {
+			ReverseIteratorMap &operator=(const ReverseIteratorMap& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
@@ -197,17 +198,18 @@ namespace ft {
 			typedef Category 					iterator_category;
 
 			ConstIteratorMap() {}
-			ConstIteratorMap(const ConstIteratorMap &other):_ptr(other._ptr) {}
-			ConstIteratorMap(TreeNode<const Key,T> *node):_ptr(node) {}
+			ConstIteratorMap(const IteratorMap<Key,T>& other):_ptr(other.getPtr()) {}
+			ConstIteratorMap(const ConstIteratorMap& other):_ptr(other._ptr) {}
+			ConstIteratorMap(TreeNode<const Key,T>* node):_ptr(node) {}
 			~ConstIteratorMap() {}
 
-			TreeNode<const Key,T>*	getPtr() { return (_ptr); }
+			TreeNode<const Key,T>*	getPtr() const { return (_ptr); }
 			const value_type* operator->() const { return (_ptr->_data); }
-			const value_type& operator*() { return (*_ptr->_data); }
-			bool operator==(const ConstIteratorMap &other) const { return (_ptr == other._ptr); }
-			bool operator!=(const ConstIteratorMap &other) const { return (_ptr != other._ptr); }
+			const value_type& operator*() const { return (*_ptr->_data); }
+			bool operator==(const ConstIteratorMap& other) const { return (_ptr == other._ptr); }
+			bool operator!=(const ConstIteratorMap& other) const { return (_ptr != other._ptr); }
 
-			ConstIteratorMap &operator=(const ConstIteratorMap &other) {
+			ConstIteratorMap &operator=(const ConstIteratorMap& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}
@@ -274,13 +276,16 @@ namespace ft {
 			typedef Category 					iterator_category;
 
 			ConstReverseIteratorMap() {}
-			ConstReverseIteratorMap(const ConstReverseIteratorMap &other):_ptr(other._ptr) {}
-			ConstReverseIteratorMap(TreeNode<const Key,T> *node):_ptr(node) {}
+			ConstReverseIteratorMap(const IteratorMap<Key,T>& other):_ptr(other.getPtr()) {}
+			ConstReverseIteratorMap(const ConstIteratorMap<Key,T>& other):_ptr(other.getPtr()) {}
+			ConstReverseIteratorMap(const ReverseIteratorMap<Key,T>& other):_ptr(other.getPtr()) {}
+			ConstReverseIteratorMap(const ConstReverseIteratorMap& other):_ptr(other._ptr) {}
+			ConstReverseIteratorMap(TreeNode<const Key,T>* node):_ptr(node) {}
 			~ConstReverseIteratorMap() {}
 
-			TreeNode<const Key,T>*	getPtr() { return (_ptr); }
+			TreeNode<const Key,T>*	getPtr() const { return (_ptr); }
 			const value_type* operator->() const { return (_ptr->_data); }
-			const value_type& operator*() {
+			const value_type& operator*() const {
 				TreeNode<const Key,T>* tmp = _ptr;
 
 				if (tmp->_left)
@@ -297,10 +302,10 @@ namespace ft {
 				}
 				return (*tmp->_data);
 			}
-			bool operator==(const ConstReverseIteratorMap &other) const { return (_ptr == other._ptr); }
-			bool operator!=(const ConstReverseIteratorMap &other) const { return (_ptr != other._ptr); }
+			bool operator==(const ConstReverseIteratorMap& other) const { return (_ptr == other._ptr); }
+			bool operator!=(const ConstReverseIteratorMap& other) const { return (_ptr != other._ptr); }
 
-			ConstReverseIteratorMap &operator=(const ConstReverseIteratorMap &other) {
+			ConstReverseIteratorMap &operator=(const ConstReverseIteratorMap& other) {
 				_ptr = other._ptr;
 				return (*this);
 			}

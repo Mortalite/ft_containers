@@ -26,7 +26,7 @@ namespace ft {
 
 			pointer			getPtr() const { return (_ptr); }
 			pointer 		operator->() const {	return (_ptr);		}
-			reference		operator*() {	return (*_ptr);		}
+			reference		operator*() const {	return (*_ptr);		}
 			reference		operator[](int n) const {	return (*(_ptr + n));	}
 			difference_type operator-(const IteratorVector& other) const {		return (_ptr - other._ptr);		}
 			bool 			operator==(const IteratorVector& other) const {		return (_ptr == other._ptr);		}
@@ -101,6 +101,7 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ReverseIteratorVector() {}
+			ReverseIteratorVector(const IteratorVector<T,Category>& other):_ptr(other._ptr) {}
 			ReverseIteratorVector(const ReverseIteratorVector& other):_ptr(other._ptr) {}
 			ReverseIteratorVector(pointer ptr):_ptr(ptr) {}
 			~ReverseIteratorVector() {}
@@ -182,6 +183,7 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstIteratorVector() {}
+			ConstIteratorVector(const IteratorVector<T,Category>& other):_ptr(other._ptr) {}
 			ConstIteratorVector(const ConstIteratorVector& other):_ptr(other._ptr) {}
 			ConstIteratorVector(pointer ptr):_ptr(ptr) {}
 			~ConstIteratorVector() {}
@@ -263,6 +265,9 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstReverseIteratorVector() {}
+			ConstReverseIteratorVector(const IteratorVector<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorVector(const ConstIteratorVector<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorVector(const ReverseIteratorVector<T,Category>& other):_ptr(other._ptr) {}
 			ConstReverseIteratorVector(const ConstReverseIteratorVector& other):_ptr(other._ptr) {}
 			ConstReverseIteratorVector(pointer ptr):_ptr(ptr) {}
 			~ConstReverseIteratorVector() {}

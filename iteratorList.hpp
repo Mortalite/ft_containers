@@ -34,13 +34,13 @@ namespace ft {
 
 			IteratorList() {}
 			IteratorList(const IteratorList& other):_ptr(other._ptr) {}
-			IteratorList(DLLNode<T> *node):_ptr(node) {}
+			IteratorList(DLLNode<T>* node):_ptr(node) {}
 			~IteratorList() {}
 
-			DLLNode<T>*				getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() const { return (_ptr); }
 			bool					operator==(const IteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const IteratorList& other) const {	return (_ptr != other._ptr);	}
-			reference				operator*() {	return (*_ptr->_data);	}
+			reference				operator*() const {	return (*_ptr->_data);	}
 			pointer 				operator->() const {	return (_ptr->_data);	}
 
 			IteratorList&	operator=(const IteratorList& other) {
@@ -89,14 +89,15 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ReverseIteratorList() {}
-			ReverseIteratorList(const IteratorList<T>& other):IteratorList<T>(other) {}
-			ReverseIteratorList(DLLNode<T> *node):_ptr(node) {}
+			ReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ReverseIteratorList(const ReverseIteratorList& other):_ptr(other._ptr) {}
+			ReverseIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ReverseIteratorList() {}
 
-			DLLNode<T>*				getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() const { return (_ptr); }
 			bool					operator==(const ReverseIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ReverseIteratorList& other) const {	return (_ptr != other._ptr);	}
-			reference				operator*() {	return (*_ptr->_data);	}
+			reference				operator*() const {	return (*_ptr->_data);	}
 			pointer 				operator->() const {	return (_ptr->_data);	}
 
 			ReverseIteratorList&	operator=(const ReverseIteratorList& other) {
@@ -145,14 +146,15 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstIteratorList() {}
-			ConstIteratorList(const IteratorList<T>& other):IteratorList<T>(other) {}
-			ConstIteratorList(DLLNode<T> *node):_ptr(node) {}
+			ConstIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstIteratorList(const ConstIteratorList& other):_ptr(other._ptr) {}
+			ConstIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ConstIteratorList() {}
 
-			DLLNode<T>*				getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() const { return (_ptr); }
 			bool					operator==(const ConstIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ConstIteratorList& other) const {	return (_ptr != other._ptr);	}
-			const T&				operator*() {	return (*_ptr->_data);	}
+			const T&				operator*() const {	return (*_ptr->_data);	}
 			const T*	 			operator->() const {	return (_ptr->_data);	}
 
 			ConstIteratorList&	operator=(const ConstIteratorList& other) {
@@ -201,14 +203,17 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstReverseIteratorList() {}
-			ConstReverseIteratorList(const ReverseIteratorList<T>& other):ReverseIteratorList<T>(other) {}
-			ConstReverseIteratorList(DLLNode<T> *node):_ptr(node) {}
+			ConstReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorList(const ConstIteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorList(const ReverseIteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorList(const ConstReverseIteratorList& other):_ptr(other._ptr) {}
+			ConstReverseIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ConstReverseIteratorList() {}
 
-			DLLNode<T>*				getPtr() { return (_ptr); }
+			DLLNode<T>*				getPtr() const { return (_ptr); }
 			bool					operator==(const ConstReverseIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ConstReverseIteratorList& other) const {	return (_ptr != other._ptr);	}
-			const T&				operator*() {	return (*_ptr->_data);	}
+			const T&				operator*() const {	return (*_ptr->_data);	}
 			const T*	 			operator->() const {	return (_ptr->_data);	}
 
 			ConstReverseIteratorList&	operator=(const ConstReverseIteratorList& other) {
