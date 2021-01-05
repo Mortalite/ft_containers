@@ -20,13 +20,13 @@
 #define BLUE    "\033[34m"
 #define RESET   "\033[0m"
 
-size_t g_countRandNumbers = 10;
+size_t g_countRandNumbers = 3;
 size_t g_printMargin = 15;
 size_t g_mapMarginCoeff = 3;
-int g_intMin = -5, g_intMax = 5;
+int g_intMin = -500, g_intMax = 500;
 float g_floatMin = -500.0, g_floatMax = 500.0;
 
-typedef	int	cType;
+typedef int	cType;
 
 template<typename T>
 void printIterator(T& container) {
@@ -807,10 +807,12 @@ void testMapSwap() {
 	mapRandomInsert(alterContainer);
 
 	std::cout << BLUE << "Before Swap" << RESET << std::endl;
-	printCmpIteratorMap(mainContainer, alterContainer);
+	printIteratorMap(mainContainer);
+	printIteratorMap(alterContainer);
 	mainContainer.swap(alterContainer);
 	std::cout << BLUE << "After Swap" << RESET << std::endl;
-	printCmpIteratorMap(mainContainer, alterContainer);
+	printIteratorMap(mainContainer);
+	printIteratorMap(alterContainer);
 }
 
 template<typename T, typename C>
@@ -1075,63 +1077,14 @@ void testVector() {
 	testOperators<ft::vector<cType>, std::vector<cType> >();
 }
 
-template<typename T, typename C>
-void testMapSpecial() {
-	T mainMap;
-	C alterMap;
-
-	mainMap[100];
-	mainMap[10];
-
-	alterMap[100];
-	alterMap[10];
-
-	mainMap.erase(--mainMap.end());
-	alterMap.erase(--alterMap.end());
-
-	typename C::iterator it = alterMap.begin();
-	typename C::const_iterator itConst = alterMap.begin();
-
-	typename C::reverse_iterator itRev = alterMap.rbegin();
-	typename C::const_reverse_iterator itRevConst = alterMap.rbegin();
-
-/*	typename T::iterator it = mainMap.begin();
-	typename T::const_iterator itConst(it);
-
-	typename T::reverse_iterator itRev = mainMap.rbegin();
-	typename T::const_reverse_iterator itRevConst(itConst);*/
-
-	mainMap[40];
-	mainMap[30];
-	alterMap[40];
-	alterMap[30];
-	printCmpIteratorMap(mainMap, alterMap);
-
-/*	mainMap[100];
-	mainMap[200];
-
-	alterMap[100];
-	alterMap[200];
-
-	mainMap.erase(mainMap.begin());
-	alterMap.erase(alterMap.begin());
-
-	mainMap[30];
-	mainMap[40];
-	alterMap[30];
-	alterMap[40];
-	printCmpIteratorMap(mainMap, alterMap);*/
-}
-
 void testMap() {
 	std::cout << RED << "||||||||||MAP||||||||||" << RESET << std::endl;
 
-	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
+//	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
 	testMapConstructors<ft::map<cType, cType>, std::map<cType, cType> >();
 	testMapIterators<ft::map<cType, cType>, std::map<cType, cType> >();
 	testMapInsert<ft::map<cType, cType>, std::map<cType, cType> >();
 	testMapErase<ft::map<cType, cType>, std::map<cType, cType> >();
-//	testMapSpecial<ft::map<cType, cType>, std::map<cType, cType> >();
 	testMapSwap<ft::map<cType, cType>, ft::map<cType, cType> >();
 	testMapOperations<ft::map<cType, cType>, std::map<cType, cType> >();
 	testMapNonMember<ft::map<cType, cType>, std::map<cType, cType> >();
@@ -1175,9 +1128,29 @@ int main() {
 	std::cout.setf(std::ios::left);
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
+
+/*	std::vector<cType> vec;
+	containerPushBack(vec);
+
+	printIterator(vec);
+	std::vector<cType>::iterator itVec = vec.begin();
+	std::vector<cType>::const_iterator itVec2 = 2 + itVec;
+
+	std::cout << BLUE << "itVec2 = " << *itVec2 << RESET << std::endl;*/
+
+	ft::vector<cType> vec;
+	containerPushBack(vec);
+
+	printIterator(vec);
+	ft::vector<cType>::iterator itVec = vec.begin();
+	ft::vector<cType>::const_iterator itVec2 = 2 + itVec;
+
+	std::cout << BLUE << "itVec2 = " << *itVec2 << RESET << std::endl;
+
+
 //	testList();
 //	testVector();
-	testMap();
+//	testMap();
 //	testStack();
 //	testQueue();
 

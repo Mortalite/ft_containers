@@ -89,7 +89,7 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ReverseIteratorList() {}
-			ReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other.getPtr()) {}
 			ReverseIteratorList(const ReverseIteratorList& other):_ptr(other._ptr) {}
 			ReverseIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ReverseIteratorList() {}
@@ -146,7 +146,7 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstIteratorList() {}
-			ConstIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstIteratorList(const IteratorList<T,Category>& other):_ptr(other.getPtr()) {}
 			ConstIteratorList(const ConstIteratorList& other):_ptr(other._ptr) {}
 			ConstIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ConstIteratorList() {}
@@ -203,9 +203,9 @@ namespace ft {
 			typedef Category		iterator_category;
 
 			ConstReverseIteratorList() {}
-			ConstReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other._ptr) {}
-			ConstReverseIteratorList(const ConstIteratorList<T,Category>& other):_ptr(other._ptr) {}
-			ConstReverseIteratorList(const ReverseIteratorList<T,Category>& other):_ptr(other._ptr) {}
+			ConstReverseIteratorList(const IteratorList<T,Category>& other):_ptr(other.getPtr()) {}
+			ConstReverseIteratorList(const ConstIteratorList<T,Category>& other):_ptr(other.getPtr()) {}
+			ConstReverseIteratorList(const ReverseIteratorList<T,Category>& other):_ptr(other.getPtr()) {}
 			ConstReverseIteratorList(const ConstReverseIteratorList& other):_ptr(other._ptr) {}
 			ConstReverseIteratorList(DLLNode<T>* node):_ptr(node) {}
 			~ConstReverseIteratorList() {}
