@@ -3,4 +3,9 @@ project(ft_containers)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(ft_containers main.cpp list.hpp iteratorList.hpp utils.hpp vector.hpp iteratorVector.hpp stack.hpp queue.hpp map.hpp iteratorMap.hpp multimap.h set.hpp)
+include_directories(includes)
+include_directories(includes/containers)
+include_directories(includes/iterators)
+
+
+add_executable(ft_containers srcs/main.cpp includes/containers/list.hpp includes/iterators/iteratorList.hpp includes/containers/vector.hpp includes/iterators/iteratorVector.hpp includes/containers/stack.hpp includes/containers/queue.hpp includes/containers/map.hpp includes/iterators/iteratorMap.hpp includes/containers/multimap.hpp includes/containers/set.hpp includes/iterators/iteratorSet.hpp includes/tests.hpp srcs/mainTesters.cpp includes/print.hpp includes/utils.hpp includes/mapTest.hpp includes/queueTest.hpp includes/defines.hpp includes/stackTest.hpp)
