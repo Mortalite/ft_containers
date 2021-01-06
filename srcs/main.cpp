@@ -6,18 +6,18 @@
 #include "multimap.hpp"
 #include "set.hpp"
 
-#include "tests.hpp"
+#include "mainTest.hpp"
 #include "print.hpp"
 #include "mapTest.hpp"
 #include "queueTest.hpp"
 #include "stackTest.hpp"
+#include "setTest.hpp"
 
 size_t g_countRandNumbers = 3;
 size_t g_printMargin = 15;
 size_t g_mapMarginCoeff = 3;
 int g_intMin = -500, g_intMax = 500;
 float g_floatMin = -500.0, g_floatMax = 500.0;
-
 
 void testList() {
 	std::cout << RED << "||||||||||LIST||||||||||" << RESET << std::endl;
@@ -64,7 +64,7 @@ void testMap() {
 	typedef ft::map<cType, cType> ftType;
 	typedef std::map<cType, cType> stdType;
 
-	ft::testMapConstructors<ft::map<const int, int, std::greater<int> >, std::map<const int, int, std::greater<int> > >();
+	ft::testMapConstructors<ft::map<cType, cType, std::greater<cType> >, std::map<cType, cType, std::greater<cType> > >();
 	ft::testMapConstructors<ftType, stdType>();
 	ft::testMapIterators<ftType, stdType>();
 	ft::testMapInsert<ftType, stdType>();
@@ -99,8 +99,6 @@ void testMultiMap() {
 	typedef ft::multimap<cType, cType> ftType;
 	typedef std::multimap<cType, cType> stdType;
 
-	bool isMap = (typeid(typename ftType ::key_type) != typeid(typename ftType ::value_type));
-
 //	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
 	ft::testMapConstructors<ftType, stdType>();
 	ft::testMapIterators<ftType, stdType>();
@@ -112,14 +110,20 @@ void testMultiMap() {
 
 }
 
-void testSet() {
+/*void testSet() {
 	std::cout << RED << "||||||||||SET||||||||||" << RESET << std::endl;
 
-	typedef ft::set<cType, cType> ftType;
-	typedef std::set<cType, cType> stdType;
+	typedef ft::set<cType> ftType;
+	typedef std::set<cType> stdType;
 
-//	testMapConstructors<ftType, stdType>();
-}
+	ft::testSetConstructors<ftType, stdType>();
+	ft::testSetIterators<ftType, stdType>();
+	ft::testSetInsert<ftType, stdType>();
+	ft::testSetErase<ftType, stdType>();
+	ft::testSetSwap<ftType, ftType>();
+	ft::testSetOperations<ftType, stdType>();
+	ft::testSetNonMember<ftType, stdType>();
+}*/
 
 int main() {
 	srand(time(NULL));
@@ -127,15 +131,29 @@ int main() {
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
 
-	testList();
-	testVector();
-	testMap();
-	testStack();
-	testQueue();
-
+//	testList();
+//	testVector();
+//	testMap();
+//	testStack();
+//	testQueue();
+//
 	std::cout << RED << "Bonus part" << RESET << std::endl;
-	testMultiMap();
+//	testMultiMap();
 //	testSet();
+	typedef std::set<int> setType;
+
+	setType set;
+	set.insert(1);
+	set.insert(976);
+	set.insert(1000);
+
+	setType::iterator it = set.begin();
+	setType::const_iterator itConst = set.begin();
+	setType::reverse_iterator itRev = set.rbegin();
+	setType::const_reverse_iterator itConstRev = set.rbegin();
+
+	setType::iterator itT(it);
+
 
 	return (0);
 }

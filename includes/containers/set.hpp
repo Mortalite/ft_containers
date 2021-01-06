@@ -1,21 +1,19 @@
 #ifndef SET_HPP
 #define SET_HPP
 
-#include "../iterators/iteratorSet.hpp"
+#include "iteratorSet.hpp"
 
 namespace ft {
 
-	template < 	class T,                        // set::key_type/value_type
-				class Compare = std::less<T>,        // set::key_compare/value_compare
-				class Alloc = std::allocator<T>      // set::allocator_type
-	> class set {
+	template 	< 	class T,							// set::key_type/value_type
+					class Compare = std::less<T>,		// set::key_compare/value_compare
+					class Alloc = std::allocator<T>		// set::allocator_type
+				>
+	class set {
 
 		/*
 		** Typedefs
 		*/
-		private:
-			typedef int Key;
-
 		public:
 			typedef T											key_type;
 			typedef T											value_type;
@@ -26,10 +24,10 @@ namespace ft {
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef ft::IteratorSet<T, value_type>				iterator;
-			typedef ft::ReverseIteratorSet<T, value_type>		reverse_iterator;
-			typedef ft::ConstIteratorSet<T, value_type>			const_iterator;
-			typedef ft::ConstReverseIteratorSet<T, value_type>	const_reverse_iterator;
+			typedef IteratorSet<T>								iterator;
+			typedef ReverseIteratorSet<T>						reverse_iterator;
+			typedef ConstIteratorSet<T>							const_iterator;
+			typedef ConstReverseIteratorSet<T>					const_reverse_iterator;
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;
 
@@ -212,9 +210,9 @@ namespace ft {
 
 				while (x && x != _end) {
 					y = x;
-					if (_comp(val.first, x->_data->first))
+					if (_comp(val, *(x->_data)))
 						x = x->_left;
-					else if (_comp(x->_data->first, val.first))
+					else if (_comp(*(x->_data), val))
 						x = x->_right;
 					else
 						return (std::make_pair(iterator(x), false));
@@ -228,7 +226,7 @@ namespace ft {
 					z->_right = _end;
 					_root = _begin = _end->_parent = z;
 				}
-				else if (_comp(z->_data->first, y->_data->first))
+				else if (_comp(*(z->_data), *(y->_data)))
 					y->_left = z;
 				else
 					y->_right = z;
@@ -244,15 +242,15 @@ namespace ft {
 				while (x->_parent) {
 					x = x->_parent;
 					y = x;
-					if (_comp(x->_data->first, val.first))
+					if (_comp(*(x->_data), val))
 						break ;
 				}
 
 				while (x && x != _end) {
 					y = x;
-					if (_comp(val.first, x->_data->first))
+					if (_comp(val, *(x->_data)))
 						x = x->_left;
-					else if (_comp(x->_data->first, val.first))
+					else if (_comp(*(x->_data), val))
 						x = x->_right;
 					else
 						return (iterator(x));
@@ -266,7 +264,7 @@ namespace ft {
 					z->_right = _end;
 					_root = _begin = _end->_parent = z;
 				}
-				else if (_comp(z->_data->first, y->_data->first))
+				else if (_comp(*(z->_data), *(y->_data)))
 					y->_left = _begin = z;
 				else
 					y->_right = z;
@@ -352,7 +350,7 @@ namespace ft {
 			** Operations
 			*/
 			iterator		find (const value_type& val) const {
-				iterator first = this->begin(), last = this->end();
+				const_iterator first = this->begin(), last = this->end();
 
 				while (first != last) {
 					if (!_comp(*first, val) && !_comp(val, *first))
@@ -398,44 +396,44 @@ namespace ft {
 	/*
 	** Non-member function overloads
 	*/
-	template <class T, class Alloc>
-	bool operator==(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator==(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
-		typename set<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
-		for (typename set<T, Alloc>::size_type i = 0; i < lhs.size(); i++)
+		typename set<T,Compare,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
+		for (typename set<T,Compare,Alloc>::size_type i = 0; i < lhs.size(); i++)
 			if (*firstLhs++ != *firstRhs++)
 				return (false);
 		return (true);
 	}
 
-	template <class T, class Alloc>
-	bool operator!=(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator!=(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		return (!(lhs == rhs));
 	}
 
-	template <class T, class Alloc>
-	bool operator<(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template <class T, class Alloc>
-	bool operator<=(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<=(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		return (!(rhs < lhs));
 	}
 
-	template <class T, class Alloc>
-	bool operator>(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		return (rhs < lhs);
 	}
 
-	template <class T, class Alloc>
-	bool operator>=(const set<T,Alloc>& lhs, const set<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>=(const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs) {
 		return (!(lhs < rhs));
 	}
 
-	template <class T, class Alloc>
-	void swap(set<T,Alloc>& x, set<T,Alloc>& y) {
+	template <class T, class Compare, class Alloc>
+	void swap(set<T,Compare,Alloc>& x, set<T,Compare,Alloc>& y) {
 		x.swap(y);
 	}
 

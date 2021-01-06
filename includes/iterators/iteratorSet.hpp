@@ -7,7 +7,7 @@ namespace ft {
 	class SetNode {
 
 	public:
-		T*				_data;
+		T*			_data;
 		SetNode<T>*	_left;
 		SetNode<T>*	_right;
 		SetNode<T>*	_parent;
@@ -40,7 +40,9 @@ namespace ft {
 		bool operator!=(const IteratorSet& other) const { return (_ptr != other._ptr); }
 
 		IteratorSet &operator=(const IteratorSet& other) {
-			_ptr = other._ptr;
+			if (this != &other) {
+				_ptr = other._ptr;
+			}
 			return (*this);
 		}
 
@@ -105,7 +107,7 @@ namespace ft {
 		typedef Category 		iterator_category;
 
 		ReverseIteratorSet() {}
-		ReverseIteratorSet(const IteratorSet<T>& other): _ptr(other.getPtr()) {}
+		ReverseIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
 		ReverseIteratorSet(const ReverseIteratorSet& other): _ptr(other._ptr) {}
 		ReverseIteratorSet(SetNode<T>* node): _ptr(node) {}
 		~ReverseIteratorSet() {}
@@ -133,7 +135,9 @@ namespace ft {
 		bool operator!=(const ReverseIteratorSet& other) const { return (_ptr != other._ptr); }
 
 		ReverseIteratorSet &operator=(const ReverseIteratorSet& other) {
-			_ptr = other._ptr;
+			if (this != &other) {
+				_ptr = other._ptr;
+			}
 			return (*this);
 		}
 
@@ -198,7 +202,7 @@ namespace ft {
 		typedef Category 		iterator_category;
 
 		ConstIteratorSet() {}
-		ConstIteratorSet(const IteratorSet<T>& other): _ptr(other.getPtr()) {}
+		ConstIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
 		ConstIteratorSet(const ConstIteratorSet& other): _ptr(other._ptr) {}
 		ConstIteratorSet(SetNode<T>* node): _ptr(node) {}
 		~ConstIteratorSet() {}
@@ -210,7 +214,9 @@ namespace ft {
 		bool operator!=(const ConstIteratorSet& other) const { return (_ptr != other._ptr); }
 
 		ConstIteratorSet &operator=(const ConstIteratorSet& other) {
-			_ptr = other._ptr;
+			if (this != &other) {
+				_ptr = other._ptr;
+			}
 			return (*this);
 		}
 
@@ -276,9 +282,9 @@ namespace ft {
 		typedef Category 		iterator_category;
 
 		ConstReverseIteratorSet() {}
-		ConstReverseIteratorSet(const IteratorSet<T>& other): _ptr(other.getPtr()) {}
-		ConstReverseIteratorSet(const ConstIteratorSet<T>& other): _ptr(other.getPtr()) {}
-		ConstReverseIteratorSet(const ReverseIteratorSet<T>& other): _ptr(other.getPtr()) {}
+		ConstReverseIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
+		ConstReverseIteratorSet(const ConstIteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
+		ConstReverseIteratorSet(const ReverseIteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
 		ConstReverseIteratorSet(const ConstReverseIteratorSet& other): _ptr(other._ptr) {}
 		ConstReverseIteratorSet(SetNode<T>* node): _ptr(node) {}
 		~ConstReverseIteratorSet() {}
@@ -306,7 +312,9 @@ namespace ft {
 		bool operator!=(const ConstReverseIteratorSet& other) const { return (_ptr != other._ptr); }
 
 		ConstReverseIteratorSet &operator=(const ConstReverseIteratorSet& other) {
-			_ptr = other._ptr;
+			if (this != &other) {
+				_ptr = other._ptr;
+			}
 			return (*this);
 		}
 
