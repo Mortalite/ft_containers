@@ -692,6 +692,9 @@ template<typename T, typename C>
 void testMapConstructors() {
 	std::cout << RED << "Constructors" << RESET << std::endl;
 
+/*	if (typeid(typename T::value_type) == typeid(std::pair<const typename T::key_type, typename T::mapped_type>))
+		std::cout << BLUE << "SUPER TESTTTT" << RESET << std::endl;*/
+	
 	std::cout << BLUE << "Fill (rand<T>(), rand<T>())" << RESET << std::endl;
 	T mainContainerFill;
 	C alterContainerFill;
@@ -1080,14 +1083,17 @@ void testVector() {
 void testMap() {
 	std::cout << RED << "||||||||||MAP||||||||||" << RESET << std::endl;
 
+	typedef ft::map<cType, cType> ftType;
+	typedef std::map<cType, cType> stdType;
+
 //	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
-	testMapConstructors<ft::map<cType, cType>, std::map<cType, cType> >();
-	testMapIterators<ft::map<cType, cType>, std::map<cType, cType> >();
-	testMapInsert<ft::map<cType, cType>, std::map<cType, cType> >();
-	testMapErase<ft::map<cType, cType>, std::map<cType, cType> >();
-	testMapSwap<ft::map<cType, cType>, ft::map<cType, cType> >();
-	testMapOperations<ft::map<cType, cType>, std::map<cType, cType> >();
-	testMapNonMember<ft::map<cType, cType>, std::map<cType, cType> >();
+	testMapConstructors<ftType, stdType>();
+	testMapIterators<ftType, stdType>();
+	testMapInsert<ftType, stdType>();
+	testMapErase<ftType, stdType>();
+	testMapSwap<ftType, ftType>();
+	testMapOperations<ftType, stdType>();
+	testMapNonMember<ftType, stdType>();
 
 }
 
@@ -1112,14 +1118,17 @@ void testQueue() {
 void testMultiMap() {
 	std::cout << RED << "||||||||||MULTIMAP||||||||||" << RESET << std::endl;
 
+	typedef ft::multimap<cType, cType> ftType;
+	typedef std::multimap<cType, cType> stdType;
+
 //	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
-	testMapConstructors<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-	testMapIterators<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-	testMapInsert<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-	testMapErase<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-	testMapSwap<ft::multimap<cType, cType>, ft::multimap<cType, cType> >();
-	testMapOperations<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
-	testMapNonMember<ft::multimap<cType, cType>, std::multimap<cType, cType> >();
+	testMapConstructors<ftType, stdType>();
+	testMapIterators<ftType, stdType>();
+	testMapInsert<ftType, stdType>();
+	testMapErase<ftType, stdType>();
+	testMapSwap<ftType, ftType>();
+	testMapOperations<ftType, stdType>();
+	testMapNonMember<ftType, stdType>();
 
 }
 
@@ -1129,33 +1138,14 @@ int main() {
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
 
-/*	std::vector<cType> vec;
-	containerPushBack(vec);
-
-	printIterator(vec);
-	std::vector<cType>::iterator itVec = vec.begin();
-	std::vector<cType>::const_iterator itVec2 = 2 + itVec;
-
-	std::cout << BLUE << "itVec2 = " << *itVec2 << RESET << std::endl;*/
-
-	ft::vector<cType> vec;
-	containerPushBack(vec);
-
-	printIterator(vec);
-	ft::vector<cType>::iterator itVec = vec.begin();
-	ft::vector<cType>::const_iterator itVec2 = 2 + itVec;
-
-	std::cout << BLUE << "itVec2 = " << *itVec2 << RESET << std::endl;
-
-
 //	testList();
 //	testVector();
-//	testMap();
+	testMap();
 //	testStack();
 //	testQueue();
 
 	std::cout << RED << "Bonus part" << RESET << std::endl;
-//	testMultiMap();
+	testMultiMap();
 
 	return (0);
 }
