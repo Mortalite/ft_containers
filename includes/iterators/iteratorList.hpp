@@ -141,8 +141,8 @@ namespace ft {
 
 			typedef std::ptrdiff_t	difference_type;
 			typedef T				value_type;
-			typedef T*				pointer;
-			typedef T&				reference;
+			typedef const T*		pointer;
+			typedef const T&		reference;
 			typedef Category		iterator_category;
 
 			ConstIteratorList() {}
@@ -154,8 +154,8 @@ namespace ft {
 			DLLNode<T>*				getPtr() const { return (_ptr); }
 			bool					operator==(const ConstIteratorList& other) const {	return (_ptr == other._ptr);	}
 			bool					operator!=(const ConstIteratorList& other) const {	return (_ptr != other._ptr);	}
-			const T&				operator*() const {	return (*_ptr->_data);	}
-			const T*	 			operator->() const {	return (_ptr->_data);	}
+			reference 				operator*() const {	return (*_ptr->_data);	}
+			pointer 	 			operator->() const {	return (_ptr->_data);	}
 
 			ConstIteratorList&	operator=(const ConstIteratorList& other) {
 				_ptr = other._ptr;

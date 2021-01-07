@@ -110,20 +110,20 @@ void testMultiMap() {
 
 }
 
-/*void testSet() {
-	std::cout << RED << "||||||||||SET||||||||||" << RESET << std::endl;
+void testSet() {
+ 	std::cout << RED << "||||||||||SET||||||||||" << RESET << std::endl;
 
-	typedef ft::set<cType> ftType;
-	typedef std::set<cType> stdType;
+ 	typedef ft::set<cType> ftType;
+ 	typedef std::set<cType> stdType;
 
-	ft::testSetConstructors<ftType, stdType>();
-	ft::testSetIterators<ftType, stdType>();
-	ft::testSetInsert<ftType, stdType>();
-	ft::testSetErase<ftType, stdType>();
-	ft::testSetSwap<ftType, ftType>();
-	ft::testSetOperations<ftType, stdType>();
-	ft::testSetNonMember<ftType, stdType>();
-}*/
+ 	ft::testSetConstructors<ftType, stdType>();
+ 	ft::testSetIterators<ftType, stdType>();
+ 	ft::testSetInsert<ftType, stdType>();
+ 	ft::testSetErase<ftType, stdType>();
+ 	ft::testSetSwap<ftType, ftType>();
+ 	ft::testSetOperations<ftType, stdType>();
+ 	ft::testSetNonMember<ftType, stdType>();
+ }
 
 int main() {
 	srand(time(NULL));
@@ -136,23 +136,24 @@ int main() {
 //	testMap();
 //	testStack();
 //	testQueue();
-//
+
 	std::cout << RED << "Bonus part" << RESET << std::endl;
 //	testMultiMap();
-//	testSet();
-	typedef std::set<int> setType;
+	testSet();
 
-	setType set;
-	set.insert(1);
-	set.insert(976);
-	set.insert(1000);
+/*	 typedef std::set<int> setType;
+//
+	 setType set;
+	 set.insert(1);
+	 set.insert(976);
+	 set.insert(1000);
 
-	setType::iterator it = set.begin();
-	setType::const_iterator itConst = set.begin();
-	setType::reverse_iterator itRev = set.rbegin();
-	setType::const_reverse_iterator itConstRev = set.rbegin();
-
-	setType::iterator itT(it);
+	 setType::iterator it = set.begin();
+	 setType::const_iterator itConst = set.begin();
+	 setType::reverse_iterator itRev = set.rbegin();
+	 setType::const_reverse_iterator itConstRev = set.rbegin();
+//
+	 setType::iterator itT(itConst);*/
 
 
 	return (0);

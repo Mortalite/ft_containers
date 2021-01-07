@@ -193,8 +193,8 @@ namespace ft {
 
 			typedef std::ptrdiff_t				difference_type;
 			typedef std::pair<const Key,T>		value_type;
-			typedef value_type*					pointer;
-			typedef value_type&					reference;
+			typedef const value_type*			pointer;
+			typedef const value_type&			reference;
 			typedef Category 					iterator_category;
 
 			ConstIteratorMap() {}
@@ -204,8 +204,8 @@ namespace ft {
 			~ConstIteratorMap() {}
 
 			TreeNode<const Key,T>*	getPtr() const { return (_ptr); }
-			const value_type* operator->() const { return (_ptr->_data); }
-			const value_type& operator*() const { return (*_ptr->_data); }
+			pointer operator->() const { return (_ptr->_data); }
+			reference operator*() const { return (*_ptr->_data); }
 			bool operator==(const ConstIteratorMap& other) const { return (_ptr == other._ptr); }
 			bool operator!=(const ConstIteratorMap& other) const { return (_ptr != other._ptr); }
 

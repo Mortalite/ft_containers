@@ -14,7 +14,20 @@ namespace ft {
 
 	};
 
-	template<typename T, typename Category = std::bidirectional_iterator_tag>
+	template <bool flag, class IsTrue, class IsFalse>
+	struct choose;
+
+	template <class IsTrue, class IsFalse>
+	struct choose<true, IsTrue, IsFalse> {
+		typedef IsTrue type;
+	};
+
+	template <class IsTrue, class IsFalse>
+	struct choose<false, IsTrue, IsFalse> {
+		typedef IsFalse type;
+	};
+
+	template<bool isConst, typename T, typename Category = std::bidirectional_iterator_tag>
 	class IteratorSet {
 
 	private:
@@ -22,14 +35,15 @@ namespace ft {
 
 	public:
 
-		typedef std::ptrdiff_t	difference_type;
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef Category 		iterator_category;
+		typedef std::ptrdiff_t								difference_type;
+		typedef T											value_type;
+		typedef typename choose<isConst,const T&,T&>::type 	reference;
+		typedef typename choose<isConst,const T*,T*>::type 	pointer;
+		typedef Category 									iterator_category;
 
 		IteratorSet() {}
-		IteratorSet(const IteratorSet& other): _ptr(other._ptr) {}
+		IteratorSet(const IteratorSet<false,T,Category>& other): _ptr(other._ptr) {}
+		IteratorSet(const IteratorSet<true,T,Category>& other): _ptr(other.getPtr()) {}
 		IteratorSet(SetNode<T>* node): _ptr(node) {}
 		~IteratorSet() {}
 
@@ -63,7 +77,7 @@ namespace ft {
 		}
 
 		IteratorSet operator++(int) {
-			IteratorSet<T,Category> tmp(*this);
+			IteratorSet<isConst,T,Category> tmp(*this);
 			operator++();
 			return (tmp);
 		}
@@ -85,7 +99,7 @@ namespace ft {
 		}
 
 		IteratorSet operator--(int) {
-			IteratorSet<T,Category> tmp(*this);
+			IteratorSet<isConst,T,Category> tmp(*this);
 			operator--();
 			return (tmp);
 		}
@@ -107,7 +121,7 @@ namespace ft {
 		typedef Category 		iterator_category;
 
 		ReverseIteratorSet() {}
-		ReverseIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
+		ReverseIteratorSet(const IteratorSet<false,T,Category>& other): _ptr(other.getPtr()) {}
 		ReverseIteratorSet(const ReverseIteratorSet& other): _ptr(other._ptr) {}
 		ReverseIteratorSet(SetNode<T>* node): _ptr(node) {}
 		~ReverseIteratorSet() {}
@@ -187,7 +201,7 @@ namespace ft {
 
 	};
 
-	template<typename T, typename Category = std::bidirectional_iterator_tag>
+/*	template<typename T, typename Category = std::bidirectional_iterator_tag>
 	class ConstIteratorSet {
 
 	private:
@@ -195,11 +209,11 @@ namespace ft {
 
 	public:
 
-		typedef std::ptrdiff_t	difference_type;
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef Category 		iterator_category;
+		typedef std::ptrdiff_t		difference_type;
+		typedef T					value_type;
+		typedef const value_type*	pointer;
+		typedef const value_type&	reference;
+		typedef Category 			iterator_category;
 
 		ConstIteratorSet() {}
 		ConstIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
@@ -208,8 +222,8 @@ namespace ft {
 		~ConstIteratorSet() {}
 
 		SetNode<T>*	getPtr() const { return (_ptr); }
-		const value_type* operator->() const { return (_ptr->_data); }
-		const value_type& operator*() const { return (*_ptr->_data); }
+		pointer operator->() const { return (_ptr->_data); }
+		reference operator*() const { return (*_ptr->_data); }
 		bool operator==(const ConstIteratorSet& other) const { return (_ptr == other._ptr); }
 		bool operator!=(const ConstIteratorSet& other) const { return (_ptr != other._ptr); }
 
@@ -264,7 +278,7 @@ namespace ft {
 			return (tmp);
 		}
 
-	};
+	};*/
 
 
 	template<typename T, typename Category = std::bidirectional_iterator_tag>
@@ -282,8 +296,8 @@ namespace ft {
 		typedef Category 		iterator_category;
 
 		ConstReverseIteratorSet() {}
-		ConstReverseIteratorSet(const IteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
-		ConstReverseIteratorSet(const ConstIteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
+		ConstReverseIteratorSet(const IteratorSet<false,T,Category>& other): _ptr(other.getPtr()) {}
+		ConstReverseIteratorSet(const IteratorSet<true,Category>& other): _ptr(other.getPtr()) {}
 		ConstReverseIteratorSet(const ReverseIteratorSet<T,Category>& other): _ptr(other.getPtr()) {}
 		ConstReverseIteratorSet(const ConstReverseIteratorSet& other): _ptr(other._ptr) {}
 		ConstReverseIteratorSet(SetNode<T>* node): _ptr(node) {}

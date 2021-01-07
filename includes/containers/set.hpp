@@ -24,9 +24,9 @@ namespace ft {
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef IteratorSet<T>								iterator;
+			typedef IteratorSet<false,T>						iterator;
 			typedef ReverseIteratorSet<T>						reverse_iterator;
-			typedef ConstIteratorSet<T>							const_iterator;
+			typedef IteratorSet<true,T>							const_iterator;
 			typedef ConstReverseIteratorSet<T>					const_reverse_iterator;
 			typedef std::ptrdiff_t								difference_type;
 			typedef std::size_t									size_type;

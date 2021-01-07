@@ -186,19 +186,19 @@ namespace ft {
 
 			typedef std::ptrdiff_t	difference_type;
 			typedef T				value_type;
-			typedef T*				pointer;
-			typedef T&				reference;
+			typedef const T*		pointer;
+			typedef const T&		reference;
 			typedef Category		iterator_category;
 
 			ConstIteratorVector() {}
 			ConstIteratorVector(const IteratorVector<T,Category>& other):_ptr(other.getPtr()) {}
 			ConstIteratorVector(const ConstIteratorVector& other):_ptr(other._ptr) {}
-			ConstIteratorVector(pointer ptr):_ptr(ptr) {}
+			ConstIteratorVector(T* ptr):_ptr(ptr) {}
 			~ConstIteratorVector() {}
 
 			pointer				getPtr() const { return (_ptr); }
-			const value_type*	operator->() const {	return (_ptr);		}
-			const value_type&	operator*() const {	return (*_ptr);	}
+			pointer 			operator->() const {	return (_ptr);		}
+			reference		 	operator*() const {	return (*_ptr);	}
 			reference 			operator[](int n) const {	return (*(_ptr + n));	}
 			difference_type 	operator-(const ConstIteratorVector& other) const {		return (_ptr - other._ptr);		}
 			bool 				operator==(const ConstIteratorVector& other) const {		return (_ptr == other._ptr);		}

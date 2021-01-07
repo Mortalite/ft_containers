@@ -1,14 +1,14 @@
 NAME = ft_containers
-SRCS = main.cpp
+SRCS = srcs/main.cpp
 OBJS = $(SRCS:.cpp=.o)
 DEPS = $(SRCS:.cpp=.d)
 
 COMPILER = clang++
-FLAGS = -Wall -Werror -Wextra -MMD -std=c++98
-INCLUDES = -I.
+FLAGS = -Wall -Werror -Wextra -std=c++98
+INCLUDES = -Iincludes -Iincludes/containers -Iincludes/iterators
 
 %.o : %.cpp
-	$(COMPILER) $(FLAGS) $(INCLUDES) -c $< -o $@
+	$(COMPILER) $(FLAGS) $(INCLUDES) -MMD -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(COMPILER) $(FLAGS) $(OBJS) -o $(NAME)
@@ -27,10 +27,10 @@ re:
 	$(MAKE) fclean
 	$(MAKE) all
 
-leak_sanitizer:
+leak_sanitizer_address:
 	$(MAKE) fclean
-	$(COMPILER) -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3 $(SRCS) -o $(NAME)
-	ASAN_OPTIONS=detect_leaks=1 ./${NAME} ${LEAK_TEST_CASE}
+	$(COMPILER) $(FLAGS) $(INCLUDES) -fsanitize=address -g3 $(SRCS) -o $(NAME)
+	ASAN_OPTIONS=detect_leaks=1 ASAN_OPTIONS=atexit=1 ./${NAME}
 
 leak_valgrind:
 	$(MAKE) re
