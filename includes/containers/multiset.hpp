@@ -1,64 +1,49 @@
-#ifndef MULTIMAP_H
-#define MULTIMAP_H
+#ifndef MULTISET_HPP
+#define MULTISET_HPP
+
+#include "iteratorSet.hpp"
 
 namespace ft {
 
-	template 	< 	class Key,												// map::key_type
-					class T,												// map::mapped_type
-					class Compare = std::less<Key>,							// map::key_compare
-					class Alloc = std::allocator<std::pair<const Key,T> >	// map::allocator_type
+	template 	< 	class T,							// set::key_type/value_type
+					class Compare = std::less<T>,		// set::key_compare/value_compare
+					class Alloc = std::allocator<T>		// set::allocator_type
 				>
-	class multimap {
+	class multiset {
 
-	/*
-	** Typedefs
-	*/
+		/*
+		** Typedefs
+		*/
 	public:
-		typedef Key											key_type;
-		typedef T											mapped_type;
-		typedef std::pair<const key_type, mapped_type>		value_type;
+		typedef T											key_type;
+		typedef T											value_type;
 		typedef Compare										key_compare;
+		typedef Compare										value_compare;
 		typedef Alloc										allocator_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
-		typedef ft::IteratorMap<Key,T>						iterator;
-		typedef ft::ReverseIteratorMap<Key,T>				reverse_iterator;
-		typedef ft::ConstIteratorMap<Key,T>					const_iterator;
-		typedef ft::ConstReverseIteratorMap<Key, T>			const_reverse_iterator;
+		typedef IteratorSet<false,T>						iterator;
+		typedef ReverseIteratorSet<T>						reverse_iterator;
+		typedef IteratorSet<true,T>							const_iterator;
+		typedef ConstReverseIteratorSet<T>					const_reverse_iterator;
 		typedef std::ptrdiff_t								difference_type;
 		typedef std::size_t									size_type;
 
-		class value_compare: public std::binary_function<value_type, value_type, bool>
-		{
-			friend class multimap;
-		protected:
-			Compare comp;
-			value_compare (Compare c) : comp(c) {}
-		public:
-			typedef bool result_type;
-			typedef value_type first_argument_type;
-			typedef value_type second_argument_type;
-			bool operator() (const value_type& x, const value_type& y) const
-			{
-				return (comp(x.first, y.first));
-			}
-		};
-
-	/*
-	** Class members
-	*/
+		/*
+		** Class members
+		*/
 	private:
-		TreeNode<const Key,T>*	_root;
-		TreeNode<const Key,T>*	_begin;
-		TreeNode<const Key,T>*	_end;
-		key_compare				_comp;
-		allocator_type			_alloc;
-		size_type				_size;
+		SetNode<T>*		_root;
+		SetNode<T>*		_begin;
+		SetNode<T>*		_end;
+		key_compare		_comp;
+		allocator_type	_alloc;
+		size_type		_size;
 
-		TreeNode<const Key,T>*	treeMinimum(TreeNode<const Key,T>* ptr) {
-			TreeNode<const Key,T>* leftMost = ptr;
+		SetNode<T>*	treeMinimum(SetNode<T>* ptr) {
+			SetNode<T>* leftMost = ptr;
 
 			while (leftMost && leftMost->_left)
 				leftMost = leftMost->_left;
@@ -66,8 +51,8 @@ namespace ft {
 			return (leftMost);
 		}
 
-		TreeNode<const Key,T>*	treeMaximum(TreeNode<const Key,T>* ptr) {
-			TreeNode<const Key,T>* rightMost = ptr;
+		SetNode<T>*	treeMaximum(SetNode<T>* ptr) {
+			SetNode<T>* rightMost = ptr;
 
 			while (rightMost && rightMost->_right)
 				rightMost = rightMost->_right;
@@ -75,8 +60,8 @@ namespace ft {
 			return (rightMost);
 		}
 
-		void					refresh_iterators() {
-			TreeNode<const Key,T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
+		void	refresh_iterators() {
+			SetNode<T>* leftMost = this->treeMinimum(_root), *rightMost = this->treeMaximum(_root);
 
 			_begin = leftMost;
 			if (rightMost != _end) {
@@ -85,7 +70,7 @@ namespace ft {
 			}
 		}
 
-		void					transplant(TreeNode<const Key,T> *first, TreeNode<const Key,T> *second) {
+		void	transplant(SetNode<T> *first, SetNode<T> *second) {
 			if (!first->_parent)
 				_root = second;
 			else if (first == first->_parent->_left)
@@ -96,15 +81,14 @@ namespace ft {
 				second->_parent = first->_parent;
 		}
 
-
 	public:
 		/*
 		** Constructors
 		*/
-		explicit multimap (const key_compare& comp = key_compare(),
-					  const allocator_type& alloc = allocator_type()) {
+		explicit multiset(const key_compare& comp = key_compare(),
+					 const allocator_type& alloc = allocator_type()) {
 			_root = NULL;
-			_begin = _end = new TreeNode<const Key,T>;
+			_begin = _end = new SetNode<T>;
 			_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 			_begin->_data = _end->_data = NULL;
 			_comp = comp;
@@ -113,11 +97,11 @@ namespace ft {
 		}
 
 		template <class InputIterator>
-		multimap (InputIterator first, InputIterator last,
-			 const key_compare& comp = key_compare(),
-			 const allocator_type& alloc = allocator_type()) {
+		multiset(InputIterator first, InputIterator last,
+			const key_compare& comp = key_compare(),
+			const allocator_type& alloc = allocator_type()) {
 			_root = NULL;
-			_begin = _end = new TreeNode<const Key,T>;
+			_begin = _end = new SetNode<T>;
 			_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 			_comp = comp;
 			_alloc = alloc;
@@ -126,9 +110,9 @@ namespace ft {
 				insert(*first++);
 		}
 
-		multimap (const multimap& x) {
+		multiset(const multiset& x) {
 			_root = NULL;
-			_begin = _end = new TreeNode<const Key,T>;
+			_begin = _end = new SetNode<T>;
 			_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 			_comp = x._comp;
 			_alloc = x._alloc;
@@ -141,18 +125,18 @@ namespace ft {
 			}
 		}
 
-		~multimap() {
+		~multiset() {
 			clear();
 			delete _end;
 		}
 
-		multimap& operator=(const multimap& x) {
+		multiset& operator=(const multiset& x) {
 			if (this != &x) {
 				clear();
 				delete _end;
 
 				_root = NULL;
-				_begin = _end = new TreeNode<const Key,T>;
+				_begin = _end = new SetNode<T>;
 				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 				_comp = x._comp;
 				_alloc = x._alloc;
@@ -221,17 +205,17 @@ namespace ft {
 		** Modifiers
 		*/
 		iterator					insert (const value_type& val) {
-			TreeNode<const Key,T> *x = _root;
-			TreeNode<const Key,T> *y = NULL;
+			SetNode<T> *x = _root;
+			SetNode<T> *y = NULL;
 
 			while (x && x != _end) {
 				y = x;
-				if (_comp(val.first, x->_data->first))
+				if (_comp(val, *(x->_data)))
 					x = x->_left;
 				else
 					x = x->_right;
 			}
-			TreeNode<const Key,T> *z = new TreeNode<const Key,T>;
+			SetNode<T> *z = new SetNode<T>;
 			z->_data = _alloc.allocate(1);
 			_alloc.construct(z->_data, val);
 			z->_parent = y;
@@ -240,8 +224,8 @@ namespace ft {
 				z->_right = _end;
 				_root = _begin = _end->_parent = z;
 			}
-			else if (_comp(z->_data->first, y->_data->first))
-				y->_left = _begin = z;
+			else if (_comp(*(z->_data), *(y->_data)))
+				y->_left = z;
 			else
 				y->_right = z;
 			_size++;
@@ -250,24 +234,24 @@ namespace ft {
 		}
 
 		iterator					insert (iterator position, const value_type& val) {
-			TreeNode<const Key,T> *x = position.getPtr();
-			TreeNode<const Key,T> *y = NULL;
+			SetNode<T> *x = position.getPtr();
+			SetNode<T> *y = NULL;
 
 			while (x->_parent) {
 				x = x->_parent;
 				y = x;
-				if (_comp(x->_data->first, val.first))
+				if (_comp(*(x->_data), val))
 					break ;
 			}
 
 			while (x && x != _end) {
 				y = x;
-				if (_comp(val.first, x->_data->first))
+				if (_comp(val, *(x->_data)))
 					x = x->_left;
 				else
 					x = x->_right;
 			}
-			TreeNode<const Key,T> *z = new TreeNode<const Key,T>;
+			SetNode<T> *z = new SetNode<T>;
 			z->_data = _alloc.allocate(1);
 			_alloc.construct(z->_data, val);
 			z->_parent = y;
@@ -276,7 +260,7 @@ namespace ft {
 				z->_right = _end;
 				_root = _begin = _end->_parent = z;
 			}
-			else if (_comp(z->_data->first, y->_data->first))
+			else if (_comp(*(z->_data), *(y->_data)))
 				y->_left = _begin = z;
 			else
 				y->_right = z;
@@ -292,7 +276,7 @@ namespace ft {
 		}
 
 		void						erase (iterator position) {
-			TreeNode<const Key,T>* ptr = position.getPtr(), *y;
+			SetNode<T>* ptr = position.getPtr(), *y;
 
 			if (!ptr->_left)
 				transplant(ptr, ptr->_right);
@@ -316,7 +300,7 @@ namespace ft {
 			refresh_iterators();
 		}
 
-		size_type					erase (const key_type& k) {
+		size_type					erase (const value_type& k) {
 			size_type count = 0;
 			iterator del;
 			while ((del = find(k)) != this->end()) {
@@ -335,7 +319,7 @@ namespace ft {
 			}
 		}
 
-		void						swap (multimap& x) {
+		void						swap (multiset& x) {
 			ft::swap(_root, x._root);
 			ft::swap(_begin, x._begin);
 			ft::swap(_end, x._end);
@@ -357,140 +341,97 @@ namespace ft {
 		}
 
 		value_compare	value_comp() const {
-			return (value_compare(_comp));
+			return (_comp);
 		}
 
 		/*
 		** Operations
 		*/
-		iterator		find (const key_type& k) {
+		iterator		find (const value_type& val) const {
+			const_iterator first = this->begin(), last = this->end();
+
+			while (first != last) {
+				if (!_comp(*first, val) && !_comp(val, *first))
+					return (first);
+				first++;
+			}
+			return (last);
+		}
+
+		size_type		count (const value_type& val) const {
+			return (this->find(val) != this->end());
+		}
+
+		iterator		lower_bound (const value_type& val) const {
 			iterator first = this->begin(), last = this->end();
 
 			while (first != last) {
-				if (!_comp((*first).first, k) && !_comp(k, (*first).first))
+				if (!(_comp(*first, val)))
 					return (first);
 				first++;
 			}
 			return (last);
 		}
 
-		const_iterator	find (const key_type& k) const {
-			const_iterator first = this->begin(), last = this->end();
+		iterator		upper_bound (const value_type& val) const {
+			iterator first = this->begin(), last = this->end();
 
 			while (first != last) {
-				if (!_comp((*first).first, k) && !_comp(k, (*first).first))
+				if (_comp(val, *first))
 					return (first);
 				first++;
 			}
 			return (last);
 		}
 
-		size_type		count (const key_type& k) const {
-			size_type count = 0;
-			const_iterator first = this->begin(), last = this->end();
-			while (first != last) {
-				if (!_comp((*first).first, k) && !_comp(k, (*first).first))
-					count++;
-				first++;
-			}
-			return (count);
+		std::pair<iterator,iterator>	equal_range (const value_type& val) const {
+			return (std::make_pair(this->lower_bound(val), this->upper_bound(val)));
 		}
 
-		iterator		lower_bound (const key_type& k) {
-			iterator first = begin(), last = end();
-
-			while (first != last) {
-				if (!(_comp((*first).first, k)))
-					return (first);
-				first++;
-			}
-			return (last);
-		}
-
-		const_iterator	lower_bound (const key_type& k) const {
-			const_iterator first = begin(), last = end();
-
-			while (first != last) {
-				if (!(_comp((*first).first, k)))
-					return (first);
-				first++;
-			}
-			return (last);
-		}
-
-		iterator		upper_bound (const key_type& k) {
-			iterator first = begin(), last = end();
-
-			while (first != last) {
-				if (_comp(k, (*first).first))
-					return (first);
-				first++;
-			}
-			return (last);
-		}
-
-		const_iterator	upper_bound (const key_type& k) const {
-			const_iterator first = begin(), last = end();
-
-			while (first != last) {
-				if (_comp(k, (*first).first))
-					return (first);
-				first++;
-			}
-			return (last);
-		}
-
-		std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
-			return (std::make_pair(lower_bound(k), upper_bound(k)));
-		}
-
-		std::pair<iterator,iterator>	equal_range (const key_type& k) {
-			return (std::make_pair(lower_bound(k), upper_bound(k)));
-		}
 
 	};
 
 	/*
 	** Non-member function overloads
 	*/
-	template <class T, class Alloc>
-	bool operator==(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator==(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return (false);
-		typename multimap<T, Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
-		for (typename multimap<T, Alloc>::size_type i = 0; i < lhs.size(); i++)
+		typename multiset<T,Compare,Alloc>::const_iterator firstLhs = lhs.begin(), firstRhs = rhs.begin();
+		for (typename multiset<T,Compare,Alloc>::size_type i = 0; i < lhs.size(); i++)
 			if (*firstLhs++ != *firstRhs++)
 				return (false);
 		return (true);
 	}
 
-	template <class T, class Alloc>
-	bool operator!=(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator!=(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		return (!(lhs == rhs));
 	}
 
-	template <class T, class Alloc>
-	bool operator<(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template <class T, class Alloc>
-	bool operator<=(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator<=(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		return (!(rhs < lhs));
 	}
 
-	template <class T, class Alloc>
-	bool operator>(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		return (rhs < lhs);
 	}
 
-	template <class T, class Alloc>
-	bool operator>=(const multimap<T,Alloc>& lhs, const multimap<T,Alloc>& rhs) {
+	template <class T, class Compare, class Alloc>
+	bool operator>=(const multiset<T,Compare,Alloc>& lhs, const multiset<T,Compare,Alloc>& rhs) {
 		return (!(lhs < rhs));
 	}
 
-	template <class T, class Alloc>
-	void swap(multimap<T,Alloc>& x, multimap<T,Alloc>& y) {
+	template <class T, class Compare, class Alloc>
+	void swap(multiset<T,Compare,Alloc>& x, multiset<T,Compare,Alloc>& y) {
 		x.swap(y);
 	}
 

@@ -5,12 +5,13 @@
 #include "queue.hpp"
 #include "multimap.hpp"
 #include "set.hpp"
+#include "multiset.hpp"
 
-#include "mainTest.hpp"
 #include "print.hpp"
-#include "mapTest.hpp"
-#include "queueTest.hpp"
+#include "mainTest.hpp"
 #include "stackTest.hpp"
+#include "queueTest.hpp"
+#include "mapTest.hpp"
 #include "setTest.hpp"
 
 size_t g_countRandNumbers = 3;
@@ -64,7 +65,6 @@ void testMap() {
 	typedef ft::map<cType, cType> ftType;
 	typedef std::map<cType, cType> stdType;
 
-	ft::testMapConstructors<ft::map<cType, cType, std::greater<cType> >, std::map<cType, cType, std::greater<cType> > >();
 	ft::testMapConstructors<ftType, stdType>();
 	ft::testMapIterators<ftType, stdType>();
 	ft::testMapInsert<ftType, stdType>();
@@ -72,7 +72,6 @@ void testMap() {
 	ft::testMapSwap<ftType, ftType>();
 	ft::testMapOperations<ftType, stdType>();
 	ft::testMapNonMember<ftType, stdType>();
-
 }
 
 void testStack() {
@@ -99,7 +98,6 @@ void testMultiMap() {
 	typedef ft::multimap<cType, cType> ftType;
 	typedef std::multimap<cType, cType> stdType;
 
-//	testMapConstructors<ft::map<const int, int, greater<int> >, std::map<const int, int, greater<int> > >();
 	ft::testMapConstructors<ftType, stdType>();
 	ft::testMapIterators<ftType, stdType>();
 	ft::testMapInsert<ftType, stdType>();
@@ -107,7 +105,6 @@ void testMultiMap() {
 	ft::testMapSwap<ftType, ftType>();
 	ft::testMapOperations<ftType, stdType>();
 	ft::testMapNonMember<ftType, stdType>();
-
 }
 
 void testSet() {
@@ -123,38 +120,39 @@ void testSet() {
  	ft::testSetSwap<ftType, ftType>();
  	ft::testSetOperations<ftType, stdType>();
  	ft::testSetNonMember<ftType, stdType>();
- }
+}
+
+
+void testMultiSet() {
+	std::cout << RED << "||||||||||MULTISET||||||||||" << RESET << std::endl;
+
+	typedef ft::multiset<cType> ftType;
+	typedef std::multiset<cType> stdType;
+
+	ft::testSetConstructors<ftType, stdType>();
+	ft::testSetIterators<ftType, stdType>();
+	ft::testSetInsert<ftType, stdType>();
+	ft::testSetErase<ftType, stdType>();
+	ft::testSetSwap<ftType, ftType>();
+	ft::testSetOperations<ftType, stdType>();
+	ft::testSetNonMember<ftType, stdType>();
+}
 
 int main() {
 	srand(time(NULL));
 	std::cout.setf(std::ios::left);
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
-
-//	testList();
-//	testVector();
-//	testMap();
-//	testStack();
-//	testQueue();
+	testList();
+	testVector();
+	testMap();
+	testStack();
+	testQueue();
 
 	std::cout << RED << "Bonus part" << RESET << std::endl;
-//	testMultiMap();
+	testMultiMap();
 	testSet();
-
-/*	 typedef std::set<int> setType;
-//
-	 setType set;
-	 set.insert(1);
-	 set.insert(976);
-	 set.insert(1000);
-
-	 setType::iterator it = set.begin();
-	 setType::const_iterator itConst = set.begin();
-	 setType::reverse_iterator itRev = set.rbegin();
-	 setType::const_reverse_iterator itConstRev = set.rbegin();
-//
-	 setType::iterator itT(itConst);*/
-
+	testMultiSet();
 
 	return (0);
 }
