@@ -27,6 +27,81 @@ namespace ft {
 		}
 	};
 
+	struct true_type {};
+	struct false_type {};
+
+	template<typename Tp>
+	struct is_integer
+	{
+		typedef false_type type;
+	};
+
+	template<>
+	struct is_integer<bool>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<char>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<signed char>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<unsigned char>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<wchar_t>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<short>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<unsigned short>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<int>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<unsigned int>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<long>
+	{
+		typedef true_type type;
+	};
+
+	template<>
+	struct is_integer<unsigned long>
+	{
+		typedef true_type type;
+	};
+
 	template<class InputIt1, class InputIt2>
 	bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
 								 InputIt2 first2, InputIt2 last2)

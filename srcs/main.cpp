@@ -143,16 +143,18 @@ int main() {
 	std::cout.setf(std::ios::left);
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
-	testList();
-	testVector();
-	testMap();
-	testStack();
-	testQueue();
+//	testList();
+//	testVector();
+//	testMap();
+//	testStack();
+//	testQueue();
 
 	std::cout << RED << "Bonus part" << RESET << std::endl;
-	testMultiMap();
-	testSet();
-	testMultiSet();
+//	testMultiMap();
+//	testSet();
+//	testMultiSet();
+
+	std::vector<int> vec(4, 100);
 
 	return (0);
 }

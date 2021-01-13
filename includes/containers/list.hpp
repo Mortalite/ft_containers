@@ -69,40 +69,53 @@ namespace ft {
 				_size++;
 			}
 
+			void fill_initialize(size_type n, const value_type& val) {
+				_end = new DLLNode<T>;
+				_first = _last = _end->_next = _end->_prev = _end;
+				_end->_data = NULL;
+				_size = 0;
+				while (n--)
+					push_back(val);
+			}
+
+			template<typename Integer>
+			void initialize_dispatch(Integer n, Integer val, true_type) {
+				fill_initialize(static_cast<size_type>(n), val);
+			}
+
+			template<typename InputIterator>
+			void initialize_dispatch(InputIterator first, InputIterator last, false_type) {
+				_end = new DLLNode<T>;
+				_first = _last = _end->_next = _end->_prev = _end;
+				_end->_data = NULL;
+				_size = 0;
+				while (first != last)
+					push_back(*first++);
+			}
+
 		public:
 
 			/*
 			** Constructors, destructor and assignment operator
 			*/
-			explicit list(const allocator_type& alloc = allocator_type()) {
+			explicit list(const allocator_type& alloc = allocator_type()):_alloc(alloc) {
 				_end = new DLLNode<T>;
 				_first = _last = _end->_next = _end->_prev = _end;
 				_end->_data = NULL;
 				_size = 0;
-				_alloc = alloc;
 			}
 
 			explicit list(	size_type n, const value_type& val = value_type(),\
-							const allocator_type& alloc = allocator_type()) {
-				_end = new DLLNode<T>;
-				_first = _last = _end->_next = _end->_prev = _end;
-				_end->_data = NULL;
-				_size = 0;
-				_alloc = alloc;
-				while (n--)
-					push_back(val);
+							const allocator_type& alloc = allocator_type()):_alloc(alloc) {
+				fill_initialize(n, val);
 		 	}
 
 		 	template<class InputIterator>
 		 	list(	InputIterator first, InputIterator last, \
-		 			const allocator_type& alloc = allocator_type()) {
-				_end = new DLLNode<T>;
-				_first = _last = _end->_next = _end->_prev = _end;
-				_end->_data = NULL;
-				_size = 0;
-		   		_alloc = alloc;
-				while (first != last)
-					push_back(*first++);
+		 			const allocator_type& alloc = allocator_type()):_alloc(alloc) {
+
+				typedef typename ft::is_integer<InputIterator>::type Integral;
+		 		initialize_dispatch(first, last, Integral());
 			}
 
 			list(const list& x) {
