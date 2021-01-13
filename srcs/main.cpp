@@ -144,7 +144,7 @@ int main() {
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
 //	testList();
-//	testVector();
+	testVector();
 //	testMap();
 //	testStack();
 //	testQueue();
@@ -154,7 +154,5 @@ int main() {
 //	testSet();
 //	testMultiSet();
 
-	std::vector<int> vec(4, 100);
-
-	return (0);
+ 	return (0);
 }

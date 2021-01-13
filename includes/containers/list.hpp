@@ -113,7 +113,6 @@ namespace ft {
 		 	template<class InputIterator>
 		 	list(	InputIterator first, InputIterator last, \
 		 			const allocator_type& alloc = allocator_type()):_alloc(alloc) {
-
 				typedef typename ft::is_integer<InputIterator>::type Integral;
 		 		initialize_dispatch(first, last, Integral());
 			}

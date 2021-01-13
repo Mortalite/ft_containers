@@ -37,32 +37,21 @@ namespace ft {
 			const static size_type	_scaleFactor = 2;
 			const static size_type	_initCapacity = 10;
 
-		public:
-
-			/*
-			** Constructors and destructor
-			*/
-			explicit vector (const allocator_type& alloc = allocator_type()) {
-				_alloc = alloc;
-				_array = _alloc.allocate(_initCapacity);
-				_capacity = _initCapacity;
-				_size = 0;
-			}
-
-			explicit vector (size_type n, const value_type& val = value_type(),
-						 	const allocator_type& alloc = allocator_type()) {
-				_alloc = alloc;
+			void fill_initialize(size_type n, const value_type& val) {
 				_array = _alloc.allocate(_initCapacity);
 				_capacity = _initCapacity;
 				_size = 0;
 				resize(n, val);
 			}
 
-			template <class InputIterator>
-			vector (InputIterator first, InputIterator last,
-					const allocator_type& alloc = allocator_type()) {
+			template<typename Integer>
+			void initialize_dispatch(Integer n, Integer val, true_type) {
+				fill_initialize(static_cast<size_type>(n), val);
+			}
+
+			template<typename InputIterator>
+			void initialize_dispatch(InputIterator first, InputIterator last, false_type) {
 				difference_type size = ft::distance(first, last);
-				_alloc = alloc;
 				_size = size;
 				_capacity = size;
 				if (size > 0) {
@@ -72,6 +61,29 @@ namespace ft {
 				}
 				else
 					_array = NULL;
+			}
+
+		public:
+
+			/*
+			** Constructors and destructor
+			*/
+			explicit vector (const allocator_type& alloc = allocator_type()):_alloc(alloc) {
+				_array = _alloc.allocate(_initCapacity);
+				_capacity = _initCapacity;
+				_size = 0;
+			}
+
+			explicit vector (size_type n, const value_type& val = value_type(),
+						 	const allocator_type& alloc = allocator_type()):_alloc(alloc) {
+				fill_initialize(n, val);
+			}
+
+			template <class InputIterator>
+			vector (InputIterator first, InputIterator last,
+					const allocator_type& alloc = allocator_type()):_alloc(alloc) {
+				typedef typename ft::is_integer<InputIterator>::type Integral;
+				initialize_dispatch(first, last, Integral());
 			}
 
 			vector (const vector& x) {
