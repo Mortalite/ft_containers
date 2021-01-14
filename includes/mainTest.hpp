@@ -158,7 +158,7 @@ namespace ft {
 		typename C::iterator alterIt;
 
 		typename T::value_type randomValue = getRandomValue<T>();
-		typename T::size_type randomTimes = (abs(getRandomValue<T>()))%4 + 1;
+		typename T::size_type randomTimes = getRandomValueByType<int>()%4 + 1;
 		std::cout << BLUE << "Insert " << randomValue << " in begin()" << RESET << std::endl;
 		mainIt = mainContainer.insert(mainContainer.begin(), randomValue);
 		alterIt = alterContainer.insert(alterContainer.begin(), randomValue);
