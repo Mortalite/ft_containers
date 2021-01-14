@@ -86,25 +86,21 @@ namespace ft {
 			** Constructors
 			*/
 			explicit set(const key_compare& comp = key_compare(),
-							const allocator_type& alloc = allocator_type()) {
+							const allocator_type& alloc = allocator_type()):_comp(comp), _alloc(alloc) {
 				_root = NULL;
 				_begin = _end = new SetNode<T>;
 				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
 				_begin->_data = _end->_data = NULL;
-				_comp = comp;
-				_alloc = alloc;
 				_size = 0;
 			}
 
 			template <class InputIterator>
 			set(InputIterator first, InputIterator last,
 	   			const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type()) {
+				const allocator_type& alloc = allocator_type()):_comp(comp), _alloc(alloc) {
 				_root = NULL;
 				_begin = _end = new SetNode<T>;
 				_begin->_left = _begin->_right = _begin->_parent = _end->_left = _end->_right = _end->_parent = NULL;
-				_comp = comp;
-				_alloc = alloc;
 				_size = 0;
 				while (first != last)
 					insert(*first++);
