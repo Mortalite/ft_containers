@@ -5,8 +5,9 @@
 
 namespace ft {
 
-// Simple containers
-
+/*
+** Simple containers
+*/
 	template<typename T>
 	void printIterator(T &container) {
 		size_t i = 0;
@@ -78,8 +79,9 @@ namespace ft {
 			std::cout << "Containers are not equal" << std::endl;
 	}
 
-// Map, multimap
-
+/*
+** Map, multimap
+*/
 	template<typename T>
 	void printIteratorMap(T &container) {
 		std::cout << BLUE << "ForwardIterator" << RESET << std::endl;

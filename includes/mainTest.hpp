@@ -1,5 +1,5 @@
-#ifndef TESTS_HPP
-#define TESTS_HPP
+#ifndef MAINTEST_HPP
+#define MAINTEST_HPP
 
 #include <iostream>
 #include <iomanip>

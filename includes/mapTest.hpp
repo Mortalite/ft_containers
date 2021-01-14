@@ -1,5 +1,5 @@
-#ifndef MAPTESTER_HPP
-#define MAPTESTER_HPP
+#ifndef MAPTEST_HPP
+#define MAPTEST_HPP
 
 namespace ft {
 
