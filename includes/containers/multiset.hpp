@@ -359,7 +359,14 @@ namespace ft {
 		}
 
 		size_type		count (const value_type& val) const {
-			return (this->find(val) != this->end());
+			size_type count = 0;
+			const_iterator first = this->begin(), last = this->end();
+			while (first != last) {
+				if (*first == val)
+					count++;
+				first++;
+			}
+			return (count);
 		}
 
 		iterator		lower_bound (const value_type& val) const {
