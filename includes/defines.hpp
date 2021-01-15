@@ -15,6 +15,6 @@ extern size_t	g_mapMarginCoeff;
 extern int		g_intMin, g_intMax;
 extern float	g_floatMin, g_floatMax;
 
-typedef float	cType;
+typedef int	cType;
 
 #endif

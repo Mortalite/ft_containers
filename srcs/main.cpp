@@ -143,8 +143,8 @@ int main() {
 	std::cout.setf(std::ios::left);
 
 	std::cout << RED << "Mandatory part" << RESET << std::endl;
-//	testList();
-	testVector();
+	testList();
+//	testVector();
 //	testMap();
 //	testStack();
 //	testQueue();

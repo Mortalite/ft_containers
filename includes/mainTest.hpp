@@ -106,8 +106,8 @@ namespace ft {
 		T mainContainer2;
 		C alterContainer2;
 
-		mainContainer2.assign(11, (typename T::size_type)10);
-		alterContainer2.assign(11,(typename C::size_type)10);
+		mainContainer2.assign(11, 10);
+		alterContainer2.assign(11, 10);
 		printCmpIterator(mainContainer2, alterContainer2);
 	}
 
@@ -158,7 +158,7 @@ namespace ft {
 		typename C::iterator alterIt;
 
 		typename T::value_type randomValue = getRandomValue<T>();
-		typename T::size_type randomTimes = getRandomValueByType<int>()%4 + 1;
+		typename T::size_type randomTimes = getRandomValueByType<typename T::size_type>()%4 + 1;
 		std::cout << BLUE << "Insert " << randomValue << " in begin()" << RESET << std::endl;
 		mainIt = mainContainer.insert(mainContainer.begin(), randomValue);
 		alterIt = alterContainer.insert(alterContainer.begin(), randomValue);

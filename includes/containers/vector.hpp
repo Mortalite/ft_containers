@@ -63,6 +63,43 @@ namespace ft {
 					_array = NULL;
 			}
 
+
+			void fill_assign(size_type n, const value_type& val) {
+				clear();
+				while (n--)
+					push_back(val);
+			}
+
+			template<typename Integer>
+			void assign_dispatch(Integer n, Integer val, true_type) {
+				fill_assign(static_cast<size_type>(n), val);
+			}
+
+			template<typename InputIterator>
+			void assign_dispatch(InputIterator first, InputIterator last, false_type) {
+				clear();
+				while (first != last)
+					push_back(*first++);
+			}
+
+			void fill_insert(iterator position, size_type n, const value_type& val) {
+				while (n--)
+					insert(position, val);
+			}
+
+			template<typename Integer>
+			void insert_dispatch(iterator position, Integer n, Integer val, true_type) {
+				fill_insert(position, static_cast<size_type>(n), val);
+			}
+
+			template<typename InputIterator>
+			void insert_dispatch(iterator position, InputIterator first, InputIterator last, false_type) {
+				while (first != last) {
+					position = insert(position, *first++);
+					position++;
+				}
+			}
+
 		public:
 
 			/*
@@ -242,15 +279,12 @@ namespace ft {
 
 			template <class InputIterator>
 			void				assign(InputIterator first, InputIterator last) {
-				clear();
-				while (first != last)
-					push_back(*first++);
+				typedef typename ft::is_integer<InputIterator>::type Integral;
+				assign_dispatch(first, last, Integral());
 			}
 
 			void				assign(size_type n, const value_type& val) {
-				clear();
-				while (n--)
-					push_back(val);
+				fill_assign(n, val);
 			}
 
 			void				push_back(const value_type& val) {
@@ -278,16 +312,13 @@ namespace ft {
 			}
 
 			void				insert(iterator position, size_type n, const value_type& val) {
-				while (n--)
-					position = insert(position, val);
+				fill_insert(position, n, val);
 			}
 
 			template <class InputIterator>
 			void				insert(iterator position, InputIterator first, InputIterator last) {
-				while (first != last) {
-					position = insert(position, *first++);
-					position++;
-				}
+				typedef typename ft::is_integer<InputIterator>::type Integral;
+				insert_dispatch(position, first, last, Integral());
 			}
 
 			iterator			erase(iterator position) {
